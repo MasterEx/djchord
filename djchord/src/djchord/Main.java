@@ -29,6 +29,10 @@
 
 package djchord;
 
+/**
+ *
+ *@author Ntanasis Periklis and Chatzipetros Mike
+ */
 public class Main {
 
     /**

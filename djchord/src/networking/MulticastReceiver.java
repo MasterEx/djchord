@@ -34,6 +34,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+/**
+ *
+ *@author Ntanasis Periklis and Chatzipetros Mike
+ */
 public class MulticastReceiver extends Multicast{
 
     /*

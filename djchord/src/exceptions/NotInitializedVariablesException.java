@@ -29,6 +29,10 @@
 
 package exceptions;
 
+/**
+ *
+ *@author Ntanasis Periklis and Chatzipetros Mike
+ */
 public class NotInitializedVariablesException extends Exception {
 
     public NotInitializedVariablesException()

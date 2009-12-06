@@ -32,6 +32,10 @@ import java.io.IOException;
 import java.net.*;
 import exceptions.NotInitializedVariablesException;
 
+/**
+ *
+ *@author Ntanasis Periklis and Chatzipetros Mike
+ */
 public class Multicast {
 
     protected int port = -1; // port

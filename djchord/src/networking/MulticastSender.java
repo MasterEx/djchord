@@ -29,6 +29,10 @@
 
 package networking;
 
+/**
+ *
+ *@author Ntanasis Periklis and Chatzipetros Mike
+ */
 public class MulticastSender extends Multicast{
 
     private int ttl = 1; // time to live
