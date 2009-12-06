@@ -32,35 +32,39 @@ import java.io.IOException;
 import java.net.*;
 import exceptions.NotInitializedVariablesException;
 
-/**
- *
- * @author periklis
- */
 public class Multicast {
 
     protected int port = -1; // port
     protected String group; // d class group address
     protected MulticastSocket socket = null; // socket
 
-    //constructor
+    /*
+     *constructor
+     */
     Multicast()
     {
         //empty
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     Multicast(int port)
     {
         setport(port);
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     Multicast(String group)
     {
         setgroup(group);
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     Multicast(int port,String group)
     {
         setport(port);
@@ -68,19 +72,25 @@ public class Multicast {
     }
 
 
-    //sets port number
+    /*
+     *sets port number
+     */
     public void setport(int port)
     {
         this.port = port;
     }
 
-    //sets group address
+    /*
+     *sets group address
+     */
     public void setgroup(String group)
     {
         this.group = group;
     }
 
-    //binds port to socket and joins the mullticast group
+    /*
+     *binds port to socket and joins the mullticast group
+     */
     public void openconnection() throws NotInitializedVariablesException, IOException
     {
         if(group.equalsIgnoreCase("") || port==-1)
@@ -93,7 +103,9 @@ public class Multicast {
         socket = new MulticastSocket(port);
     }
 
-    //closes the open connnections
+    /*
+     *closes the open connnections
+     */
     public void closeconnection() throws UnknownHostException, IOException, NotInitializedVariablesException
     {
         if(socket == null)

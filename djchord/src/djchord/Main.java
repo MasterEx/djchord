@@ -29,10 +29,6 @@
 
 package djchord;
 
-/**
- *
- * @author periklis
- */
 public class Main {
 
     /**

@@ -34,37 +34,44 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-/**
- *
- * @author periklis
- */
 public class MulticastReceiver extends Multicast{
 
-    //constructor
+    /*
+     * constructor
+     */
     MulticastReceiver()
     {
         super();
     }
 
-    //constructor
+    /*
+     * constructor
+     */
     MulticastReceiver(int port)
     {
         super(port);
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     MulticastReceiver(String group)
     {
         super(group);
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     MulticastReceiver(int port,String group)
     {
         super(port,group);
     }
 
-    //binds port to socket and joins the mullticast group
+    /*
+     *binds port to socket and joins the mullticast group
+     */
+    @Override
     public void openconnection() throws NotInitializedVariablesException, IOException
     {
         if(group.equalsIgnoreCase("") || port==-1)
@@ -78,7 +85,9 @@ public class MulticastReceiver extends Multicast{
         socket.joinGroup(InetAddress.getByName(group));
     }
 
-    //closes the open connnections
+    /*
+     *closes the open connnections
+     */
     @Override
     public void closeconnection() throws IOException, NotInitializedVariablesException
     {

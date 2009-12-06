@@ -29,33 +29,37 @@
 
 package networking;
 
-/**
- *
- * @author periklis
- */
 public class MulticastSender extends Multicast{
 
     private int ttl = 1; // time to live
 
-    //constructor
+    /*
+     *constructor
+     */
     MulticastSender()
     {
         super();
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     MulticastSender(int port)
     {
         super(port);
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     MulticastSender(String group)
     {
         super(group);
     }
 
-    //constructor
+    /*
+     *constructor
+     */
     MulticastSender(int port,String group)
     {
         super(port,group);
