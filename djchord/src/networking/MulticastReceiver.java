@@ -31,6 +31,7 @@ package networking;
 
 import exceptions.NotInitializedVariablesException;
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
@@ -102,6 +103,16 @@ public class MulticastReceiver extends Multicast{
         }
         socket.leaveGroup(InetAddress.getByName(group));
         socket.close();
+    }
+
+    /*
+     * receiver that returns the received datagram packet
+     */
+    public DatagramPacket receive(byte buffer[]) throws IOException
+    {
+        DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
+        this.socket.receive(packet);
+        return packet;
     }
 
 }

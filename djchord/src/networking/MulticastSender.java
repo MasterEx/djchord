@@ -31,6 +31,8 @@ package networking;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -73,13 +75,22 @@ public class MulticastSender extends Multicast{
     }
 
     /*
-     * receiver that returns the received datagram packet
+     * set time to live
      */
-    public DatagramPacket receive(byte buffer[]) throws IOException
+    public void setttl(int ttl)
     {
-        DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
-        this.socket.receive(packet);
-        return packet;
+        this.ttl = ttl;
+    }
+
+    /*
+     * sender
+     */
+    public void send(byte buffer[]) throws UnknownHostException, IOException
+    {
+        DatagramPacket packet = new DatagramPacket(buffer,buffer.length,
+                InetAddress.getByName(group),port);
+        this.socket.setTimeToLive(this.ttl);
+        this.socket.send(packet);
     }
 
 }
