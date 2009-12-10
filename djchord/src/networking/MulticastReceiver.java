@@ -110,6 +110,7 @@ public class MulticastReceiver extends Multicast{
      */
     public DatagramPacket receive(byte buffer[]) throws IOException
     {
+        //packet.setLength(buffer.length);
         DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
         this.socket.receive(packet);
         return packet;
