@@ -29,6 +29,9 @@
 
 package networking;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
@@ -67,6 +70,16 @@ public class MulticastSender extends Multicast{
     MulticastSender(int port,String group)
     {
         super(port,group);
+    }
+
+    /*
+     * receiver that returns the received datagram packet
+     */
+    public DatagramPacket receive(byte buffer[]) throws IOException
+    {
+        DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
+        this.socket.receive(packet);
+        return packet;
     }
 
 }
