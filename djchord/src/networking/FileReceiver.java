@@ -86,7 +86,7 @@ public class FileReceiver implements Runnable{
 
     FileReceiver(int port,String destination) throws IOException
     {
-        serversocket = new ServerSocket(port);
+        this.port = port;
         this.destination = destination;
         if (runner == null)
         {
