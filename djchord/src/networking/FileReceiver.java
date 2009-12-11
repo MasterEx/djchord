@@ -47,12 +47,14 @@ public class FileReceiver implements Runnable{
     private Socket socket;
     private String destination;
     private Thread runner;
+    private int port;
     private boolean echo = false;
 
     public void run() 
     {
         try
         {
+            serversocket = new ServerSocket(port);
             socket = serversocket.accept();
             InputStreamReader in = new InputStreamReader(socket.getInputStream());
             FileOutputStream out = new FileOutputStream(destination);
@@ -94,9 +96,9 @@ public class FileReceiver implements Runnable{
         }
     }
 
-    FileReceiver(int port,String destination,boolean echo) throws IOException
+    FileReceiver(int port,String destination,boolean echo)
     {
-        serversocket = new ServerSocket(port);
+        this.port = port;
         this.destination = destination;
         this.echo = echo;
         if (runner == null)
