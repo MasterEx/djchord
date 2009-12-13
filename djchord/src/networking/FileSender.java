@@ -56,11 +56,12 @@ public class FileSender implements Runnable{
         try
         {
             socket = new Socket(address, port);
-            input = new FileInputStream(address);
+            input = new FileInputStream(source);
             outstream = new PrintWriter(socket.getOutputStream(),true);
             int x = 0;
             while(true)
             {
+                x = input.read();
                 if(x == -1)
                 {
                     break;
@@ -86,9 +87,12 @@ public class FileSender implements Runnable{
         this.address = address;
         this.port = port;
         this.source = source;
-        runner = new Thread(this);
-        runner.setDaemon(true);
-        runner.start();
+        if (runner == null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }        
     }
 
 }
