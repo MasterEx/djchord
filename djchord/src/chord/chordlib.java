@@ -42,7 +42,8 @@ public class chordlib {
     /*
      * methods
      */
-    public String find_succesor(String k){
+    public String find_succesor(String k)
+    {
 
         return new String();
     }
