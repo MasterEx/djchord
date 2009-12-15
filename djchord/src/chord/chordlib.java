@@ -37,7 +37,7 @@ public class chordlib {
     /*
      * variables
      */
-    private node komvos;
+    private node djnode;
 
     /*
      * methods
