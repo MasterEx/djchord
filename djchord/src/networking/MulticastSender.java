@@ -118,7 +118,7 @@ public class MulticastSender extends Multicast implements Runnable{
     }
 
     /*
-     * is invoked when start() is called
+     * is invoked by start()
      */
     public void run()
     {

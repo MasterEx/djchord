@@ -52,6 +52,9 @@ public class FileSender implements Runnable{
     private Thread runner;
     private boolean status = false;
 
+    /*
+     * is invoked by start()
+     */
     public void run()
     {
         try
@@ -84,6 +87,9 @@ public class FileSender implements Runnable{
         }
     }
 
+    /*
+     * constructor
+     */
     FileSender(String address,int port, String source)
     {
         this.address = address;
@@ -91,6 +97,9 @@ public class FileSender implements Runnable{
         this.source = source;               
     }
 
+    /*
+     * starts the execution of the thread
+     */
     public void start()
     {
         if (runner == null)
@@ -101,12 +110,18 @@ public class FileSender implements Runnable{
         }
     }
 
+    /*
+     * stops the execution of the thread
+     */
     public void stop()
     {
         runner.interrupt();
         runner = null;
     }
 
+    /*
+     * returns true if file is sended
+     */
     public boolean getstatus()
     {
         return status;

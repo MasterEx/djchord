@@ -51,6 +51,9 @@ public class FileReceiver implements Runnable{
     private boolean echo = false;
     private boolean status = false;
 
+    /*
+     * is invoked by start()
+     */
     public void run() 
     {
         try
@@ -86,6 +89,9 @@ public class FileReceiver implements Runnable{
         }
     }
 
+    /*
+     * constructor
+     */
     FileReceiver(int port,String destination) throws IOException
     {
         this.port = port;
@@ -98,6 +104,9 @@ public class FileReceiver implements Runnable{
         }
     }
 
+    /*
+     * constructor
+     */
     FileReceiver(int port,String destination,boolean echo)
     {
         this.port = port;
@@ -105,6 +114,9 @@ public class FileReceiver implements Runnable{
         this.echo = echo;
     }
 
+    /*
+     * starts the execution of the thread
+     */
     public void start()
     {
         if (runner == null)
@@ -115,12 +127,18 @@ public class FileReceiver implements Runnable{
         }
     }
 
+    /*
+     * stops the execution of the thread
+     */
     public void stop()
     {
         runner.interrupt();
         runner = null;
     }
 
+    /*
+     * returns true if file is received
+     */
     public boolean getstatus()
     {
         return status;
