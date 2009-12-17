@@ -49,6 +49,7 @@ public class FileReceiver implements Runnable{
     private Thread runner;
     private int port;
     private boolean echo = false;
+    private boolean status = false;
 
     public void run() 
     {
@@ -64,6 +65,7 @@ public class FileReceiver implements Runnable{
                 out.write(currentbyte = in.read());
                 if(currentbyte == -1)
                 {
+                    status = true;
                     break;
                 }
             }
@@ -101,12 +103,27 @@ public class FileReceiver implements Runnable{
         this.port = port;
         this.destination = destination;
         this.echo = echo;
+    }
+
+    public void start()
+    {
         if (runner == null)
         {
             runner = new Thread(this);
             runner.setDaemon(true);
             runner.start();
         }
+    }
+
+    public void stop()
+    {
+        runner.interrupt();
+        runner = null;
+    }
+
+    public boolean getstatus()
+    {
+        return status;
     }
 
 }

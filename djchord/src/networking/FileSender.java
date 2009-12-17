@@ -43,13 +43,14 @@ import java.util.logging.Logger;
  */
 public class FileSender implements Runnable{
 
-    FileInputStream input;
-    String source;
-    String address;
-    int port;
-    Socket socket;
-    PrintWriter outstream;
-    Thread runner;
+    private FileInputStream input;
+    private String source;
+    private String address;
+    private int port;
+    private Socket socket;
+    private PrintWriter outstream;
+    private Thread runner;
+    private boolean status = false;
 
     public void run()
     {
@@ -58,15 +59,16 @@ public class FileSender implements Runnable{
             socket = new Socket(address, port);
             input = new FileInputStream(source);
             outstream = new PrintWriter(socket.getOutputStream(),true);
-            int x = 0;
+            int currentbyte = 0;
             while(true)
             {
-                x = input.read();
-                if(x == -1)
+                currentbyte = input.read();
+                if(currentbyte == -1)
                 {
+                    status = true;
                     break;
                 }
-                outstream.write(x);
+                outstream.write(currentbyte);
             }
             outstream.close();
             input.close();
@@ -86,13 +88,28 @@ public class FileSender implements Runnable{
     {
         this.address = address;
         this.port = port;
-        this.source = source;
+        this.source = source;               
+    }
+
+    public void start()
+    {
         if (runner == null)
         {
             runner = new Thread(this);
             runner.setDaemon(true);
             runner.start();
-        }        
+        }
+    }
+
+    public void stop()
+    {
+        runner.interrupt();
+        runner = null;
+    }
+
+    public boolean getstatus()
+    {
+        return status;
     }
 
 }
