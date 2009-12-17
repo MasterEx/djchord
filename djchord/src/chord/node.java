@@ -29,11 +29,55 @@
 
 package chord;
 
+import basic.SHAhash;
+
 /**
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class node {
-    private String key;
+    /**
+     * variables
+     */
+    private SHAhash key;
+    private String[] files;//paths for files? path for folder? names of files only?
+    private SHAhash[] file_keys;
 
+    /**
+     * empty constructor
+     */
+    public node()
+    {
+
+    }
+    /**
+     * get methods
+     */
+    public SHAhash getKey()
+    {
+        return this.key;
+    }
+    public String[] getFiles()
+    {
+        return this.files;
+    }
+    public SHAhash[] getFile_keys()
+    {
+        return this.file_keys;
+    }
+    /**
+     * set methods
+     */
+    public void setKey(SHAhash key)
+    {
+         this.key = key;
+    }
+    public void setFiles(String[] files)
+    {
+         this.files = files;
+    }
+    public void setFile_keys(SHAhash[] file_keys)
+    {
+         this.file_keys = file_keys;
+    }
 }
