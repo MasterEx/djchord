@@ -29,6 +29,8 @@
 
 package chord;
 
+import basic.SHAhash;
+
 /**
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
@@ -42,11 +44,13 @@ public class chordlib {
     /*
      * methods
      */
-    public String find_succesor(String k)
+    public SHAhash find_succesor(String k)
     {
 
-        return new String();
+        return new SHAhash();
     }
+    //public
+
 
 
 }
