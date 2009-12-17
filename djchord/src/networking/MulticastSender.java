@@ -160,7 +160,7 @@ public class MulticastSender extends Multicast implements Runnable{
     }
 
     /*
-     * set valuw to buffer
+     * set value to buffer
      */
     public void setbuffer(byte buffer[])
     {

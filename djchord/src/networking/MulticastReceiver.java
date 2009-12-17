@@ -34,12 +34,16 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
-public class MulticastReceiver extends Multicast{
+public class MulticastReceiver extends Multicast implements Runnable{
+
+    private Thread runner;
 
     /*
      * constructor
@@ -110,10 +114,60 @@ public class MulticastReceiver extends Multicast{
      */
     public DatagramPacket receive(byte buffer[]) throws IOException
     {
-        //packet.setLength(buffer.length);
         DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
         this.socket.receive(packet);
         return packet;
+    }
+
+    /*
+     * starts the execution of the thread
+     */
+    public void run()
+    {
+        try
+        {
+            openconnection();
+            action(receive(new byte[1024]));
+            closeconnection();
+        }
+        catch (NotInitializedVariablesException ex)
+        {
+                Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /*
+     * starts the execution of the thread
+     */
+    public void start()
+    {
+        if (runner==null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }
+    }
+
+    /*
+     * stops the execution of the thread
+     */
+    public void stop()
+    {
+        runner.interrupt();
+        runner = null;
+    }
+
+    /*
+     * we use the received DatagramPacket
+     */
+    public void action(DatagramPacket packet)
+    {
+        //action
     }
 
 }
