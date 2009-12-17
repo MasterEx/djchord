@@ -44,6 +44,7 @@ import java.util.logging.Logger;
 public class MulticastReceiver extends Multicast implements Runnable{
 
     private Thread runner;
+    private boolean run = true; //terminates the loop
 
     /*
      * constructor
@@ -123,11 +124,14 @@ public class MulticastReceiver extends Multicast implements Runnable{
      * is invoked by start()
      */
     public void run()
-    {
+    {        
         try
         {
             openconnection();
-            action(receive(new byte[1024]));
+            while(run)
+            {
+                new PacketHandling(receive(new byte[1024]));
+            }            
             closeconnection();
         }
         catch (NotInitializedVariablesException ex)
@@ -158,7 +162,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
      */
     public void stop()
     {
-        try {
+        try
+        {
             closeconnection();
         }
         catch (IOException ex)
@@ -174,11 +179,11 @@ public class MulticastReceiver extends Multicast implements Runnable{
     }
 
     /*
-     * we use the received DatagramPacket
+     * Terminates the loop - thread
      */
-    public void action(DatagramPacket packet)
+    public void terminate()
     {
-        //action
+        run = false;
     }
 
 }
