@@ -120,7 +120,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
     }
 
     /*
-     * starts the execution of the thread
+     * is invoked by start()
      */
     public void run()
     {

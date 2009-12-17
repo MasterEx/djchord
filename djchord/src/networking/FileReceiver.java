@@ -126,7 +126,8 @@ public class FileReceiver implements Runnable{
      */
     public void stop()
     {
-        try {
+        try 
+        {
             socket.close();
         }
         catch (IOException ex)

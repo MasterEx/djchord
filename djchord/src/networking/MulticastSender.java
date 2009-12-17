@@ -29,6 +29,7 @@
 
 package networking;
 
+import exceptions.NotInitializedVariablesException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -122,9 +123,16 @@ public class MulticastSender extends Multicast implements Runnable{
      */
     public void run()
     {
-        try {
+        try
+        {
+            openconnection();
             send();
-            socket.close();
+            closeconnection();
+
+        }
+        catch (NotInitializedVariablesException ex)
+        {
+                Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (UnknownHostException ex)
         {
@@ -154,7 +162,22 @@ public class MulticastSender extends Multicast implements Runnable{
      */
     public void stop()
     {
-        socket.close();
+        try
+        {
+            closeconnection();
+        }
+        catch (UnknownHostException ex)
+        {
+            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NotInitializedVariablesException ex)
+        {
+            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
         runner.interrupt();
         runner = null;
     }
