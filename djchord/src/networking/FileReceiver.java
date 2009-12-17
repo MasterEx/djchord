@@ -96,12 +96,6 @@ public class FileReceiver implements Runnable{
     {
         this.port = port;
         this.destination = destination;
-        if (runner == null)
-        {
-            runner = new Thread(this);
-            runner.setDaemon(true);
-            runner.start();
-        }
     }
 
     /*
