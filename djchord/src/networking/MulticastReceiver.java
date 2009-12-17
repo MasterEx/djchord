@@ -158,6 +158,17 @@ public class MulticastReceiver extends Multicast implements Runnable{
      */
     public void stop()
     {
+        try {
+            closeconnection();
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NotInitializedVariablesException ex)
+        {
+            Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        }
         runner.interrupt();
         runner = null;
     }
