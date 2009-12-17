@@ -33,14 +33,18 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
-public class MulticastSender extends Multicast{
+public class MulticastSender extends Multicast implements Runnable{
 
     private int ttl = 1; // time to live
+    private byte[] buffer; //the message tha we will send
+    private Thread runner; //the thread that we will use
 
     /*
      *constructor
@@ -75,6 +79,15 @@ public class MulticastSender extends Multicast{
     }
 
     /*
+     *constructor
+     */
+    MulticastSender(int port,String group,byte buffer[])
+    {
+        super(port,group);
+        this.buffer = buffer;
+    }
+
+    /*
      * set time to live
      */
     public void setttl(int ttl)
@@ -91,6 +104,67 @@ public class MulticastSender extends Multicast{
                 InetAddress.getByName(group),port);
         this.socket.setTimeToLive(this.ttl);
         this.socket.send(packet);
+    }
+
+    /*
+     * sender
+     */
+    public void send() throws UnknownHostException, IOException
+    {
+        DatagramPacket packet = new DatagramPacket(this.buffer,this.buffer.length,
+                InetAddress.getByName(group),port);
+        this.socket.setTimeToLive(this.ttl);
+        this.socket.send(packet);
+    }
+
+    /*
+     * is invoked when start() is called
+     */
+    public void run()
+    {
+        try {
+            send();
+            socket.close();
+        }
+        catch (UnknownHostException ex)
+        {
+            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /*
+     * starts the execution of the thread
+     */
+    public void start()
+    {
+        if (runner == null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }
+    }
+
+    /*
+     * stops the execution of the thread
+     */
+    public void stop()
+    {
+        socket.close();
+        runner.interrupt();
+        runner = null;
+    }
+
+    /*
+     * set valuw to buffer
+     */
+    public void setbuffer(byte buffer[])
+    {
+        this.buffer = buffer;
     }
 
 }
