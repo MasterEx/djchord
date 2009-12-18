@@ -33,6 +33,10 @@ package chord;
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
-public class djchord {
+public class djchord implements Runnable {
+    public void run()
+    {
+        
+    }
 
 }

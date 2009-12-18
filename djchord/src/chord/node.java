@@ -30,6 +30,7 @@
 package chord;
 
 import basic.SHAhash;
+import java.util.Map;
 
 /**
  *
@@ -41,7 +42,8 @@ public class node {
      */
     private SHAhash key;
     private String[] files;//paths for files? path for folder? names of files only?
-    private SHAhash[] file_keys;
+    private SHAhash[] file_keys,fingers;
+    private Map<SHAhash,String> index;
 
     /**
      * empty constructor
@@ -79,5 +81,12 @@ public class node {
     public void setFile_keys(SHAhash[] file_keys)
     {
          this.file_keys = file_keys;
+    }
+    public void mapAdd(SHAhash nodeHash,String fileName)
+    {
+        if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
+        {
+            this.index.put(nodeHash, fileName);        
+        }
     }
 }
