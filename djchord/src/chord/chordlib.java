@@ -47,7 +47,7 @@ public class chordlib {
     public SHAhash find_succesor(String k)
     {
 
-        return new SHAhash();
+        return new SHAhash(new byte[40]);
     }
     //public
 

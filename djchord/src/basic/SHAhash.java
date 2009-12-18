@@ -41,7 +41,7 @@ public class SHAhash implements Comparable{
     /*
      * constructor
      */
-    SHAhash(byte[] hash)
+    public SHAhash(byte[] hash)
     {
         this.bytehash = hash;
         this.stringhash = convertToHex(hash);
