@@ -45,7 +45,7 @@ public class Multicast {
     /*
      *constructor
      */
-    Multicast()
+    public Multicast()
     {
         //empty
     }
@@ -53,7 +53,7 @@ public class Multicast {
     /*
      *constructor
      */
-    Multicast(int port)
+    public Multicast(int port)
     {
         setport(port);
     }
@@ -61,7 +61,7 @@ public class Multicast {
     /*
      *constructor
      */
-    Multicast(String group)
+    public Multicast(String group)
     {
         setgroup(group);
     }
@@ -69,7 +69,7 @@ public class Multicast {
     /*
      *constructor
      */
-    Multicast(int port,String group)
+    public Multicast(int port,String group)
     {
         setport(port);
         setgroup(group);

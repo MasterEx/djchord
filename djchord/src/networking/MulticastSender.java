@@ -50,7 +50,7 @@ public class MulticastSender extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastSender()
+    public MulticastSender()
     {
         super();
     }
@@ -58,7 +58,7 @@ public class MulticastSender extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastSender(int port)
+    public MulticastSender(int port)
     {
         super(port);
     }
@@ -66,7 +66,7 @@ public class MulticastSender extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastSender(String group)
+    public MulticastSender(String group)
     {
         super(group);
     }
@@ -74,7 +74,7 @@ public class MulticastSender extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastSender(int port,String group)
+    public MulticastSender(int port,String group)
     {
         super(port,group);
     }
@@ -82,7 +82,7 @@ public class MulticastSender extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastSender(int port,String group,byte buffer[])
+    public MulticastSender(int port,String group,byte buffer[])
     {
         super(port,group);
         this.buffer = buffer;

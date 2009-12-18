@@ -92,7 +92,7 @@ public class FileReceiver implements Runnable{
     /*
      * constructor
      */
-    FileReceiver(int port,String destination) throws IOException
+    public FileReceiver(int port,String destination) throws IOException
     {
         this.port = port;
         this.destination = destination;
@@ -101,7 +101,7 @@ public class FileReceiver implements Runnable{
     /*
      * constructor
      */
-    FileReceiver(int port,String destination,boolean echo)
+    public FileReceiver(int port,String destination,boolean echo)
     {
         this.port = port;
         this.destination = destination;

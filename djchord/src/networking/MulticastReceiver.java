@@ -49,7 +49,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
     /*
      * constructor
      */
-    MulticastReceiver()
+    public MulticastReceiver()
     {
         super();
     }
@@ -57,7 +57,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
     /*
      * constructor
      */
-    MulticastReceiver(int port)
+    public MulticastReceiver(int port)
     {
         super(port);
     }
@@ -65,7 +65,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastReceiver(String group)
+    public MulticastReceiver(String group)
     {
         super(group);
     }
@@ -73,7 +73,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
     /*
      *constructor
      */
-    MulticastReceiver(int port,String group)
+    public MulticastReceiver(int port,String group)
     {
         super(port,group);
     }

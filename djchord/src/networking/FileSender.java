@@ -90,7 +90,7 @@ public class FileSender implements Runnable{
     /*
      * constructor
      */
-    FileSender(String address,int port, String source)
+    public FileSender(String address,int port, String source)
     {
         this.address = address;
         this.port = port;
