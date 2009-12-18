@@ -49,7 +49,10 @@ public class Chordlib {
 
         return new SHAhash(new byte[40]);
     }
-    //public
+    public void map_insert(SHAhash hash, String name)
+    {
+        djnode.mapAdd(hash, name);
+    }
 
 
 
