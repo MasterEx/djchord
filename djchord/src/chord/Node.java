@@ -41,7 +41,7 @@ public class Node {
      * variables
      */
     private SHAhash key;
-    private String[] files;//paths for files? path for folder? names of files only?
+    private String folder;
     private SHAhash[] file_keys,fingers;
     private Map<SHAhash,String> index;
 
@@ -59,9 +59,9 @@ public class Node {
     {
         return this.key;
     }
-    public String[] getFiles()
+    public String getFolder()
     {
-        return this.files;
+        return this.folder;
     }
     public SHAhash[] getFile_keys()
     {
@@ -74,9 +74,9 @@ public class Node {
     {
          this.key = key;
     }
-    public void setFiles(String[] files)
+    public void setFolder(String folder)
     {
-         this.files = files;
+         this.folder = folder;
     }
     public void setFile_keys(SHAhash[] file_keys)
     {

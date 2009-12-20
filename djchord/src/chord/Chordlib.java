@@ -53,6 +53,10 @@ public class Chordlib {
     {
         djnode.mapAdd(hash, name);
     }
+    public void hashFiles()
+    {
+
+    }
 
 
 
