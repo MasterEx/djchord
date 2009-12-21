@@ -29,7 +29,9 @@
 
 package chord;
 
-import basic.SHAhash;
+import basic.*;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -40,6 +42,11 @@ public class Chordlib {
      * variables
      */
     private Node djnode;
+    String folder;
+    FileNames files;
+    String[] fileNames;
+    SHA1 dum;
+    SHAhash[] keys;
 
     /*
      * methods
@@ -53,9 +60,16 @@ public class Chordlib {
     {
         djnode.mapAdd(hash, name);
     }
-    public void hashFiles()
+    public SHAhash[] hashFiles() throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
-
+        this.folder = djnode.getFolder();
+        files = new FileNames(this.folder);
+        fileNames = files.getFileNames();
+        for(int i=0;i<fileNames.length;i++)
+        {
+            keys[i] = dum.SHA1(fileNames[i]/*,keys*/);
+        }
+        return keys;
     }
 
 
