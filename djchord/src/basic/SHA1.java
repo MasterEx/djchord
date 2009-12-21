@@ -17,12 +17,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class SHA1 {   
 
-    public SHAhash SHA1(String text,SHAhash output)
+    public SHAhash SHA1(String text/*,SHAhash output*/)
     throws NoSuchAlgorithmException, UnsupportedEncodingException  {
     MessageDigest md;
     md = MessageDigest.getInstance("SHA-1");
     md.update(text.getBytes("iso-8859-1"), 0, text.length());
-    output = new SHAhash(md.digest());
-    return output;
+    /*output = new SHAhash(md.digest());
+    return output;*/
+    return new SHAhash(md.digest());
     }
 }
