@@ -42,11 +42,11 @@ public class Chordlib {
      * variables
      */
     private Node djnode;
-    String folder;
-    FileNames files;
-    String[] fileNames;
-    SHA1 dum;
-    SHAhash[] keys;
+    private String folder;
+    private FileNames files;
+    private String[] fileNames;
+    private SHA1 dum;
+    private SHAhash[] keys;
 
     /*
      * methods
