@@ -30,7 +30,6 @@
 package basic;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  *
@@ -45,7 +44,8 @@ public class FileNames {
     private int count,pos;
     private File[] files;
     private File folder;
-    private String[] fiiles,a,filess,b,ret;
+    private String[] filepaths,temp1,tempstringarray,temp2,retval;
+    String separator = "";
 
     /**
      * constructor
@@ -55,7 +55,16 @@ public class FileNames {
         pos = 0;
         this.folderPath = "" + folderPath;
         this.folder = new File(folderPath);
+	if(File.separator.equals("\\"))
+        {
+            separator = "\\\\";
+        }
+	if(File.separator.equals("/"))
+        {
+            separator = "/";
+        }
     }
+
     /**
      * methods
      */
@@ -63,27 +72,28 @@ public class FileNames {
     {
         return this.files();
     }
+
     private String[] files()
     {
-        a=folderPath.split(File.separator);
+        temp1=folderPath.split(separator);
         try
         {
             files = folder.listFiles();
-            fiiles = new String[files.length];
+            filepaths = new String[files.length];
         
             for(int i=0;i<files.length;i++)
             {
                 if(!files[i].isHidden())
                 {
-                    fiiles[i] = files[i].toString();
-                    filess=fiiles[i].split(File.separator);
+                    filepaths[i] = files[i].toString();
+                    tempstringarray=filepaths[i].split(separator);
 
-                    for(int j=0;j<filess.length;j++)
+                    for(int j=0;j<tempstringarray.length;j++)
                     {
                         count=0;
-                        for(int y=0;y<a.length;y++)
+                        for(int y=0;y<temp1.length;y++)
                         {
-                            if(filess[j].equals(a[y]))
+                            if(tempstringarray[j].equals(temp1[y]))
                             {
                                 count++;
                                 break;
@@ -91,15 +101,15 @@ public class FileNames {
                         }
                         if(count==0)
                         {
-                            if(filess[j].contains("."))
+                            if(tempstringarray[j].contains("."))
                             {
-                                b=filess[j].split("\\.");
-                                ret[pos] = b[0];
+                                temp2=tempstringarray[j].split("\\.");
+                                retval[pos] = temp2[0];
                                 pos++;
                             }
                             else 
                             {
-                                ret[pos] = filess[j];
+                                retval[pos] = tempstringarray[j];
                                 pos++;
                             }
                         }
@@ -111,7 +121,7 @@ public class FileNames {
         {
             System.out.println("The folder is empty or doesn't exist");
         }
-        return ret;
+        return retval;
     }
 
 }
