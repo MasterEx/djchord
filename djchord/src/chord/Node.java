@@ -43,9 +43,18 @@ public class Node {
      */
     private SHAhash key;
     private String folder;
-    private SHAhash[] file_keys,fingers;
+    private SHAhash[] file_keys;
+    private FingerArray[] fingers;
     private Map<SHAhash,String> index;
     private Node next;
+    
+    /*
+     * an array of fingers
+     */
+    private class FingerArray {
+        public String address;
+        public SHAhash key;
+    }
 
     /**
      * empty constructor
