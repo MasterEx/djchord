@@ -38,6 +38,7 @@ import java.security.NoSuchAlgorithmException;
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class Chordlib {
+
     /*
      * variables
      */
@@ -45,21 +46,31 @@ public class Chordlib {
     private String folder;
     private FileNames files;
     private String[] fileNames;
-    private SHA1 dum;
     private SHAhash[] keys;
 
     /*
      * methods
      */
-    public SHAhash find_succesor(String k)
+    public SHAhash find_succesor(SHAhash k)
     {
-
-        return new SHAhash(new byte[40]);
+        Node search = djnode;
+        while(k.compareTo(search.getKey())==1)
+        {
+            search = search.getNext();
+        }
+        return search.getKey();
     }
+    
+    public SHAhash find_succesor(String k) throws NoSuchAlgorithmException, UnsupportedEncodingException
+    {
+        return find_succesor(SHA1.getHash(k));
+    }
+
     public void map_insert(SHAhash hash, String name)
     {
         djnode.mapAdd(hash, name);
     }
+
     public SHAhash[] hashFiles() throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
         this.folder = djnode.getFolder();
@@ -67,11 +78,9 @@ public class Chordlib {
         fileNames = files.getFileNames();
         for(int i=0;i<fileNames.length;i++)
         {
-            keys[i] = dum.SHA1(fileNames[i]/*,keys*/);
+            keys[i] = SHA1.getHash(fileNames[i]/*,keys*/);
         }
         return keys;
     }
-
-
 
 }

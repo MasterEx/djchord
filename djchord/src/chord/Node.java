@@ -37,6 +37,7 @@ import java.util.Map;
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class Node {
+
     /**
      * variables
      */
@@ -44,6 +45,7 @@ public class Node {
     private String folder;
     private SHAhash[] file_keys,fingers;
     private Map<SHAhash,String> index;
+    private Node next;
 
     /**
      * empty constructor
@@ -52,6 +54,7 @@ public class Node {
     {
 
     }
+
     /**
      * get methods
      */
@@ -59,14 +62,22 @@ public class Node {
     {
         return this.key;
     }
+
     public String getFolder()
     {
         return this.folder;
     }
+
     public SHAhash[] getFile_keys()
     {
         return this.file_keys;
     }
+    
+    public Node getNext()
+    {
+        return next;
+    }
+
     /**
      * set methods
      */
@@ -74,14 +85,22 @@ public class Node {
     {
          this.key = key;
     }
+
     public void setFolder(String folder)
     {
          this.folder = folder;
     }
+
     public void setFile_keys(SHAhash[] file_keys)
     {
          this.file_keys = file_keys;
     }
+    
+    public void setNext(Node next)
+    {
+        this.next = next;
+    }
+
     public void mapAdd(SHAhash nodeHash,String fileName)
     {
         if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
@@ -89,4 +108,5 @@ public class Node {
             this.index.put(nodeHash, fileName);        
         }
     }
+
 }

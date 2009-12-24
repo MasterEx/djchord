@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class SHA1 {   
 
-    public SHAhash SHA1(String text/*,SHAhash output*/)
+    public static SHAhash getHash(String text/*,SHAhash output*/)
     throws NoSuchAlgorithmException, UnsupportedEncodingException  {
     MessageDigest md;
     md = MessageDigest.getInstance("SHA-1");
