@@ -47,17 +47,9 @@ public class Node {
     private SHAhash key;
     private String folder;
     private SHAhash[] file_keys;
-    private FingerArray[] fingers;
+    private Node[] fingers,successors;
     private Map<SHAhash,String> index;
-    private Node successor;
-    
-    /*
-     * an array of fingers
-     */
-    private class FingerArray {
-        public String address;
-        public SHAhash key;
-    }
+    private Node predecessor;
 
     /**
      * empty constructor
@@ -67,25 +59,44 @@ public class Node {
 
     }
 
+    //public
+
+    public Node find_successor(SHAhash k)
+    {
+        Node search = this;
+        if (k.compareTo(search.getKey())==-1 && k.compareTo(search.getSuccessor().getKey())==1)
+        {
+            return search.getSuccessor();
+        }
+        else
+        {
+            return search.getSuccessor().find_successor(k);
+        }
+    }
+    
+    public Node closest_preceding_node(SHAhash k)
+    {
+        for(int i=160;i>0;i--)
+        {
+            if (k.compareTo(fingers[i].getKey())==1 && k.compareTo(fingers[i-1].getKey())==-1)
+            {
+                return fingers[i];
+            }
+        }
+        return this;
+    }
+
+    public void mapAdd(SHAhash nodeHash,String fileName)
+    {
+        if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
+        {
+            this.index.put(nodeHash, fileName);
+        }
+    }
+
     /**
      * get methods
      */
-
-        public SHAhash find_succesor(SHAhash k)
-    {
-        Node search = this;
-        while(k.compareTo(search.getKey())==1)
-        {
-            search = search.getNext();
-        }
-        return search.getKey();
-    }
-
-    public SHAhash find_succesor(String k) throws NoSuchAlgorithmException, UnsupportedEncodingException
-    {
-        return find_succesor(SHA1.getHash(k));
-    }
-
     public SHAhash getKey()
     {
         return this.key;
@@ -100,10 +111,15 @@ public class Node {
     {
         return this.file_keys;
     }
-    
-    public Node getNext()
+
+    public Node getSuccessor()
     {
-        return successor;
+        return successors[0];
+    }
+
+    public Node getSuccessor(int i)
+    {
+        return successors[i];
     }
 
     /**
@@ -123,18 +139,14 @@ public class Node {
     {
          this.file_keys = file_keys;
     }
-    
-    public void setNext(Node next)
+
+    public void setSuccessor(Node next)
     {
-        this.successor = next;
+        this.successors[0] = next;
     }
 
-    public void mapAdd(SHAhash nodeHash,String fileName)
+    public void setSuccessor(int i,Node next)
     {
-        if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
-        {
-            this.index.put(nodeHash, fileName);        
-        }
+        this.successors[i] = next;
     }
-
 }
