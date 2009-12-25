@@ -42,7 +42,6 @@ public class Chordlib {
     /*
      * variables
      */
-    private Node djnode;
     private String folder;
     private FileNames files;
     private String[] fileNames;
@@ -51,27 +50,14 @@ public class Chordlib {
     /*
      * methods
      */
-    public SHAhash find_succesor(SHAhash k)
-    {
-        Node search = djnode;
-        while(k.compareTo(search.getKey())==1)
-        {
-            search = search.getNext();
-        }
-        return search.getKey();
-    }
-    
-    public SHAhash find_succesor(String k) throws NoSuchAlgorithmException, UnsupportedEncodingException
-    {
-        return find_succesor(SHA1.getHash(k));
-    }
 
-    public void map_insert(SHAhash hash, String name)
+
+    public void map_insert(Node djnode, SHAhash hash, String name)
     {
         djnode.mapAdd(hash, name);
     }
 
-    public SHAhash[] hashFiles() throws NoSuchAlgorithmException, UnsupportedEncodingException
+    public SHAhash[] hashFiles(Node djnode) throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
         this.folder = djnode.getFolder();
         files = new FileNames(this.folder);
