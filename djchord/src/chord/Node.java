@@ -29,7 +29,10 @@
 
 package chord;
 
+import basic.SHA1;
 import basic.SHAhash;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
@@ -46,7 +49,7 @@ public class Node {
     private SHAhash[] file_keys;
     private FingerArray[] fingers;
     private Map<SHAhash,String> index;
-    private Node next;
+    private Node successor;
     
     /*
      * an array of fingers
@@ -67,6 +70,22 @@ public class Node {
     /**
      * get methods
      */
+
+        public SHAhash find_succesor(SHAhash k)
+    {
+        Node search = this;
+        while(k.compareTo(search.getKey())==1)
+        {
+            search = search.getNext();
+        }
+        return search.getKey();
+    }
+
+    public SHAhash find_succesor(String k) throws NoSuchAlgorithmException, UnsupportedEncodingException
+    {
+        return find_succesor(SHA1.getHash(k));
+    }
+
     public SHAhash getKey()
     {
         return this.key;
@@ -84,7 +103,7 @@ public class Node {
     
     public Node getNext()
     {
-        return next;
+        return successor;
     }
 
     /**
@@ -107,7 +126,7 @@ public class Node {
     
     public void setNext(Node next)
     {
-        this.next = next;
+        this.successor = next;
     }
 
     public void mapAdd(SHAhash nodeHash,String fileName)
