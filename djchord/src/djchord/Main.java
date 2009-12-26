@@ -29,6 +29,11 @@
 
 package djchord;
 
+import basic.SHA1;
+import basic.SHAhash;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
@@ -38,8 +43,17 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         // TODO code application logic here
+
+        //test code goes here!
+        SHAhash a,b;
+        a = SHA1.getHash("hello");
+        b = SHA1.getHash("test");
+
+        System.out.println("The hashes are:\n"+a+"\n"+b);
+
+        System.out.println(a.compareTo(a));
     }
 
 }

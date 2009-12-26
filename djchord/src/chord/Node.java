@@ -73,7 +73,7 @@ public class Node {
     
     public Node closest_preceding_node(SHAhash k)
     {
-        for(int i=160;i>0;i--)
+        for(int i=159;i>=0;i--)
         {
             if (k.compareTo(fingers[i].getKey())==1 && k.compareTo(fingers[i-1].getKey())==-1)
             {
