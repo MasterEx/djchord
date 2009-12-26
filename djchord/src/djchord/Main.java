@@ -53,7 +53,7 @@ public class Main {
 
         System.out.println("The hashes are:\n"+a+"\n"+b);
 
-        System.out.println(a.compareTo(a));
+        System.out.println(a.compareTo(b));
     }
 
 }
