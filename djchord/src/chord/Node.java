@@ -29,10 +29,7 @@
 
 package chord;
 
-import basic.SHA1;
 import basic.SHAhash;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
