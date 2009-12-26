@@ -33,7 +33,7 @@ package basic;
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
-public class SHAhash implements Comparable{
+public class SHAhash implements Comparable<SHAhash>{
 
     private byte[] bytehash = new byte[20];
     private String stringhash;
@@ -50,9 +50,9 @@ public class SHAhash implements Comparable{
     /*
      * compareTo implementation
      */
-    public int compareTo(Object arg0)
+    public int compareTo(SHAhash arg0)
     {
-        SHAhash hash = (SHAhash) arg0;
+        SHAhash hash = arg0;
         for(int i=0;i<20;i++)
         {
             if (bytehash[i]>hash.getByte(i))
