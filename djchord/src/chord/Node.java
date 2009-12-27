@@ -75,7 +75,7 @@ public class Node {
     {
         for(int i=159;i>=0;i--)
         {
-            if (k.compareTo(fingers[i].getKey())==1 && k.compareTo(fingers[i-1].getKey())==-1)
+            if (k.compareTo(fingers[i].getKey())==1 && k.compareTo(fingers[i].getPredecessor().getKey())==-1)
             {
                 return fingers[i];
             }
@@ -119,6 +119,11 @@ public class Node {
         return successors[i];
     }
 
+    public Node getPredecessor()
+    {
+        return predecessor;
+    }
+
     /**
      * set methods
      */
@@ -145,5 +150,10 @@ public class Node {
     public void setSuccessor(int i,Node next)
     {
         this.successors[i] = next;
+    }
+
+    public void setPredecessor(Node previous)
+    {
+        this.predecessor = previous;
     }
 }
