@@ -48,12 +48,13 @@ public class Main {
 
         //test code goes here!
         SHAhash a,b;
-        a = SHA1.getHash("hello");
-        b = SHA1.getHash("test");
+        a = SHA1.getHash("hi");
+        b = SHA1.getHash("toast");
 
         System.out.println("The hashes are:\n"+a+"\n"+b);
-
-        System.out.println(a.compareTo(b));
+        System.out.println("c".compareTo("2"));
+        //when the result of compareTo
+        System.out.println(a.getStringHash().compareTo(b.getStringHash()));//the correct order is numbers < capital letters < non capital letters
     }
 
 }
