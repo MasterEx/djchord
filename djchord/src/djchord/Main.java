@@ -44,17 +44,16 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        // TODO code application logic here
-
         //test code goes here!
         SHAhash a,b;
         a = SHA1.getHash("hi");
         b = SHA1.getHash("toast");
 
         System.out.println("The hashes are:\n"+a+"\n"+b);
-        System.out.println("c".compareTo("2"));
+        System.out.println("c".getBytes()[0]);
+        System.out.println("2".getBytes()[0]);
         //when the result of compareTo
-        System.out.println(a.getStringHash().compareTo(b.getStringHash()));//the correct order is numbers < capital letters < non capital letters
+        System.out.println(a.compareTo(b));//the correct order is numbers < capital letters < non capital letters
     }
 
 }
