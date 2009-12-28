@@ -57,14 +57,10 @@ public class SHAhash implements Comparable<SHAhash>{
         {
             if (bytehash[i]>hash.getByte(i))
             {
-                System.out.println(""+bytehash[i]);
-                System.out.println(""+hash.getByte(i));
                 return 1;
             }
             else if (bytehash[i]<hash.getByte(i))
             {
-                System.out.println(""+bytehash[i]);
-                System.out.println(""+hash.getByte(i));
                 return -1;
             }
         }
