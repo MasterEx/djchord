@@ -61,26 +61,30 @@ public class Node {
     public Node find_successor(SHAhash k)
     {
         Node search = this;
-        if (k.compareTo(search.getKey())==-1 && k.compareTo(search.getSuccessor().getKey())==1)
+        if (k.compareTo(search.getKey())==1 && k.compareTo(search.getSuccessor().getKey())<=0)
         {
             return search.getSuccessor();
         }
         else
         {
-            return search.getSuccessor().find_successor(k);
+            return search.closest_preceding_node(k).find_successor(k);
         }
     }
     
     public Node closest_preceding_node(SHAhash k)
     {
-        for(int i=159;i>=0;i--)
+        if (k.compareTo(fingers[159].getKey())==1)
         {
-            if (k.compareTo(fingers[i].getKey())==1 && k.compareTo(fingers[i].getPredecessor().getKey())==-1)
+            return fingers[159].closest_preceding_node(k);
+        }
+        for(int i=158;i>=0;i--)
+        {
+            if (k.compareTo(fingers[i].getKey())==1)
             {
                 return fingers[i];
             }
         }
-        return this;
+        return new Node();//thelei diorthwsi alla den kserw :P
     }
 
     public void mapAdd(SHAhash nodeHash,String fileName)
