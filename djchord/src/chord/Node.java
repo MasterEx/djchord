@@ -41,6 +41,7 @@ public class Node implements RemoteNode {
     /**
      * variables
      */
+    private int port;
     private SHAhash key;
     private String folder;
     private SHAhash[] file_keys;
@@ -139,6 +140,11 @@ public class Node implements RemoteNode {
         return last;
     }
 
+    public int getPort()
+    {
+        return port;
+    }
+
     /**
      * set methods
      */
@@ -181,4 +187,10 @@ public class Node implements RemoteNode {
     {
         this.last = true;
     }
+
+    public void setPort(int port)
+    {
+        this.port = port;
+    }
+
 }
