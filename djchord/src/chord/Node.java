@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
-public class Node {
+public class Node implements RemoteNode {
 
     /**
      * variables
@@ -47,6 +47,7 @@ public class Node {
     private Node[] fingers,successors;
     private Map<SHAhash,String> index;
     private Node predecessor;
+    private boolean first = false, last = false;
 
     /**
      * empty constructor
@@ -73,18 +74,18 @@ public class Node {
     
     public Node closest_preceding_node(SHAhash k)
     {
-        if (k.compareTo(fingers[159].getKey())==1)
+        if (k.compareTo(fingers[159].getKey())==1 || k.compareTo(this.getKey())==-1)
         {
-            return fingers[159].closest_preceding_node(k);
+        return fingers[159].closest_preceding_node(k);
         }
         for(int i=158;i>=0;i--)
         {
-            if (k.compareTo(fingers[i].getKey())==1)
+            if (k.compareTo(fingers[i].getKey())==1 && (k.compareTo(fingers[i].getSuccessor().getKey())==-1 || fingers[i].getSuccessor().isFirst()))
             {
-                return fingers[i];
+                 return fingers[i];
             }
         }
-        return new Node();//thelei diorthwsi alla den kserw :P
+        return null; // no reachable statement
     }
 
     public void mapAdd(SHAhash nodeHash,String fileName)
@@ -128,6 +129,16 @@ public class Node {
         return predecessor;
     }
 
+    public boolean isFirst()
+    {
+        return first;
+    }
+
+    public boolean isLast()
+    {
+        return last;
+    }
+
     /**
      * set methods
      */
@@ -159,5 +170,15 @@ public class Node {
     public void setPredecessor(Node previous)
     {
         this.predecessor = previous;
+    }
+
+    public void setFirst()
+    {
+        this.first = true;
+    }
+
+    public void setLast()
+    {
+        this.last = true;
     }
 }
