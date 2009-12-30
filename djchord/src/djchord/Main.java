@@ -46,13 +46,18 @@ public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //test code goes here!
         SHAhash a,b;
-        a = SHA1.getHash("hi");
-        b = SHA1.getHash("toast");
+
+        a = SHA1.getHash("hello");
+        
+        b = SHA1.getHash("test");
+
+
 
         System.out.println("The hashes are:\n"+a+"\n"+b);
-        System.out.println("c".getBytes()[0]);
-        System.out.println("2".getBytes()[0]);
+
+
         //when the result of compareTo
+
         System.out.println(a.compareTo(b));//the correct order is numbers < capital letters < non capital letters
     }
 
