@@ -30,7 +30,9 @@
 package chord;
 
 import basic.SHAhash;
+import java.lang.management.ManagementFactory;
 import java.util.Map;
+import networking.RMIRegistry;
 
 /**
  *
@@ -50,11 +52,13 @@ public class Node implements RemoteNode {
     private boolean first = false, last = false;
 
     /**
-     * empty constructor
+     * constructor
      */
     public Node()
     {
-
+        //the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
+        //and may not always work
+        RMIRegistry.addNode(this, ManagementFactory.getRuntimeMXBean().getName());
     }
 
     //public

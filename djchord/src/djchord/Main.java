@@ -29,9 +29,8 @@
 
 package djchord;
 
-import basic.SHA1;
-import basic.SHAhash;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -45,20 +44,8 @@ public class Main {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //test code goes here!
-        SHAhash a,b;
-
-        a = SHA1.getHash("hello");
         
-        b = SHA1.getHash("test");
-
-
-
-        System.out.println("The hashes are:\n"+a+"\n"+b);
-
-
-        //when the result of compareTo
-
-        System.out.println(a.compareTo(b));//the correct order is numbers < capital letters < non capital letters
+        System.out.println(ManagementFactory.getRuntimeMXBean().getName());
     }
 
 }
