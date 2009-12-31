@@ -45,6 +45,7 @@ public class PacketHandling implements Runnable{
      */
     public void run() {
         throw new UnsupportedOperationException("Not supported yet.");
+        //here we will learn next nodes ip and name
     }
 
     /*
