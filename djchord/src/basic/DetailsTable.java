@@ -41,85 +41,85 @@ public class DetailsTable {
     static private Vector<String> name = new Vector<String>();
     static private Vector<Integer> port = new Vector<Integer>();
 
-    private void setAddress(String address)
+    static private void setAddress(String address)
     {
         DetailsTable.address.addElement(address);
     }
 
-    private void setName(String name)
+    static private void setName(String name)
     {
         DetailsTable.name.addElement(name);
     }
 
-    private void setPort(int port)
+    static private void setPort(int port)
     {
         DetailsTable.port.addElement(port);
     }
 
-    public void setNodeDetails(String address,String name, int port)
+    static public void setNodeDetails(String address,String name, int port)
     {
         DetailsTable.address.addElement(address);
         DetailsTable.name.addElement(name);
         DetailsTable.port.addElement(port);
     }
 
-    public String getAddress(int i)
+    static public String getAddress(int i)
     {
         return DetailsTable.address.get(i);
     }
 
-    public String getName(int i)
+    static public String getName(int i)
     {
         return DetailsTable.name.get(i);
     }
 
-    public int getPort(int i)
+    static public int getPort(int i)
     {
         return DetailsTable.port.get(i);
     }
 
-    public int getLength()
+    static public int getLength()
     {
         return DetailsTable.port.size();
     }
 
-    public int searchByAddress(String address)
+    static public int searchByAddress(String address)
     {
-        for(int i=0;i<this.getLength();i++)
+        for(int i=0;i<DetailsTable.getLength();i++)
         {
             if(address.equals(DetailsTable.address.get(i)))
             {
                 return i;
             }
         }
-        return this.getLength()-1;
+        return DetailsTable.getLength()-1;
     }
 
-    public int searchByName(String name)
+    static public int searchByName(String name)
     {
-        for(int i=0;i<this.getLength();i++)
+        for(int i=0;i<DetailsTable.getLength();i++)
         {
             if(name.equals(DetailsTable.name.get(i)))
             {
                 return i;
             }
         }
-        return this.getLength()-1;
+        return DetailsTable.getLength()-1;
     }
 
-    public int searchByPort(int port)
+    static public int searchByPort(int port)
     {
-        for(int i=0;i<this.getLength();i++)
+        for(int i=0;i<DetailsTable.getLength();i++)
         {
             if(port==DetailsTable.port.get(i))
             {
                 return i;
             }
         }
-        return this.getLength()-1;
+        return DetailsTable.getLength()-1;
     }
 
-    public void trim()
+    static public void trim()
     {
         DetailsTable.address.trimToSize();
         DetailsTable.name.trimToSize();
