@@ -47,12 +47,27 @@ public class RMIRegistry {
     private static boolean init = false;
     private static Registry registry;
 
+    /*
+     * This method works like java RMI tutorial example
+     * http://java.sun.com/docs/books/tutorial/rmi/overview.html
+     * and as the example we have to start RMI registry before the
+     * execution of our applications.
+     * It is start rmiregistry fow windows (or javaw if start not available)
+     * and rmiregistry & for linux.
+     * We also use a security manager, so we need to specify a security policy
+     * file so that the code is granted the security permissions it needs to run.
+     */
     static public boolean init()
     {
         if(init)
         {
             return init;
         }
+        if (System.getSecurityManager() == null)
+        {
+            System.setSecurityManager(new SecurityManager());
+        }
+
         try
         {
             RMIRegistry.registry = LocateRegistry.getRegistry();
