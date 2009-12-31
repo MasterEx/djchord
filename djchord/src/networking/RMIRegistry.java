@@ -46,6 +46,7 @@ public class RMIRegistry {
 
     private static boolean init = false;
     private static Registry registry;
+    private static int port = 1099; //this is the default port of java RMI
 
     /*
      * This method works like java RMI tutorial example
@@ -70,7 +71,7 @@ public class RMIRegistry {
 
         try
         {
-            RMIRegistry.registry = LocateRegistry.getRegistry();
+            RMIRegistry.registry = LocateRegistry.getRegistry(port);
         }
         catch (RemoteException ex)
         {
@@ -92,6 +93,16 @@ public class RMIRegistry {
             Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    static public int getPort()
+    {
+        return RMIRegistry.port;
+    }
+
+    static public void setPort(int port)
+    {
+        RMIRegistry.port = port;
     }
 
 }
