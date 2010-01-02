@@ -29,6 +29,7 @@
 
 package networking;
 
+import chord.Node;
 import exceptions.NotInitializedVariablesException;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -45,37 +46,41 @@ public class MulticastReceiver extends Multicast implements Runnable{
 
     private Thread runner;
     private boolean run = true; //terminates the loop
+    private Node node;
 
     /*
      * constructor
      */
-    public MulticastReceiver()
+    public MulticastReceiver(Node node)
     {
-        super();
+        this.node = node;
     }
 
     /*
      * constructor
      */
-    public MulticastReceiver(int port)
+    public MulticastReceiver(int port,Node node)
     {
         super(port);
+        this.node = node;
     }
 
     /*
      *constructor
      */
-    public MulticastReceiver(String group)
+    public MulticastReceiver(String group,Node node)
     {
         super(group);
+        this.node = node;
     }
 
     /*
      *constructor
      */
-    public MulticastReceiver(int port,String group)
+    public MulticastReceiver(int port,String group,Node node)
     {
         super(port,group);
+        this.node = node;
     }
 
     /*
@@ -130,7 +135,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
             openconnection();
             while(run)
             {
-                new PacketHandling(receive(new byte[1024]));
+                new PacketHandling(receive(new byte[1024]),this.node);
             }            
             closeconnection();
         }

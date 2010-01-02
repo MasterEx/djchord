@@ -31,6 +31,9 @@ package djchord;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -42,10 +45,17 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, UnknownHostException {
         //test code goes here!
-        
-        System.out.println(ManagementFactory.getRuntimeMXBean().getName());
+     
+        byte[] buffer = new byte[10];
+        buffer = "192.168.1.15 10120".getBytes();
+        DatagramPacket packet = new DatagramPacket(buffer,buffer.length,
+                InetAddress.getByName("123.1.2.3"),1000);
+        System.out.println(new String(packet.getData()));
+        String[] s = new String(packet.getData()).split(" ");
+        System.out.println("adrr:"+s[0]+" post:"+s[1]);
+
     }
 
 }

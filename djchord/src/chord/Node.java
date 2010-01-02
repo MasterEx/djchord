@@ -44,7 +44,7 @@ public class Node implements RemoteNode {
      * variables
      */
     private SHAhash key;
-    private String folder;
+    private String folder,pid;
     private SHAhash[] file_keys;
     private Node[] fingers,successors;
     private Map<SHAhash,String> index;
@@ -58,7 +58,8 @@ public class Node implements RemoteNode {
     {
         //the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
         //and may not always work
-        RMIRegistry.addNode(this, ManagementFactory.getRuntimeMXBean().getName());
+        pid = this.setPid();
+        RMIRegistry.addNode(this,pid);
     }
 
     //public
@@ -133,6 +134,11 @@ public class Node implements RemoteNode {
         return predecessor;
     }
 
+    public String getPid()
+    {
+        return pid;
+    }
+
     public boolean isFirst()
     {
         return first;
@@ -184,6 +190,11 @@ public class Node implements RemoteNode {
     public void setLast()
     {
         this.last = true;
+    }
+    
+    private String setPid() 
+    {
+        return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
     }
 
 }

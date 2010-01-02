@@ -29,7 +29,14 @@
 
 package networking;
 
+import chord.Node;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,20 +46,52 @@ public class PacketHandling implements Runnable{
 
     Thread runner;
     DatagramPacket packet;
+    String[] temp;
+    Node node;
 
     /*
      * is invoked by start()
      */
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet.");
         //here we will learn next nodes ip and name
+        temp = new String(this.packet.getData()).split(" ");
+        Socket socket = null;
+        PrintWriter outstream = null;
+        try
+        {
+            socket = new Socket(temp[0], Integer.valueOf(temp[1]));
+            outstream = new PrintWriter(socket.getOutputStream(),true);
+            outstream.write(node.getPid());
+        }
+        catch (UnknownHostException ex)
+        {
+            Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            outstream.close();
+            try
+            {
+                socket.close();
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            runner.interrupt();
+        }
     }
 
     /*
      * constructor
      */
-    PacketHandling(DatagramPacket packet)
+    PacketHandling(DatagramPacket packet,Node node)
     {
+        this.node = node;
         this.packet = packet;
         if(runner == null)
         {
