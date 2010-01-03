@@ -121,8 +121,13 @@ public class RMIRegistry {
         try
         {
             registry = LocateRegistry.createRegistry(port);
+            Thread.currentThread().wait();
         }
         catch (RemoteException ex)
+        {
+            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (InterruptedException ex)
         {
             Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
         }
