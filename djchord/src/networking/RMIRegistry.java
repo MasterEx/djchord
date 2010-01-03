@@ -58,13 +58,14 @@ public class RMIRegistry {
      * We also use a security manager, so we need to specify a security policy
      * file so that the code is granted the security permissions it needs to run.
      */
-    static public boolean init()
+    static public boolean init(boolean security)
     {
         if(init)
         {
             return init;
         }
-        if (System.getSecurityManager() == null)
+        //SecurityManager is optional
+        if (System.getSecurityManager() == null && security)
         {
             System.setSecurityManager(new SecurityManager());
         }
@@ -78,6 +79,11 @@ public class RMIRegistry {
             Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
         }
         return init=true;
+    }
+
+    static public boolean init()
+    {
+        return init(false);
     }
 
     static public void addNode(Node node,String name)
