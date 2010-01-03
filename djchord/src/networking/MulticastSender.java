@@ -127,12 +127,13 @@ public class MulticastSender extends Multicast implements Runnable{
         {
             openconnection();
             send();
+            new IncomingNodeMulticastAnswer().start();
             closeconnection();
 
         }
         catch (NotInitializedVariablesException ex)
         {
-                Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (UnknownHostException ex)
         {
