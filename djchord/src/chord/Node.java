@@ -77,6 +77,18 @@ public class Node implements RemoteNode {
         }
     }
     
+    public Node simple_find_successor(SHAhash k)
+    {
+        for(Node tempnode=this.getSuccessor();tempnode==this;tempnode=tempnode.getSuccessor())
+        {
+            if((k.compareTo(tempnode.getKey())<0 || tempnode.isFirst())&& k.compareTo(tempnode.getPredecessor().getKey())>=0)
+            {
+                return tempnode;
+            }
+        }
+        return this;
+    }
+    
     public Node closest_preceding_node(SHAhash k)
     {
         if (k.compareTo(fingers[159].getKey())==1 || k.compareTo(this.getKey())==-1)
