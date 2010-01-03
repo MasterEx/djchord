@@ -111,4 +111,26 @@ public class RMIRegistry {
         RMIRegistry.port = port;
     }
 
+    /*
+     * This method creates an RMIRegistry. It's like
+     * start rmiregistry in windows or
+     * rmiregistry & in linux
+     */
+    static public void createRegistry(int port)
+    {
+        try
+        {
+            registry = LocateRegistry.createRegistry(port);
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    static public void createRegistry()
+    {
+        createRegistry(1099);
+    }
+
 }
