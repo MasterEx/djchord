@@ -29,8 +29,12 @@
 
 package chord;
 
+import basic.FileNames;
+import basic.SHA1;
 import basic.SHAhash;
+import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import networking.RMIRegistry;
 
@@ -54,12 +58,13 @@ public class Node implements RemoteNode {
     /**
      * constructor
      */
-    public Node()
+    public Node() throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
         //the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
         //and may not always work
         pid = this.setPid();
         RMIRegistry.addNode(this,pid);
+        file_keys = setFile_keys();
     }
 
     //public
@@ -159,7 +164,7 @@ public class Node implements RemoteNode {
     public boolean isLast()
     {
         return last;
-    }    
+    }
 
     /**
      * set methods
@@ -174,9 +179,15 @@ public class Node implements RemoteNode {
          this.folder = folder;
     }
 
-    public void setFile_keys(SHAhash[] file_keys)
+    public SHAhash[] setFile_keys() throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
-         this.file_keys = file_keys;
+        FileNames files = new FileNames(this.folder);
+        String[] filenames = files.getFileNames();
+        for(int i=0;i<filenames.length;i++)
+        {
+            file_keys[i] = SHA1.getHash(filenames[i]);
+        }
+        return file_keys;
     }
 
     public void setSuccessor(Node next)
