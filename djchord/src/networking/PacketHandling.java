@@ -29,12 +29,16 @@
 
 package networking;
 
+import basic.SHA1;
+import basic.SHAhash;
 import chord.Node;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,22 +50,36 @@ public class PacketHandling implements Runnable{
 
     Thread runner;
     DatagramPacket packet;
-    String[] temp;
-    Node node;
+    String pid;
+    Node node,successor;
+    SHAhash sha1;
 
     /*
      * is invoked by start()
      */
     public void run() {
         //here we will learn next nodes ip and name
-        temp = new String(this.packet.getData()).split(" ");
+        pid = new String(this.packet.getData());
+        try 
+        {
+            sha1 = SHA1.getHash(pid);
+        } 
+        catch (NoSuchAlgorithmException ex) 
+        {
+            Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (UnsupportedEncodingException ex) 
+        {
+            Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        successor = this.node.simple_find_successor(sha1);
         Socket socket = null;
-        PrintWriter outstream = null;
+        OutputStream outstream = null;
         try
         {
-            socket = new Socket(temp[0], Integer.valueOf(temp[1]));
-            outstream = new PrintWriter(socket.getOutputStream(),true);
-            outstream.write(node.getPid());
+            socket = new Socket(packet.getAddress(),1100);
+            outstream = socket.getOutputStream();
+            outstream.write(successor.getKey().getByteHash());
         }
         catch (UnknownHostException ex)
         {
@@ -73,9 +91,9 @@ public class PacketHandling implements Runnable{
         }
         finally
         {
-            outstream.close();
             try
             {
+                outstream.close();
                 socket.close();
             }
             catch (IOException ex)
