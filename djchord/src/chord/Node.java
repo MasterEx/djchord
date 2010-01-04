@@ -239,9 +239,17 @@ public class Node implements RemoteNode {
         this.last = true;
     }
     
-    private String setPid() 
+    public String setPid()
     {
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
+    }
+
+    public void setFingers()
+    {
+        for(int i=0;i<159;i++)
+        {
+            //this.fingers[i] = simple_find_successor(this.getKey().getStringHash());
+        }
     }
 
 }

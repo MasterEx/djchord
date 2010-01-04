@@ -29,13 +29,12 @@
 
 package djchord;
 
+import basic.SHA1;
+import chord.Node;
 import java.io.UnsupportedEncodingException;
-import java.lang.management.ManagementFactory;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
-
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
@@ -45,17 +44,12 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, UnknownHostException {
+    public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException
+    {
         //test code goes here!
-     
-        byte[] buffer = new byte[10];
-        buffer = "192.168.1.15 10120".getBytes();
-        DatagramPacket packet = new DatagramPacket(buffer,buffer.length,
-                InetAddress.getByName("123.1.2.3"),1000);
-        System.out.println(new String(packet.getData()));
-        String[] s = new String(packet.getData()).split(" ");
-        System.out.println("adrr:"+s[0]+" post:"+s[1]);
-
+        SHA1.getHash("123456789");
+        System.out.println(SHA1.getHash("123456789"));
+        System.out.println(BigInteger.TEN);
     }
 
 }
