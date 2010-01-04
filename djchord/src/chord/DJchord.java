@@ -44,10 +44,10 @@ import networking.MulticastSender;
  */
 public class DJchord implements Runnable {
 
-    Node node;
-    byte buffer;
-    MulticastSender sendmulticast;
-    Thread runner;
+    private Node node;
+    private byte buffer;
+    private MulticastSender sendmulticast;
+    private Thread runner;
 
     /*
      * is invoked by start()
