@@ -39,6 +39,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -66,16 +67,18 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     {
         synchronized (this)
         {
+            String responders_pid = null, responders_address = null, pid = null;
             try
             {
                 serversocket = new ServerSocket(port);
                 serversocket.setSoTimeout(5000);// 5 sec
                 socket = serversocket.accept();// race condition may occur
                 Scanner in = new Scanner(socket.getInputStream());
-                String pid = in.next();
+                pid = in.next();
                 String address = in.next();
-                SHAhash sha1 = SHA1.getHash(pid);
-                successor = RMIRegistry.getRemoteNode(address,pid);
+                responders_pid = in.next();
+                responders_address = in.next();
+                successor = RMIRegistry.getRemoteNode(address, pid);
                 successor.setKey(new SHAhash(buffer));
                 node.setSuccessor(successor);
                 node.setPredecessor(successor.getPredecessor());
@@ -88,15 +91,34 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             }
             catch (NotBoundException ex)
             {
-
-            }
-            catch (NoSuchAlgorithmException ex)
-            {
-                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
+                try
+                {
+                    RemoteNode responder = RMIRegistry.getRemoteNode(responders_address, responders_pid);
+                    try
+                    {
+                        responder.redistribute_keys(SHA1.getHash(pid));
+                    }
+                    catch (RemoteException ex1)
+                    {
+                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                    catch (NoSuchAlgorithmException ex1)
+                    {
+                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                    catch (UnsupportedEncodingException ex1)
+                    {
+                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+                catch (NotBoundException ex1)
+                {
+                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
             catch (UnsupportedEncodingException ex)
             {
-                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
             }
             catch (SocketTimeoutException ex)
             {

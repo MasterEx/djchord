@@ -55,5 +55,5 @@ public interface RemoteNode extends Remote{
     public String getPid() throws RemoteException;
     public String getRMIInfo() throws RemoteException;
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException;
-
+    public void redistribute_keys(SHAhash k) throws RemoteException;
 }

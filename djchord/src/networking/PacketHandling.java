@@ -84,7 +84,7 @@ public class PacketHandling implements Runnable{
             successor = this.node.simple_find_successor(sha1);
             socket = new Socket(packet.getAddress(),1100);
             outstream = new PrintWriter(socket.getOutputStream());
-            outstream.write(successor.getRMIInfo());
+            outstream.write(successor.getRMIInfo()+" "+node.getRMIInfo());
         }
         catch (RemoteException ex)
         {
