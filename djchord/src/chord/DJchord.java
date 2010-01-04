@@ -88,23 +88,8 @@ public class DJchord implements Runnable {
      */
     public void stop()
     {
-        try
-        {
-            sendmulticast.closeconnection();
-            runner.interrupt();
-            runner = null;
-        }
-        catch (UnknownHostException ex)
-        {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NotInitializedVariablesException ex)
-        {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        sendmulticast.stop();
+        runner.interrupt();
+        runner = null;
     }
 }
