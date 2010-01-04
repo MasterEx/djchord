@@ -29,6 +29,7 @@
 
 package networking;
 
+import chord.Node;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -46,6 +47,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     private int port = 1100; // standar port for incoming socket connextions
     private Socket socket;
     private ServerSocket serversocket;
+    private Node node;
 
     /*
      * is invoked by start()
@@ -95,6 +97,11 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         }
         runner.interrupt();
         runner = null;
+    }
+
+    public void setNode(Node node)
+    {
+        this.node = node;
     }
 
 }

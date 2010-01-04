@@ -106,7 +106,9 @@ public class MulticastSender extends Multicast implements Runnable{
         {
             openconnection();
             send();
-            new IncomingNodeMulticastAnswer().start();
+            IncomingNodeMulticastAnswer answer = new IncomingNodeMulticastAnswer();
+            answer.setNode(node);
+            answer.start();
             closeconnection();
 
         }
