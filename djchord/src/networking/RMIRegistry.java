@@ -31,6 +31,8 @@ package networking;
 
 import chord.Node;
 import chord.RemoteNode;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -49,6 +51,7 @@ public class RMIRegistry {
     private static boolean init = false;
     private static Registry registry;
     private static int port = 1099; //this is the default port of java RMI
+    private static String address;
 
     /*
 * This method works like java RMI tutorial example
@@ -65,6 +68,14 @@ public class RMIRegistry {
         if(init)
         {
             return init;
+        }
+        try
+        {
+            address = InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException ex)
+        {
+            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
         }
         //SecurityManager is optional
         if (System.getSecurityManager() == null && security)
@@ -153,6 +164,7 @@ public class RMIRegistry {
         return null;
     }
 
+
     static public RemoteNode getRemoteNode(String address,String name) throws NotBoundException
     {
         return RMIRegistry.getRemoteNode(address,1099, name);
@@ -163,5 +175,9 @@ public class RMIRegistry {
         createRegistry(1099);
     }
 
+    static public String getAddress()
+    {
+        return address;
+    }
 }
  

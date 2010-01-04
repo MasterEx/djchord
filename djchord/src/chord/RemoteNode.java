@@ -53,6 +53,7 @@ public interface RemoteNode extends Remote{
     public void setSuccessor(RemoteNode next) throws RemoteException;
     public SHAhash getKey() throws RemoteException;
     public String getPid() throws RemoteException;
+    public String getRMIInfo() throws RemoteException;
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException;
 
 }
