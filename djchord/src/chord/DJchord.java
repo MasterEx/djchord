@@ -56,6 +56,10 @@ public class DJchord implements Runnable {
         {
             node = new Node();
         }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
         catch (NoSuchAlgorithmException ex)
         {
             Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);

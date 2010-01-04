@@ -109,8 +109,11 @@ public class MulticastSender extends Multicast implements Runnable{
             IncomingNodeMulticastAnswer answer = new IncomingNodeMulticastAnswer();
             answer.setNode(node);
             answer.start();
+            if(answer.isAlone())
+            {
+                node.setFirst();
+            }
             closeconnection();
-
         }
         catch (NotInitializedVariablesException ex)
         {

@@ -59,13 +59,15 @@ public class Node implements RemoteNode {
     /**
      * constructor
      */
-    public Node() throws NoSuchAlgorithmException, UnsupportedEncodingException
+    public Node() throws NoSuchAlgorithmException, UnsupportedEncodingException, RemoteException
     {
         //the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
         //and may not always work
         pid = this.setPid();
         RMIRegistry.addNode(this,pid);
         file_keys = setFile_keys();
+        this.setSuccessor(this);
+        this.setPredecessor(this);
     }
 
     //public
@@ -214,6 +216,11 @@ public class Node implements RemoteNode {
     public void setFirst() throws RemoteException
     {
         this.first = true;
+    }
+
+    public void unsetFirst() throws RemoteException
+    {
+        this.first = false;
     }
 
     public void setLast() throws RemoteException
