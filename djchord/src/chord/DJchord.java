@@ -29,7 +29,10 @@
         
 package chord;
 
+import exceptions.NotInitializedVariablesException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +47,11 @@ public class DJchord implements Runnable {
     Node node;
     byte buffer;
     MulticastSender sendmulticast;
+    Thread runner;
+
+    /*
+     * is invoked by start()
+     */
     public void run()
     {
         try
@@ -62,4 +70,41 @@ public class DJchord implements Runnable {
         sendmulticast.start();
     }
 
+    /*
+     * starts the execution of the thread
+     */
+    public void start()
+    {
+        if (runner == null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }
+    }
+
+    /*
+     * stops the execution of the thread
+     */
+    public void stop()
+    {
+        try
+        {
+            sendmulticast.closeconnection();
+            runner.interrupt();
+            runner = null;
+        }
+        catch (UnknownHostException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NotInitializedVariablesException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
