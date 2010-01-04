@@ -29,6 +29,7 @@
 
 package networking;
 
+import chord.Node;
 import exceptions.NotInitializedVariablesException;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -46,6 +47,7 @@ public class MulticastSender extends Multicast implements Runnable{
     private int ttl = 1; // time to live
     private byte[] buffer; //the message tha we will send
     private Thread runner; //the thread that we will use
+    private Node node; //the current node
 
     /*
      *constructor
@@ -58,34 +60,11 @@ public class MulticastSender extends Multicast implements Runnable{
     /*
      *constructor
      */
-    public MulticastSender(int port)
-    {
-        super(port);
-    }
-
-    /*
-     *constructor
-     */
-    public MulticastSender(String group)
-    {
-        super(group);
-    }
-
-    /*
-     *constructor
-     */
-    public MulticastSender(int port,String group)
-    {
-        super(port,group);
-    }
-
-    /*
-     *constructor
-     */
-    public MulticastSender(int port,String group,byte buffer[])
+    public MulticastSender(int port,String group,byte buffer[],Node node)
     {
         super(port,group);
         this.buffer = buffer;
+        this.node = node;
     }
 
     /*
