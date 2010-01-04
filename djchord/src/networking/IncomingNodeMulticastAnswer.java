@@ -29,8 +29,10 @@
 
 package networking;
 
+import basic.SHAhash;
 import chord.Node;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -47,7 +49,8 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     private int port = 1100; // standar port for incoming socket connextions
     private Socket socket;
     private ServerSocket serversocket;
-    private Node node;
+    private Node node,successor;
+    private byte[] buffer = new byte[20];
 
     /*
      * is invoked by start()
@@ -57,8 +60,13 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         {
             serversocket = new ServerSocket(port);
             socket = serversocket.accept();
-            InputStreamReader in = new InputStreamReader(socket.getInputStream());
-            //receiving in from the faster node and enters in chord
+            InputStream in = socket.getInputStream();
+            for(int i=0;i<19;i++)
+            {
+                this.buffer[i] = (byte) in.read();
+            }
+            successor.setKey(new SHAhash(buffer));
+            node.setSuccessor(successor);
             in.close();
             socket.close();
             serversocket.close();
