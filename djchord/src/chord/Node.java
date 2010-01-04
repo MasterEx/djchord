@@ -36,6 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.rmi.RemoteException;
 import networking.RMIRegistry;
 
 /**
@@ -50,9 +51,9 @@ public class Node implements RemoteNode {
     private SHAhash key;
     private String folder,pid;
     private SHAhash[] file_keys;
-    private Node[] fingers,successors;
+    private RemoteNode[] fingers,successors;
     private Map<SHAhash,String> index;
-    private Node predecessor;
+    private RemoteNode predecessor;
     private boolean first = false, last = false;
 
     /**
@@ -69,7 +70,7 @@ public class Node implements RemoteNode {
 
     //public
 
-    public Node find_successor(SHAhash k)
+    public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
         if (k.compareTo(search.getKey())==1 && k.compareTo(search.getSuccessor().getKey())<=0)
@@ -82,9 +83,9 @@ public class Node implements RemoteNode {
         }
     }
     
-    public Node simple_find_successor(SHAhash k)
+    public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
     {
-        for(Node tempnode=this.getSuccessor();tempnode==this;tempnode=tempnode.getSuccessor())
+        for(RemoteNode tempnode=this.getSuccessor();tempnode==this;tempnode=tempnode.getSuccessor())
         {
             if((k.compareTo(tempnode.getKey())<0 || tempnode.isFirst())&& k.compareTo(tempnode.getPredecessor().getKey())>=0)
             {
@@ -94,7 +95,7 @@ public class Node implements RemoteNode {
         return this;
     }
     
-    public Node closest_preceding_node(SHAhash k)
+    public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
         if (k.compareTo(fingers[159].getKey())==1 || k.compareTo(this.getKey())==-1)
         {
@@ -136,32 +137,32 @@ public class Node implements RemoteNode {
         return this.file_keys;
     }
 
-    public Node getSuccessor()
+    public RemoteNode getSuccessor() throws RemoteException
     {
         return successors[0];
     }
 
-    public Node getSuccessor(int i)
+    public RemoteNode getSuccessor(int i) throws RemoteException
     {
         return successors[i];
     }
 
-    public Node getPredecessor()
+    public RemoteNode getPredecessor() throws RemoteException
     {
         return predecessor;
     }
 
-    public String getPid()
+    public String getPid() throws RemoteException
     {
         return pid;
     }
 
-    public boolean isFirst()
+    public boolean isFirst() throws RemoteException
     {
         return first;
     }
 
-    public boolean isLast()
+    public boolean isLast() throws RemoteException
     {
         return last;
     }
@@ -169,7 +170,7 @@ public class Node implements RemoteNode {
     /**
      * set methods
      */
-    public void setKey(SHAhash key)
+    public void setKey(SHAhash key) throws RemoteException
     {
          this.key = key;
     }
@@ -190,27 +191,27 @@ public class Node implements RemoteNode {
         return file_keys;
     }
 
-    public void setSuccessor(Node next)
+    public void setSuccessor(RemoteNode next) throws RemoteException
     {
         this.successors[0] = next;
     }
 
-    public void setSuccessor(int i,Node next)
+    public void setSuccessor(int i,RemoteNode next) throws RemoteException
     {
         this.successors[i] = next;
     }
 
-    public void setPredecessor(Node previous)
+    public void setPredecessor(RemoteNode previous) throws RemoteException
     {
         this.predecessor = previous;
     }
 
-    public void setFirst()
+    public void setFirst() throws RemoteException
     {
         this.first = true;
     }
 
-    public void setLast()
+    public void setLast() throws RemoteException
     {
         this.last = true;
     }

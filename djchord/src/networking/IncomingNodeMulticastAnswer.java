@@ -31,9 +31,9 @@ package networking;
 
 import basic.SHAhash;
 import chord.Node;
+import chord.RemoteNode;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -49,7 +49,8 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     private int port = 1100; // standar port for incoming socket connextions
     private Socket socket;
     private ServerSocket serversocket;
-    private Node node,successor;
+    private Node node;
+    private RemoteNode successor;
     private byte[] buffer = new byte[20];
 
     /*

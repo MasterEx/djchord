@@ -39,13 +39,20 @@ import java.rmi.RemoteException;
  */
 public interface RemoteNode extends Remote{
 
-    public Node find_successor(SHAhash k) throws RemoteException;
-    public Node getPredecessor()throws RemoteException;
-    public Node getSuccessor()throws RemoteException;
+    public RemoteNode find_successor(SHAhash k) throws RemoteException;
+    public RemoteNode getPredecessor()throws RemoteException;
+    public RemoteNode getSuccessor()throws RemoteException;
+    public RemoteNode getSuccessor(int i) throws RemoteException;
     public boolean isFirst() throws RemoteException;
     public boolean isLast() throws RemoteException;
     public void setFirst() throws RemoteException;
     public void setLast() throws RemoteException;
-    public void setSuccessor(int i,Node next) throws RemoteException;
-    public void setPredecessor(Node previous) throws RemoteException;
+    public void setSuccessor(int i,RemoteNode next) throws RemoteException;
+    public void setPredecessor(RemoteNode previous) throws RemoteException;
+    public void setKey(SHAhash key) throws RemoteException;
+    public void setSuccessor(RemoteNode next) throws RemoteException;
+    public SHAhash getKey() throws RemoteException;
+    public String getPid() throws RemoteException;
+    public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException;
+
 }

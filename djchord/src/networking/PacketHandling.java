@@ -32,12 +32,14 @@ package networking;
 import basic.SHA1;
 import basic.SHAhash;
 import chord.Node;
+import chord.RemoteNode;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,11 +50,12 @@ import java.util.logging.Logger;
  */
 public class PacketHandling implements Runnable{
 
-    Thread runner;
-    DatagramPacket packet;
-    String pid;
-    Node node,successor;
-    SHAhash sha1;
+    private Thread runner;
+    private DatagramPacket packet;
+    private String pid;
+    private Node node;
+    private RemoteNode successor;
+    private SHAhash sha1;
 
     /*
      * is invoked by start()
@@ -72,14 +75,18 @@ public class PacketHandling implements Runnable{
         {
             Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
         }
-        successor = this.node.simple_find_successor(sha1);
         Socket socket = null;
         OutputStream outstream = null;
         try
         {
+            successor = this.node.simple_find_successor(sha1);
             socket = new Socket(packet.getAddress(),1100);
             outstream = socket.getOutputStream();
             outstream.write(successor.getKey().getByteHash());
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (UnknownHostException ex)
         {

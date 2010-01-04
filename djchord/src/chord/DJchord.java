@@ -30,6 +30,7 @@
 package chord;
 
 import java.io.UnsupportedEncodingException;
+import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +64,14 @@ public class DJchord implements Runnable {
         {
             Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sendmulticast = new MulticastSender(1101,"224.1.1.1",node.getPid().getBytes(),node);
+        try
+        {
+            sendmulticast = new MulticastSender(1101, "224.1.1.1", node.getPid().getBytes(), node);
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
         sendmulticast.start();
     }
 
