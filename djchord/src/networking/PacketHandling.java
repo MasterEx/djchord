@@ -60,7 +60,8 @@ public class PacketHandling implements Runnable{
     /*
      * is invoked by start()
      */
-    public void run() {
+    public void run()
+    {
         //here we will learn next nodes ip and name
         pid = new String(this.packet.getData());
         try 

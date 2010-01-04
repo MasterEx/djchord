@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,29 +53,52 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     private Node node;
     private RemoteNode successor;
     private byte[] buffer = new byte[20];
+    private boolean flag = false;
 
     /*
      * is invoked by start()
      */
-    public void run() {
-         try
+    public void run() 
+    {
+        synchronized (this)
         {
-            serversocket = new ServerSocket(port);
-            socket = serversocket.accept();
-            InputStream in = socket.getInputStream();
-            for(int i=0;i<19;i++)
+            try
             {
-                this.buffer[i] = (byte) in.read();
+                serversocket = new ServerSocket(port);
+                serversocket.setSoTimeout(5000);// 5 sec
+                socket = serversocket.accept();// race condition may occur
+                InputStream in = socket.getInputStream();
+                for(int i=0;i<19;i++)
+                {
+                    this.buffer[i] = (byte) in.read();
+                }
+                successor.setKey(new SHAhash(buffer));
+                node.setSuccessor(successor);
+                node.setPredecessor(successor.getPredecessor());
+                node.getPredecessor().setSuccessor(node);
+                successor.setPredecessor(node);
+
+                in.close();
+                socket.close();
+                serversocket.close();
             }
-            successor.setKey(new SHAhash(buffer));
-            node.setSuccessor(successor);
-            in.close();
-            socket.close();
-            serversocket.close();
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+            catch (SocketTimeoutException ex)
+            {
+                try
+                {
+                    flag = true;
+                    socket.close();
+                    serversocket.close();
+                }
+                catch (IOException ex1)
+                {
+                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -113,4 +137,8 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         this.node = node;
     }
 
+    public synchronized boolean isAlone()
+    {
+        return flag;
+    }
 }

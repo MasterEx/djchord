@@ -99,7 +99,7 @@ public class Node implements RemoteNode {
     {
         if (k.compareTo(fingers[159].getKey())==1 || k.compareTo(this.getKey())==-1)
         {
-        return fingers[159].closest_preceding_node(k);
+            return fingers[159].closest_preceding_node(k);
         }
         for(int i=158;i>=0;i--)
         {
@@ -108,7 +108,12 @@ public class Node implements RemoteNode {
                  return fingers[i];
             }
         }
-        return null; // no reachable statement
+        return null; // unreachable statement
+    }
+
+    public void redistribute_keys(SHAhash k) throws RemoteException
+    {
+        //this.setPredecessor(this.find_successor(k).getPredecessor());
     }
 
     public void mapAdd(SHAhash nodeHash,String fileName)
