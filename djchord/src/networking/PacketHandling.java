@@ -35,6 +35,7 @@ import chord.Node;
 import chord.RemoteNode;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.Socket;
@@ -77,13 +78,13 @@ public class PacketHandling implements Runnable{
             Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
         }
         Socket socket = null;
-        OutputStream outstream = null;
+        PrintWriter outstream = null;
         try
         {
             successor = this.node.simple_find_successor(sha1);
             socket = new Socket(packet.getAddress(),1100);
-            outstream = socket.getOutputStream();
-            outstream.write(successor.getKey().getByteHash());
+            outstream = new PrintWriter(socket.getOutputStream());
+            outstream.write(successor.getRMIInfo());
         }
         catch (RemoteException ex)
         {

@@ -174,6 +174,16 @@ public class Node implements RemoteNode {
         return last;
     }
 
+    public String getAddress()
+    {
+        return RMIRegistry.getAddress();
+    }
+
+    public String getRMIInfo() throws RemoteException
+    {
+        return this.pid+" "+this.getAddress();
+    }
+
     /**
      * set methods
      */
@@ -194,6 +204,7 @@ public class Node implements RemoteNode {
         for(int i=0;i<filenames.length;i++)
         {
             file_keys[i] = SHA1.getHash(filenames[i]);
+            this.mapAdd(file_keys[i], filenames[i]);
         }
         return file_keys;
     }

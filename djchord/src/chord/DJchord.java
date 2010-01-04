@@ -43,7 +43,6 @@ import networking.MulticastSender;
 public class DJchord implements Runnable {
 
     private Node node;
-    private byte buffer;
     private MulticastSender sendmulticast;
     private Thread runner;
 

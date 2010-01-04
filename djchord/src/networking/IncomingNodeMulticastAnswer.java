@@ -29,14 +29,18 @@
 
 package networking;
 
+import basic.SHA1;
 import basic.SHAhash;
 import chord.Node;
 import chord.RemoteNode;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.rmi.NotBoundException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,11 +71,11 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 serversocket = new ServerSocket(port);
                 serversocket.setSoTimeout(5000);// 5 sec
                 socket = serversocket.accept();// race condition may occur
-                InputStream in = socket.getInputStream();
-                for(int i=0;i<19;i++)
-                {
-                    this.buffer[i] = (byte) in.read();
-                }
+                Scanner in = new Scanner(socket.getInputStream());
+                String pid = in.next();
+                String address = in.next();
+                SHAhash sha1 = SHA1.getHash(pid);
+                successor = RMIRegistry.getRemoteNode(address,pid);
                 successor.setKey(new SHAhash(buffer));
                 node.setSuccessor(successor);
                 node.setPredecessor(successor.getPredecessor());
@@ -81,6 +85,18 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 in.close();
                 socket.close();
                 serversocket.close();
+            }
+            catch (NotBoundException ex)
+            {
+
+            }
+            catch (NoSuchAlgorithmException ex)
+            {
+                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (UnsupportedEncodingException ex)
+            {
+                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
             }
             catch (SocketTimeoutException ex)
             {
