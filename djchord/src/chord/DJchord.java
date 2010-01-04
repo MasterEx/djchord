@@ -29,14 +29,37 @@
         
 package chord;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import networking.MulticastSender;
+
 /**
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class DJchord implements Runnable {
+
+    Node node;
+    byte buffer;
+    MulticastSender sendmulticast;
     public void run()
     {
-        
+        try
+        {
+            node = new Node();
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        sendmulticast = new MulticastSender(1101,"224.1.1.1",node.getPid().getBytes());
+        sendmulticast.start();
     }
 
 }
