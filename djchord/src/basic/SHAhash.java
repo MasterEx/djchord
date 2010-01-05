@@ -52,19 +52,23 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public int compareTo(SHAhash arg0)
     {
-        SHAhash hash = arg0;
-        for(int i=0;i<20;i++)
+        String this_temp = this.getStringHash();
+        String arg0_temp = arg0.getStringHash();
+        if(this_temp.length()>arg0_temp.length())
         {
-            if (bytehash[i]>hash.getByte(i))
+            for(int i=arg0_temp.length();i<this_temp.length();i++)
             {
-                return 1;
-            }
-            else if (bytehash[i]<hash.getByte(i))
-            {
-                return -1;
+                this_temp = "0".concat(this_temp);
             }
         }
-        return 0;
+        else if(this_temp.length()<arg0_temp.length())
+        {
+            for(int i=this_temp.length();i<arg0_temp.length();i++)
+            {
+                arg0_temp = "0".concat(arg0_temp);
+            }
+        }
+        return this_temp.compareToIgnoreCase(arg0_temp);
     }
 
     /*
