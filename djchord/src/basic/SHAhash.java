@@ -141,7 +141,7 @@ public class SHAhash implements Comparable<SHAhash>{
     }
 
     /*
-     * This method multiplies 2 hexadecimal numbers
+     * This method rises one hexadecimal number to the given power
      */
     public static String power(String base,int exponent)
     {
@@ -232,4 +232,60 @@ public class SHAhash implements Comparable<SHAhash>{
         return outcome;
     }
 
+    /*
+     * a method that subtracts a hexadesimal String from another (first-second)
+     * special thanks to mathforum.org
+     * http://mathforum.org/library/drmath/view/55943.html
+     */
+    public static String subtract(String first, String second)
+    {
+        if(first.compareTo(second)==1)
+        {
+            String outcome = "", temp, borrowed="0", t3 = "0", t4;
+            int max, t1, t2;
+            String a,b;
+            max = first.length();
+            for(int i=1;i<=max;i++)
+            {
+                a = String.valueOf(first.charAt(first.length()-i));
+                if(i>second.length())
+                {
+                    b = "0";
+                }
+                else
+                {
+                    b = String.valueOf(second.charAt(second.length()-i));
+                }
+                if(borrowed.equalsIgnoreCase("1") && !a.equalsIgnoreCase("0"))
+                {
+                    t1 = Integer.parseInt(a, 16) - Integer.parseInt(borrowed);
+                }
+                else if(borrowed.equalsIgnoreCase("1"))
+                {
+                    t1 = (Integer.parseInt(a, 16) + Integer.parseInt("F", 16)) - Integer.parseInt(borrowed);
+                    borrowed="1";
+                }
+                else
+                {
+                    t1 = Integer.parseInt(a, 16);
+                }
+                t2 = Integer.parseInt(b, 16);
+                if(a.compareTo(b)>1) 
+                {
+                    t3 = Integer.toHexString(t1-t2);
+                    borrowed="0";
+                }
+                else
+                {
+                    t3 = Integer.toHexString((t1+Integer.parseInt("F", 16))-t2);
+                    borrowed="1";
+                }
+                outcome = t3.concat(outcome);
+                
+            }
+            return outcome;
+        }
+        throw new ArithmeticException("trying to subtract much from little");
+    }
+    
 }
