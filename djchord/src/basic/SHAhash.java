@@ -35,7 +35,7 @@ package basic;
  */
 public class SHAhash implements Comparable<SHAhash>{
 
-    private byte[] bytehash = new byte[20];
+    private byte[] bytehash = null;
     private String stringhash;
 
     /*
@@ -45,6 +45,14 @@ public class SHAhash implements Comparable<SHAhash>{
     {
         this.bytehash = hash;
         this.stringhash = convertToHex(hash);
+    }
+    
+    /*
+     * constructor
+     */
+    public SHAhash(String hash)
+    {
+        this.stringhash = hash;
     }
 
     /*
@@ -76,7 +84,11 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public byte[] getByteHash()
     {
-        return bytehash;
+        if(this.bytehash != null)
+        {
+            return this.bytehash;
+        }
+        return this.stringhash.getBytes();
     }
 
     /*
@@ -129,7 +141,19 @@ public class SHAhash implements Comparable<SHAhash>{
     }
 
     /*
-     * This method adds 2 hexademical numbers
+     * This method multiplies 2 hexadecimal numbers
+     */
+    public static String power(String base,int exponent)
+    {
+        for(int i=0;i<exponent;i++)
+        {
+            base = SHAhash.add(base, base);
+        }
+        return base;
+    }
+
+    /*
+     * This method adds 2 hexadecimal numbers
      */
     public String add(String hex)
     {
@@ -137,7 +161,7 @@ public class SHAhash implements Comparable<SHAhash>{
     }
 
     /*
-     * This method adds 2 hexademical numbers
+     * This method adds 2 hexadecimal numbers
      */
     public static String add(String hex,String hexx)
     {
