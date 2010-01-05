@@ -29,7 +29,6 @@
 
 package djchord;
 
-import basic.SHA1;
 import basic.SHAhash;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;

@@ -129,45 +129,49 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public String add(String hex)
     {
-        String outcome = null,temp,rest="0",t3;
-        int i,t1,t2;
+        String outcome = "",temp,rest="0",t3;
+        int max,t1,t2;
         char a,b;
         if(this.getStringHash().compareTo(hex)==1)
         {
-            i = this.getStringHash().length();
+            max = this.getStringHash().length();
         }
         else
         {
-            i = hex.length();
+            max = hex.length();
         }
-        for(;i>=0;i--)
+        for(int i=1;i<=max;i++)
         {
-            if(this.getStringHash().length()<=i)
+            if(this.getStringHash().length()<i)
             {
                 a = '0';
             }
             else
             {
-                a = this.getStringHash().charAt(i);
+                a = this.getStringHash().charAt(this.getStringHash().length()-i);
             }
-            if(hex.length()<=i)
+            if(hex.length()<i)
             {
                 b = '0';
             }
             else
             {
-                b = hex.charAt(i);
+                b = hex.charAt(hex.length()-i);
             }
             t1 = Integer.parseInt(String.valueOf(a), 16);
             t2 = Integer.parseInt(String.valueOf(b), 16);
             temp = Integer.toHexString(t1+t2);
+            System.out.println("temp="+temp);
             if(Integer.valueOf(rest)!=0)
             {
                 //is there any case of having second rest?
                 t3 = String.valueOf(temp.charAt(temp.length()-1));
-                t3 = String.valueOf(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
-                //outcome = t3.concat(outcome); <--NullPointerException
-                outcome = t3 + outcome;
+                t3 = Integer.toHexString(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
+                outcome = t3.concat(outcome);
+            }
+            else
+            {
+                outcome = String.valueOf(temp.charAt(temp.length()-1)).concat(outcome);
             }
             if(temp.length()>1)
             {
@@ -191,17 +195,17 @@ public class SHAhash implements Comparable<SHAhash>{
     public static String add(String hex,String hexx)
     {
         String outcome = "",temp,rest="0",t3;
-        int i,t1,t2;
+        int max,t1,t2;
         char a,b;
         if(hexx.compareTo(hex)==1)
         {
-            i = hexx.length();
+            max = hexx.length();
         }
         else
         {
-            i = hex.length();
+            max = hex.length();
         }
-        for(;i>0;i--)
+        for(int i=1;i<=max;i++)
         {
             if(hexx.length()<i)
             {
@@ -209,7 +213,7 @@ public class SHAhash implements Comparable<SHAhash>{
             }
             else
             {
-                a = hexx.charAt(i-1);
+                a = hexx.charAt(hexx.length()-i);
             }
             if(hex.length()<i)
             {
@@ -217,17 +221,22 @@ public class SHAhash implements Comparable<SHAhash>{
             }
             else
             {
-                b = hex.charAt(i-1);
+                b = hex.charAt(hex.length()-i);
             }
             t1 = Integer.parseInt(String.valueOf(a), 16);
             t2 = Integer.parseInt(String.valueOf(b), 16);
             temp = Integer.toHexString(t1+t2);
+            System.out.println("temp="+temp);
             if(Integer.valueOf(rest)!=0)
             {
                 //is there any case of having second rest?
                 t3 = String.valueOf(temp.charAt(temp.length()-1));
                 t3 = Integer.toHexString(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
-                outcome = t3 + outcome;
+                outcome = t3.concat(outcome);
+            }
+            else
+            {
+                outcome = String.valueOf(temp.charAt(temp.length()-1)).concat(outcome);
             }
             if(temp.length()>1)
             {
