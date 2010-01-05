@@ -29,6 +29,7 @@
 
 package djchord;
 
+import basic.SHA1;
 import basic.SHAhash;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
@@ -46,8 +47,10 @@ public class Main {
     {
         //test code goes here!
         //SHA1.getHash("123456789");
-        //System.out.println(SHA1.getHash("123456789")+"\n"+SHA1.getHash("223456789"));
-        System.out.println(SHAhash.add("fad", "fad"));
+        //System.out.println("  "+SHA1.getHash("123456789").getStringHash()+"\n"+"  "+ SHA1.getHash("223456789").getStringHash());
+        System.out.println(SHAhash.add(SHA1.getHash("123456789").getStringHash() ,SHA1.getHash("223456789").getStringHash()));
+        //System.out.println(SHAhash.add("a7ae3441" ,"7f5220ae"));
+        System.out.println(SHAhash.add(SHA1.getHash("123456789").getStringHash() ,SHA1.getHash("223456789").getStringHash()).length());
         //http://www.wolframalpha.com/input/?i=0xfad+%2B+0xfad
     }
 

@@ -165,7 +165,6 @@ public class SHAhash implements Comparable<SHAhash>{
             t1 = Integer.parseInt(String.valueOf(a), 16);
             t2 = Integer.parseInt(String.valueOf(b), 16);
             temp = Integer.toHexString(t1+t2);
-            System.out.println("temp="+temp);
             if(Integer.valueOf(rest)!=0)
             {
                 //is there any case of having second rest?
@@ -198,7 +197,7 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public static String add(String hex,String hexx)
     {
-        String outcome = "",temp,rest="0",t3;
+        String outcome = "",temp,rest="0",t3 = "0",t4;
         int max,t1,t2;
         char a,b;
         if(hexx.compareTo(hex)==1)
@@ -230,13 +229,17 @@ public class SHAhash implements Comparable<SHAhash>{
             t1 = Integer.parseInt(String.valueOf(a), 16);
             t2 = Integer.parseInt(String.valueOf(b), 16);
             temp = Integer.toHexString(t1+t2);
-            System.out.println("temp="+temp);
             if(Integer.valueOf(rest)!=0)
             {
                 //is there any case of having second rest?
                 t3 = String.valueOf(temp.charAt(temp.length()-1));
                 t3 = Integer.toHexString(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
-                outcome = t3.concat(outcome);
+                t4 = String.valueOf(t3.charAt(t3.length()-1));
+                outcome = t4.concat(outcome);
+                if(t3.length()>1)
+                {
+                    rest = String.valueOf(t3.charAt(0));
+                }
             }
             else
             {
@@ -248,7 +251,10 @@ public class SHAhash implements Comparable<SHAhash>{
             }
             else
             {
-                rest = "0";
+                if(t3.length()<2)
+                {
+                   rest = "0"; 
+                }                
             }
         }
         if(!rest.equalsIgnoreCase("0"))
