@@ -30,9 +30,8 @@
 package djchord;
 
 import basic.SHA1;
-import chord.Node;
+import basic.SHAhash;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 /**
@@ -47,9 +46,10 @@ public class Main {
     public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException
     {
         //test code goes here!
-        SHA1.getHash("123456789");
-        System.out.println(SHA1.getHash("123456789"));
-        System.out.println(BigInteger.TEN);
+        //SHA1.getHash("123456789");
+        //System.out.println(SHA1.getHash("123456789")+"\n"+SHA1.getHash("223456789"));
+        System.out.println(SHAhash.add("fad", "fad"));
+        //http://www.wolframalpha.com/input/?i=0xfad+%2B+0xfad
     }
 
 }

@@ -142,7 +142,7 @@ public class SHAhash implements Comparable<SHAhash>{
         }
         for(;i>=0;i--)
         {
-            if(this.getStringHash().length()<i)
+            if(this.getStringHash().length()<=i)
             {
                 a = '0';
             }
@@ -150,7 +150,7 @@ public class SHAhash implements Comparable<SHAhash>{
             {
                 a = this.getStringHash().charAt(i);
             }
-            if(hex.length()<i)
+            if(hex.length()<=i)
             {
                 b = '0';
             }
@@ -166,7 +166,8 @@ public class SHAhash implements Comparable<SHAhash>{
                 //is there any case of having second rest?
                 t3 = String.valueOf(temp.charAt(temp.length()-1));
                 t3 = String.valueOf(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
-                outcome = t3.concat(outcome);
+                //outcome = t3.concat(outcome); <--NullPointerException
+                outcome = t3 + outcome;
             }
             if(temp.length()>1)
             {
@@ -189,7 +190,7 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public static String add(String hex,String hexx)
     {
-        String outcome = null,temp,rest="0",t3;
+        String outcome = "",temp,rest="0",t3;
         int i,t1,t2;
         char a,b;
         if(hexx.compareTo(hex)==1)
@@ -200,7 +201,7 @@ public class SHAhash implements Comparable<SHAhash>{
         {
             i = hex.length();
         }
-        for(;i>=0;i--)
+        for(;i>0;i--)
         {
             if(hexx.length()<i)
             {
@@ -208,7 +209,7 @@ public class SHAhash implements Comparable<SHAhash>{
             }
             else
             {
-                a = hexx.charAt(i);
+                a = hexx.charAt(i-1);
             }
             if(hex.length()<i)
             {
@@ -216,7 +217,7 @@ public class SHAhash implements Comparable<SHAhash>{
             }
             else
             {
-                b = hex.charAt(i);
+                b = hex.charAt(i-1);
             }
             t1 = Integer.parseInt(String.valueOf(a), 16);
             t2 = Integer.parseInt(String.valueOf(b), 16);
@@ -225,8 +226,8 @@ public class SHAhash implements Comparable<SHAhash>{
             {
                 //is there any case of having second rest?
                 t3 = String.valueOf(temp.charAt(temp.length()-1));
-                t3 = String.valueOf(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
-                outcome = t3.concat(outcome);
+                t3 = Integer.toHexString(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
+                outcome = t3 + outcome;
             }
             if(temp.length()>1)
             {
