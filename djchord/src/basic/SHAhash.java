@@ -133,63 +133,7 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public String add(String hex)
     {
-        String outcome = "",temp,rest="0",t3;
-        int max,t1,t2;
-        char a,b;
-        if(this.getStringHash().compareTo(hex)==1)
-        {
-            max = this.getStringHash().length();
-        }
-        else
-        {
-            max = hex.length();
-        }
-        for(int i=1;i<=max;i++)
-        {
-            if(this.getStringHash().length()<i)
-            {
-                a = '0';
-            }
-            else
-            {
-                a = this.getStringHash().charAt(this.getStringHash().length()-i);
-            }
-            if(hex.length()<i)
-            {
-                b = '0';
-            }
-            else
-            {
-                b = hex.charAt(hex.length()-i);
-            }
-            t1 = Integer.parseInt(String.valueOf(a), 16);
-            t2 = Integer.parseInt(String.valueOf(b), 16);
-            temp = Integer.toHexString(t1+t2);
-            if(Integer.valueOf(rest)!=0)
-            {
-                //is there any case of having second rest?
-                t3 = String.valueOf(temp.charAt(temp.length()-1));
-                t3 = Integer.toHexString(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
-                outcome = t3.concat(outcome);
-            }
-            else
-            {
-                outcome = String.valueOf(temp.charAt(temp.length()-1)).concat(outcome);
-            }
-            if(temp.length()>1)
-            {
-                rest = String.valueOf(temp.charAt(0));
-            }
-            else
-            {
-                rest = "0";
-            }
-        }
-        if(!rest.equalsIgnoreCase("0"))
-        {
-            outcome = rest.concat(outcome);
-        }
-        return outcome;
+        return SHAhash.add(this.getStringHash(), hex);
     }
 
     /*
