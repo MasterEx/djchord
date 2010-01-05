@@ -249,6 +249,20 @@ public class Node implements RemoteNode {
         for(int i=0;i<159;i++)
         {
             //this.fingers[i] = simple_find_successor(this.getKey().getStringHash());
+            //2^159 is too large!!! - long is 2^64-1 - 2^159 is 41 digits
+            //what about use 2^10 = 2^5+2^5 ???
+            if(i<64)
+            {
+                this.key.add(Long.toHexString(2^i));
+            }
+            else if(i<127)
+            {
+                this.key.add(SHAhash.add(Long.toHexString(2^63), Long.toHexString(2^(i-63))));
+            }
+            else
+            {
+                this.key.add(SHAhash.add(Long.toHexString(2^(i-126)),SHAhash.add(Long.toHexString(2^63), Long.toHexString(2^63))));
+            }
         }
     }
 

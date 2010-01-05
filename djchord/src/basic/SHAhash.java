@@ -124,4 +124,124 @@ public class SHAhash implements Comparable<SHAhash>{
         return stringhash;
     }
 
+    /*
+     * This method adds 2 hexademical numbers
+     */
+    public String add(String hex)
+    {
+        String outcome = null,temp,rest="0",t3;
+        int i,t1,t2;
+        char a,b;
+        if(this.getStringHash().compareTo(hex)==1)
+        {
+            i = this.getStringHash().length();
+        }
+        else
+        {
+            i = hex.length();
+        }
+        for(;i>=0;i--)
+        {
+            if(this.getStringHash().length()<i)
+            {
+                a = '0';
+            }
+            else
+            {
+                a = this.getStringHash().charAt(i);
+            }
+            if(hex.length()<i)
+            {
+                b = '0';
+            }
+            else
+            {
+                b = hex.charAt(i);
+            }
+            t1 = Integer.parseInt(String.valueOf(a), 16);
+            t2 = Integer.parseInt(String.valueOf(b), 16);
+            temp = Integer.toHexString(t1+t2);
+            if(Integer.valueOf(rest)!=0)
+            {
+                //is there any case of having second rest?
+                t3 = String.valueOf(temp.charAt(temp.length()-1));
+                t3 = String.valueOf(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
+                outcome = t3.concat(outcome);
+            }
+            if(temp.length()>1)
+            {
+                rest = String.valueOf(temp.charAt(0));
+            }
+            else
+            {
+                rest = "0";
+            }
+        }
+        if(!rest.equalsIgnoreCase("0"))
+        {
+            outcome = rest.concat(outcome);
+        }
+        return outcome;
+    }
+
+    /*
+     * This method adds 2 hexademical numbers
+     */
+    public static String add(String hex,String hexx)
+    {
+        String outcome = null,temp,rest="0",t3;
+        int i,t1,t2;
+        char a,b;
+        if(hexx.compareTo(hex)==1)
+        {
+            i = hexx.length();
+        }
+        else
+        {
+            i = hex.length();
+        }
+        for(;i>=0;i--)
+        {
+            if(hexx.length()<i)
+            {
+                a = '0';
+            }
+            else
+            {
+                a = hexx.charAt(i);
+            }
+            if(hex.length()<i)
+            {
+                b = '0';
+            }
+            else
+            {
+                b = hex.charAt(i);
+            }
+            t1 = Integer.parseInt(String.valueOf(a), 16);
+            t2 = Integer.parseInt(String.valueOf(b), 16);
+            temp = Integer.toHexString(t1+t2);
+            if(Integer.valueOf(rest)!=0)
+            {
+                //is there any case of having second rest?
+                t3 = String.valueOf(temp.charAt(temp.length()-1));
+                t3 = String.valueOf(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
+                outcome = t3.concat(outcome);
+            }
+            if(temp.length()>1)
+            {
+                rest = String.valueOf(temp.charAt(0));
+            }
+            else
+            {
+                rest = "0";
+            }
+        }
+        if(!rest.equalsIgnoreCase("0"))
+        {
+            outcome = rest.concat(outcome);
+        }
+        return outcome;
+    }
+
 }
