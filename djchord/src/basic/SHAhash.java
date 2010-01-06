@@ -168,7 +168,7 @@ public class SHAhash implements Comparable<SHAhash>{
         String outcome = "",temp,rest="0",t3 = "0",t4;
         int max,t1,t2;
         char a,b;
-        if(hexx.compareTo(hex)==1)
+        if(hexx.compareTo(hex)>0)
         {
             max = hexx.length();
         }
@@ -237,11 +237,11 @@ public class SHAhash implements Comparable<SHAhash>{
      * special thanks to mathforum.org
      * http://mathforum.org/library/drmath/view/55943.html
      */
-    public static String subtract(String first, String second)
+    public static String subtract(String first, String second) throws Exception
     {
-        if(first.compareTo(second)==1)
+        if(first.compareTo(second)>0)
         {
-            String outcome = "", temp, borrowed="0", t3 = "0", t4;
+            String outcome = "", borrowed="0", t3 = "0";
             int max, t1, t2;
             String a,b;
             max = first.length();
@@ -259,29 +259,29 @@ public class SHAhash implements Comparable<SHAhash>{
                 if(borrowed.equalsIgnoreCase("1") && !a.equalsIgnoreCase("0"))
                 {
                     t1 = Integer.parseInt(a, 16) - Integer.parseInt(borrowed);
+                    borrowed = "0";
                 }
                 else if(borrowed.equalsIgnoreCase("1"))
                 {
-                    t1 = (Integer.parseInt(a, 16) + Integer.parseInt("F", 16)) - Integer.parseInt(borrowed);
-                    borrowed="1";
+                    t1 = (Integer.parseInt(a, 16) + Integer.parseInt("10", 16)) - Integer.parseInt(borrowed);
+                    borrowed = "1";
                 }
                 else
                 {
                     t1 = Integer.parseInt(a, 16);
                 }
                 t2 = Integer.parseInt(b, 16);
-                if(a.compareTo(b)>1) 
+                if(Integer.toHexString(t1).compareTo(Integer.toHexString(t2))>=0)
                 {
                     t3 = Integer.toHexString(t1-t2);
                     borrowed="0";
                 }
                 else
                 {
-                    t3 = Integer.toHexString((t1+Integer.parseInt("F", 16))-t2);
+                    t3 = Integer.toHexString((t1+Integer.parseInt("10", 16))-t2);
                     borrowed="1";
                 }
                 outcome = t3.concat(outcome);
-                
             }
             return outcome;
         }
