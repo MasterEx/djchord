@@ -241,7 +241,7 @@ public class SHAhash implements Comparable<SHAhash>{
     {
         if(first.compareTo(second)>0)
         {
-            String outcome = "", borrowed="0", t3 = "0";
+            String outcome = "", borrowed="0", borrowed2="0", t3 = "0";
             int max, t1, t2;
             String a,b;
             max = first.length();
@@ -256,15 +256,16 @@ public class SHAhash implements Comparable<SHAhash>{
                 {
                     b = String.valueOf(second.charAt(second.length()-i));
                 }
-                if(borrowed.equalsIgnoreCase("1") && !a.equalsIgnoreCase("0"))
+                if((borrowed.equalsIgnoreCase("1") || borrowed2.equalsIgnoreCase("1")) && !a.equalsIgnoreCase("0"))
                 {
-                    t1 = Integer.parseInt(a, 16) - Integer.parseInt(borrowed);
+                    t1 = Integer.parseInt(a, 16) - Integer.parseInt((borrowed.equalsIgnoreCase("1")?borrowed:borrowed2),16);
                     borrowed = "0";
+                    borrowed2 ="0";
                 }
-                else if(borrowed.equalsIgnoreCase("1"))
+                else if(borrowed.equalsIgnoreCase("1") || borrowed2.equalsIgnoreCase("1"))
                 {
-                    t1 = (Integer.parseInt(a, 16) + Integer.parseInt("10", 16)) - Integer.parseInt(borrowed);
-                    borrowed = "1";
+                    t1 = (Integer.parseInt(a, 16) + Integer.parseInt("10", 16)) - Integer.parseInt((borrowed.equalsIgnoreCase("1")?borrowed:borrowed2),16);
+                    borrowed2 = "1";
                 }
                 else
                 {

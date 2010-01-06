@@ -43,14 +43,14 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException
+    public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException, Exception
     {
         //test code goes here!
         //SHA1.getHash("123456789");
-        System.out.println(SHA1.getHash("123456789").getStringHash()+"\n"+SHA1.getHash("223456789").getStringHash());
+        System.out.println(SHA1.getHash("12346789").getStringHash()+"\n"+SHA1.getHash("223456789").getStringHash());
         //System.out.println(SHAhash.add(SHA1.getHash("123456789").getStringHash() ,SHA1.getHash("223456789").getStringHash()));
         //System.out.println(SHAhash.add("a7ae3441" ,"7f5220ae"));
-        System.out.println(SHAhash.subtract(SHA1.getHash("123456789").getStringHash() ,SHA1.getHash("223456789").getStringHash()));
+        System.out.println(SHAhash.subtract(SHA1.getHash("12346789").getStringHash() ,SHA1.getHash("223456789").getStringHash()));
         //http://www.wolframalpha.com/input/?i=0xfad+%2B+0xfad
     }
 }
