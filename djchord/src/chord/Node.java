@@ -75,7 +75,7 @@ public class Node implements RemoteNode {
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
-        if (k.compareTo(search.getKey())==1 && k.compareTo(search.getSuccessor().getKey())<=0)
+        if (k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0)
         {
             return search.getSuccessor();
         }
@@ -99,13 +99,13 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
-        if (k.compareTo(fingers[159].getKey())==1 || k.compareTo(this.getKey())==-1)
+        if (k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0)
         {
             return fingers[159].closest_preceding_node(k);
         }
         for(int i=158;i>=0;i--)
         {
-            if (k.compareTo(fingers[i].getKey())==1 && (k.compareTo(fingers[i].getSuccessor().getKey())==-1 || fingers[i].getSuccessor().isFirst()))
+            if (k.compareTo(fingers[i].getKey())>0 && (k.compareTo(fingers[i].getSuccessor().getKey())<0 || fingers[i].getSuccessor().isFirst()))
             {
                  return fingers[i];
             }
