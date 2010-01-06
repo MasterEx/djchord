@@ -164,7 +164,7 @@ public class Node implements RemoteNode {
         return pid;
     }
 
-    public boolean isFirst() throws RemoteException
+    synchronized public boolean isFirst() throws RemoteException
     {
         return first;
     }
@@ -224,12 +224,12 @@ public class Node implements RemoteNode {
         this.predecessor = previous;
     }
 
-    public void setFirst() throws RemoteException
+    synchronized public void setFirst() throws RemoteException
     {
         this.first = true;
     }
 
-    public void unsetFirst() throws RemoteException
+    synchronized public void unsetFirst() throws RemoteException
     {
         this.first = false;
     }

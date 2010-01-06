@@ -84,6 +84,12 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 node.setPredecessor(successor.getPredecessor());
                 node.getPredecessor().setSuccessor(node);
                 successor.setPredecessor(node);
+                //here we set this node First in chord if it is
+                if(successor.isFirst() && node.getKey().compareTo(successor.getKey())<0)
+                {
+                    successor.unsetFirst();
+                    node.setFirst();
+                }
 
                 in.close();
                 socket.close();
