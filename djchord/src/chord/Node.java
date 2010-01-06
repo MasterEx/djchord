@@ -249,10 +249,12 @@ public class Node implements RemoteNode {
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         for(int i=0;i<159;i++)
         {
-            //this.fingers[i] = simple_find_successor(this.getKey().getStringHash());
-            //2^159 is too large!!! - long is 2^64-1 - 2^159 is 41 digits
-            //what about use 2^10 = 2^5*2^5 ???
             temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
+            /*
+             * if hash is greater than max sha1 hash value it takes a value
+             * equal to value-maxValue. Then we return a RemoteNode with
+             * find_successor to the finger table
+             */
             this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
         }
     }
