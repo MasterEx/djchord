@@ -76,6 +76,38 @@ public class DJchord implements Runnable {
             Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
         }
         sendmulticast.start();
+        for(;;)
+        {
+            try
+            {
+                runner.wait();
+            }
+            catch (InterruptedException ex)
+            {
+                try 
+                {
+                    if (node.isNotified())
+                    {
+                        break;
+                    }
+                }
+                catch (RemoteException ex1)
+                {
+                    Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+        for(int i=0;i<2;i++)
+        {
+            try
+            {
+                node.setSuccessor(i+1, node.getSuccessor().getSuccessor(i));
+            }
+            catch (RemoteException ex)
+            {
+                Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /*

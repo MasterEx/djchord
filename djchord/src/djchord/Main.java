@@ -58,6 +58,6 @@ public class Main {
         }
         //System.out.println(SHAhash.add(SHA1.getHash("12346789").getStringHash() ,SHA1.getHash("223456789").getStringHash()));
         //http://www.wolframalpha.com/input/?i=0xfad+%2B+0xfad
-        //System.out.println(SHAhash.subtract("ffffffffffffffffffffffffffffffffffffffff","1013ec5facb31d974abea91a8cce022332a71bd72"));
+        System.out.println();
     }
 }

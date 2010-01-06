@@ -37,6 +37,7 @@ import java.lang.management.ManagementFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.rmi.RemoteException;
+import java.util.Vector;
 import networking.RMIRegistry;
 
 /**
@@ -54,7 +55,8 @@ public class Node implements RemoteNode {
     private RemoteNode[] fingers,successors;
     private Map<SHAhash,String> index;
     private RemoteNode predecessor;
-    private boolean first = false, last = false;
+    private boolean first = false, last = false, notified = false;
+    private Vector<RemoteNode> compressedFingers;
 
     /**
      * constructor
@@ -68,6 +70,11 @@ public class Node implements RemoteNode {
         file_keys = setFile_keys();
         this.setSuccessor(this);
         this.setPredecessor(this);
+        this.setFingers();
+        for(int u=0;u<3;u++)
+        {
+            this.setSuccessor(u, this);
+        }
     }
 
     //public
@@ -124,6 +131,37 @@ public class Node implements RemoteNode {
         {
             this.index.put(nodeHash, fileName);
         }
+    }
+    
+    public void compressFingers() throws RemoteException
+    {
+        int j=0, i=0;
+        for(;i<159;i++)
+        {
+            for(;j<159;j++)
+            {
+                if(!fingers[i].getPid().equalsIgnoreCase(fingers[j].getPid()))
+                {
+                    break;
+                }
+            }
+            if(j!=159)
+            {
+                this.compressedFingers.add(fingers[i]);
+                this.compressedFingers.add(fingers[j]);
+                i = j;
+            }
+            else
+            {
+                this.compressedFingers.add(fingers[i]);
+                break;
+            }
+        }
+    }
+
+    public void fixFingers()
+    {
+
     }
 
     /**
@@ -183,6 +221,11 @@ public class Node implements RemoteNode {
     {
         return this.pid+" "+this.getAddress();
     }
+    
+    synchronized public boolean isNotified() throws RemoteException
+    {
+        return notified;
+    }
 
     /**
      * set methods
@@ -209,12 +252,12 @@ public class Node implements RemoteNode {
         return file_keys;
     }
 
-    public void setSuccessor(RemoteNode next) throws RemoteException
+    synchronized public void setSuccessor(RemoteNode next) throws RemoteException
     {
         this.successors[0] = next;
     }
 
-    public void setSuccessor(int i,RemoteNode next) throws RemoteException
+    synchronized public void setSuccessor(int i,RemoteNode next) throws RemoteException
     {
         this.successors[i] = next;
     }
@@ -244,7 +287,7 @@ public class Node implements RemoteNode {
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
     }
 
-    public void setFingers() throws RemoteException, Exception
+    public void setFingers() throws RemoteException
     {
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         for(int i=0;i<159;i++)
@@ -255,8 +298,13 @@ public class Node implements RemoteNode {
              * equal to value-maxValue. Then we return a RemoteNode with
              * find_successor to the finger table
              */
-            this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
+            this.fingers[i] = this.simple_find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
         }
+    }
+    
+    synchronized public void notified() throws RemoteException
+    {
+        this.notified = true;
     }
 
 }

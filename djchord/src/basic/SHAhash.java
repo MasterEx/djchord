@@ -249,7 +249,7 @@ public class SHAhash implements Comparable<SHAhash>{
      * special thanks to mathforum.org
      * http://mathforum.org/library/drmath/view/55943.html
      */
-    public static String subtract(String first, String second) throws Exception
+    public static String subtract(String first, String second)
     {
         if(SHAhash.compareTo(first,second)>=0)
         {

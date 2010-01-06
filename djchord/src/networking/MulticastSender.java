@@ -114,6 +114,8 @@ public class MulticastSender extends Multicast implements Runnable{
                 node.setFirst();
             }
             closeconnection();
+            node.notified();
+            notifyAll();
         }
         catch (NotInitializedVariablesException ex)
         {
