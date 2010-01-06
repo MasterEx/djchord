@@ -253,7 +253,7 @@ public class Node implements RemoteNode {
             //2^159 is too large!!! - long is 2^64-1 - 2^159 is 41 digits
             //what about use 2^10 = 2^5*2^5 ???
             temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
-            this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
+            this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
         }
     }
 
