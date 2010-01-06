@@ -244,14 +244,16 @@ public class Node implements RemoteNode {
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
     }
 
-    public void setFingers() throws RemoteException
+    public void setFingers() throws RemoteException, Exception
     {
+        SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         for(int i=0;i<159;i++)
         {
             //this.fingers[i] = simple_find_successor(this.getKey().getStringHash());
             //2^159 is too large!!! - long is 2^64-1 - 2^159 is 41 digits
             //what about use 2^10 = 2^5*2^5 ???
-            this.fingers[i] = this.find_successor(new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1))));
+            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
+            this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash(SHAhash.subtract(temp.getStringHash(), max.getStringHash())):temp);
         }
     }
 
