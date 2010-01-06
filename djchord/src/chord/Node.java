@@ -75,7 +75,7 @@ public class Node implements RemoteNode {
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
-        if (k.compareTo(search.getKey())==1 && k.compareTo(search.getSuccessor().getKey())<=0)
+        if (k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0)
         {
             return search.getSuccessor();
         }
@@ -99,13 +99,13 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
-        if (k.compareTo(fingers[159].getKey())==1 || k.compareTo(this.getKey())==-1)
+        if (k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0)
         {
             return fingers[159].closest_preceding_node(k);
         }
         for(int i=158;i>=0;i--)
         {
-            if (k.compareTo(fingers[i].getKey())==1 && (k.compareTo(fingers[i].getSuccessor().getKey())==-1 || fingers[i].getSuccessor().isFirst()))
+            if (k.compareTo(fingers[i].getKey())>0 && (k.compareTo(fingers[i].getSuccessor().getKey())<0 || fingers[i].getSuccessor().isFirst()))
             {
                  return fingers[i];
             }
@@ -244,14 +244,16 @@ public class Node implements RemoteNode {
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
     }
 
-    public void setFingers() throws RemoteException
+    public void setFingers() throws RemoteException, Exception
     {
+        SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         for(int i=0;i<159;i++)
         {
             //this.fingers[i] = simple_find_successor(this.getKey().getStringHash());
             //2^159 is too large!!! - long is 2^64-1 - 2^159 is 41 digits
             //what about use 2^10 = 2^5*2^5 ???
-            this.fingers[i] = this.find_successor(new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1))));
+            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
+            this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash(SHAhash.subtract(temp.getStringHash(), max.getStringHash())):temp);
         }
     }
 
