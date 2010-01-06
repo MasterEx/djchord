@@ -232,6 +232,18 @@ public class SHAhash implements Comparable<SHAhash>{
         return outcome;
     }
 
+    public static int compareTo(String one,String two)
+    {
+        if(one.length()-two.length()>0)
+        {
+            return one.length()-two.length();
+        }
+        else
+        {
+            return one.compareTo(two);
+        }
+    }
+
     /*
      * a method that subtracts a hexadesimal String from another (first-second)
      * special thanks to mathforum.org
@@ -239,7 +251,7 @@ public class SHAhash implements Comparable<SHAhash>{
      */
     public static String subtract(String first, String second) throws Exception
     {
-        if(first.compareTo(second)>0)
+        if(SHAhash.compareTo(first,second)>=0)
         {
             String outcome = "", borrowed="0", borrowed2="0", t3 = "0";
             int max, t1, t2;
