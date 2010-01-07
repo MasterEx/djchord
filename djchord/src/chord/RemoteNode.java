@@ -61,4 +61,5 @@ public interface RemoteNode extends Remote{
     public void notified() throws RemoteException;
     public boolean isNotified() throws RemoteException;
     public void fixFingers() throws RemoteException;
+    public RemoteNode[] getSuccessorSuccessorsList() throws RemoteException;
 }

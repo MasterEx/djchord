@@ -34,10 +34,13 @@ import basic.SHA1;
 import basic.SHAhash;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.rmi.NotBoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.rmi.RemoteException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import networking.RMIRegistry;
 
 /**
@@ -52,11 +55,12 @@ public class Node implements RemoteNode {
     private SHAhash key;
     private String folder,pid;
     private SHAhash[] file_keys;
-    private RemoteNode[] fingers,successors;
+    private RemoteNode[] fingers,successors = new RemoteNode[3];
     private Map<SHAhash,String> index;
     private RemoteNode predecessor;
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
+    private RemoteNode thisnode = null;
 
     /**
      * constructor
@@ -71,15 +75,50 @@ public class Node implements RemoteNode {
         this.setSuccessor(this);
         this.setPredecessor(this);
         this.fixFingers();
+        try
+        {
+            thisnode = RMIRegistry.getRemoteNode(this.getAddress(), pid);
+        }
+        catch (NotBoundException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
         for(int u=0;u<3;u++)
         {
-            this.setSuccessor(u, this);
+            this.setSuccessor(u, thisnode);
         }
     }
 
     public void initSuccessors()
     {
-        
+        // calls getSuccessorSuccessorsList and handles the returned array
+    }
+    
+    public RemoteNode[] getSuccessorSuccessorsList() throws RemoteException
+    {
+        int counter = 0; // how many times this node is in successors list
+        for(int i=0;i<successors.length;i++)
+        {
+            if(successors[i].getPid().equalsIgnoreCase(this.getPid()))
+            {
+                counter++;
+            }
+        }
+        switch (counter)
+        {
+            case 1:successors[1] = this.getPredecessor();
+            try
+            {
+                successors[2] = RMIRegistry.getRemoteNode(this.getAddress(), pid);
+            }
+            catch (NotBoundException ex)
+            {
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            break;
+            case 3:successors[1] = this.getPredecessor(); break;
+        }
+        return successors;
     }
 
     public void stabilize() throws RemoteException
@@ -154,6 +193,7 @@ public class Node implements RemoteNode {
     
     public void compressFingers() throws RemoteException
     {
+        compressedFingers = new Vector<RemoteNode>();
         int j=0, i=0;
         for(;i<159;i++)
         {
@@ -176,6 +216,7 @@ public class Node implements RemoteNode {
                 break;
             }
         }
+        compressedFingers.trimToSize();
     }
 
     public void fixFingers() throws RemoteException
