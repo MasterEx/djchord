@@ -70,14 +70,33 @@ public class Node implements RemoteNode {
         file_keys = setFile_keys();
         this.setSuccessor(this);
         this.setPredecessor(this);
-        this.setFingers();
+        this.fixFingers();
         for(int u=0;u<3;u++)
         {
             this.setSuccessor(u, this);
         }
     }
 
-    //public
+    public void initSuccessors()
+    {
+        
+    }
+
+    public void stabilize() throws RemoteException
+    {
+        int i = 0;
+        try
+        {
+            for(;i<3;i++)
+            {
+                this.getSuccessor(i).getKey();
+            }
+        }
+        catch (RemoteException e)
+        {
+
+        }
+    }
 
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
@@ -159,9 +178,10 @@ public class Node implements RemoteNode {
         }
     }
 
-    public void fixFingers()
+    public void fixFingers() throws RemoteException
     {
-
+        this.setFingers();
+        this.compressFingers();
     }
 
     /**

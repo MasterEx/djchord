@@ -39,6 +39,7 @@ import java.rmi.RemoteException;
  */
 public interface RemoteNode extends Remote{
 
+    public void stabilize() throws RemoteException;
     public RemoteNode find_successor(SHAhash k) throws RemoteException;
     public RemoteNode getPredecessor()throws RemoteException;
     public RemoteNode getSuccessor()throws RemoteException;
@@ -59,4 +60,5 @@ public interface RemoteNode extends Remote{
     public void unsetFirst() throws RemoteException;
     public void notified() throws RemoteException;
     public boolean isNotified() throws RemoteException;
+    public void fixFingers() throws RemoteException;
 }
