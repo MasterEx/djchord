@@ -119,7 +119,7 @@ public class FileNames {
         }
         catch (NullPointerException e)
         {
-            System.out.println("The folder is empty or doesn't exist");
+            System.err.println("The folder is empty or doesn't exist");
         }
         return retval;
     }

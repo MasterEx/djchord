@@ -65,4 +65,8 @@ public interface RemoteNode extends Remote{
     public void initSuccessors() throws RemoteException;
     public void fixAllFingers() throws RemoteException;
     public RemoteNode getNode() throws RemoteException;
+    public void setPortBusy(int i) throws RemoteException;
+    public boolean getPort(int i) throws RemoteException;
+    public boolean getAvailablePort(int port) throws RemoteException;
+    public void sendFile(int port,String address,String file) throws RemoteException;
 }

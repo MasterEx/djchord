@@ -32,6 +32,7 @@ package chord;
 import basic.FileNames;
 import basic.SHA1;
 import basic.SHAhash;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.rmi.NoSuchObjectException;
@@ -42,6 +43,7 @@ import java.rmi.RemoteException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import networking.FileSender;
 import networking.RMIRegistry;
 
 /**
@@ -63,6 +65,7 @@ public class Node implements RemoteNode {
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
     private Check check;
+    private boolean[] ports;
 
     /**
      * constructor
@@ -88,9 +91,31 @@ public class Node implements RemoteNode {
         }
         check = new Check(thisnode);
         check.start();
+        ports = new boolean[3000];
+        for(int i=0;i<3000;i++)
+        {
+            ports[i] = false;
+        }
+    }
+    
+    public void sendFile(int port,String address,String file) throws RemoteException
+    {
+        FileSender sender = new FileSender(address,port,File.separator+"downloads"+File.separator+file);
+        sender.start();
     }
 
-    /*
+    synchronized public boolean getAvailablePort(int port) throws RemoteException
+    {
+        // if port is free
+        if(!ports[50000-port])
+        {
+            this.setPortBusy(50000-port);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * calls getSuccessorSuccessorsList and handles the returned array
      */
     public void initSuccessors() throws RemoteException
@@ -311,6 +336,11 @@ public class Node implements RemoteNode {
         return thisnode;
     }
 
+    public boolean getPort(int i) throws RemoteException
+    {
+        return ports[i];
+    }
+
     synchronized public boolean isFirst() throws RemoteException
     {
         return first;
@@ -334,6 +364,40 @@ public class Node implements RemoteNode {
     synchronized public boolean isNotified() throws RemoteException
     {
         return notified;
+    }
+
+    synchronized public void getFile(String filename)
+    {
+        int port = 0;
+        for(int i=0;i<ports.length;i++)
+        {
+            if(!ports[i])
+            {
+                port = 50000+i;
+                break;
+            }
+        }
+        try
+        {
+            RemoteNode responsible = this.find_successor(SHA1.getHash(filename));
+            while(!responsible.getAvailablePort(port))
+            {
+                port++;
+            }
+
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (RemoteException ex)
+        {
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     /**
@@ -398,6 +462,11 @@ public class Node implements RemoteNode {
          * and may not always work
          */
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
+    }
+
+    public void setPortBusy(int i) throws RemoteException
+    {
+        ports[i]=true;
     }
 
     public void setFingers() throws RemoteException

@@ -132,4 +132,12 @@ public class DJchord implements Runnable {
         runner.interrupt();
         runner = null;
     }
+
+    /*
+     * starts receiving files!
+     */
+    public void getFile(String name)
+    {
+        //this.node
+    }
 }
