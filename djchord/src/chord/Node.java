@@ -33,6 +33,7 @@ import basic.FileNames;
 import basic.SHA1;
 import basic.SHAhash;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.rmi.NoSuchObjectException;
@@ -44,6 +45,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import networking.FileReceiver;
 import networking.FileSender;
 import networking.RMIRegistry;
 
@@ -368,6 +370,11 @@ public class Node implements RemoteNode {
         return notified;
     }
 
+    public RemoteNode getFileResponsible(String filehash) throws RemoteException
+    {
+        return this.foreignfiles.get(filehash);
+    }
+
     synchronized public void getFile(String filename)
     {
         int port = 0;
@@ -381,12 +388,14 @@ public class Node implements RemoteNode {
         }
         try
         {
-            RemoteNode responsible = this.find_successor(SHA1.getHash(filename));
+            RemoteNode responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
             while(!responsible.getAvailablePort(port))
             {
                 port++;
             }
-
+            FileReceiver receiver = new FileReceiver(port,File.separator+"remote_files"+File.separator+filename);
+            receiver.start();
+            responsible.sendFile(port, this.getAddress(), filename);
         }
         catch (NoSuchAlgorithmException ex)
         {
@@ -398,8 +407,12 @@ public class Node implements RemoteNode {
         }
         catch (RemoteException ex)
         {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -466,9 +479,14 @@ public class Node implements RemoteNode {
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
     }
 
-    public void setPortBusy(int i) throws RemoteException
+    synchronized public void setPortBusy(int i) throws RemoteException
     {
         ports[i]=true;
+    }
+
+    public void unsetPortBusy(int i) throws RemoteException
+    {
+        ports[i]=false;
     }
 
     public void setFingers() throws RemoteException
