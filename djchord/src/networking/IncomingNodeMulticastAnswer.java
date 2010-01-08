@@ -92,6 +92,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 node.initSuccessors();
                 node.fixFingers();
                 node.fixAllFingers();
+                node.sendFiles2ResponsibleNode();
 
                 in.close();
                 socket.close();

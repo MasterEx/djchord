@@ -40,6 +40,7 @@ import java.rmi.NotBoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.rmi.RemoteException;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +61,7 @@ public class Node implements RemoteNode {
     private SHAhash[] file_keys;
     private RemoteNode[] fingers,successors = new RemoteNode[3];
     private Map<SHAhash,String> index;
+    private Map<String,RemoteNode> foreignfiles;
     private RemoteNode predecessor;
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
@@ -483,6 +485,11 @@ public class Node implements RemoteNode {
             this.fingers[i] = this.simple_find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
         }
     }
+
+    public void addFile(String filehash,RemoteNode node) throws RemoteException
+    {
+        foreignfiles.put(filehash, node);
+    }
     
     synchronized public void notified() throws RemoteException
     {
@@ -492,6 +499,18 @@ public class Node implements RemoteNode {
     public void hasFailed() throws RemoteException
     {
         return;
+    }
+    
+    public void sendFiles2ResponsibleNode() throws RemoteException
+    {
+        Iterator it = index.entrySet().iterator();
+        RemoteNode remotenode;
+        while(it.hasNext())
+        {
+            Map.Entry entry = (Map.Entry) it.next();
+            remotenode = this.find_successor((SHAhash)entry.getKey());
+            remotenode.addFile(((SHAhash)entry.getKey()).getStringHash(), thisnode);
+        }
     }
 
 }

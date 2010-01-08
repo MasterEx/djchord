@@ -43,6 +43,11 @@ public class Arguments {
         System.out.println("authors : Ntanasis Periklis and Chatzipetros Mike");
         System.out.println("This application is licensed under the MIT license," +
                 "see license.txt for further information");
+        
+        while(true)
+        {
+
+        }
     }
 
 }
