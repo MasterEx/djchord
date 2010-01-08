@@ -125,10 +125,10 @@ public class RMIRegistry {
     }
 
     /*
-* This method creates an RMIRegistry. It's like
-* start rmiregistry in windows or
-* rmiregistry & in linux
-*/
+    * This method creates an RMIRegistry. It's like
+    * start rmiregistry in windows or
+    * rmiregistry & in linux
+    */
     static public void createRegistry(int port)
     {
         try

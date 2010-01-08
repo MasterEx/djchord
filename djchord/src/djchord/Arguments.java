@@ -39,7 +39,10 @@ public class Arguments {
      */
     public static void handler(String args[])
     {
-        
+        System.out.println("djchord -- a distributed filesystem based on chord written in java\n");
+        System.out.println("authors : Ntanasis Periklis and Chatzipetros Mike");
+        System.out.println("This application is licensed under the MIT license," +
+                "see license.txt for further information");
     }
 
 }
