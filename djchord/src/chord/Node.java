@@ -89,9 +89,15 @@ public class Node implements RemoteNode {
         }
     }
 
-    public void initSuccessors()
+    /*
+     * calls getSuccessorSuccessorsList and handles the returned array
+     */
+    public void initSuccessors() throws RemoteException
     {
-        // calls getSuccessorSuccessorsList and handles the returned array
+        RemoteNode[] temp;
+        temp = this.getSuccessor().getSuccessorSuccessorsList();
+        this.setSuccessor(1, temp[0]);
+        this.setSuccessor(2, temp[1]);
     }
     
     public RemoteNode[] getSuccessorSuccessorsList() throws RemoteException
@@ -106,19 +112,19 @@ public class Node implements RemoteNode {
         }
         switch (counter)
         {
-            case 1:successors[1] = this.getPredecessor();
+            case 1:this.setSuccessor(1,this.getPredecessor());
             try
             {
-                successors[2] = RMIRegistry.getRemoteNode(this.getAddress(), pid);
+                this.setSuccessor(2, RMIRegistry.getRemoteNode(this.getAddress(), pid));
             }
             catch (NotBoundException ex)
             {
                 Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
             }
             break;
-            case 3:successors[1] = this.getPredecessor(); break;
+            case 3:this.setSuccessor(1, this.getPredecessor()); break;
         }
-        return successors;
+        return this.successors;
     }
 
     public void stabilize() throws RemoteException
