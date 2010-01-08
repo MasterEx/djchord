@@ -56,10 +56,13 @@ public interface RemoteNode extends Remote{
     public String getPid() throws RemoteException;
     public String getRMIInfo() throws RemoteException;
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException;
-    public void redistribute_keys(SHAhash k) throws RemoteException;
     public void unsetFirst() throws RemoteException;
     public void notified() throws RemoteException;
     public boolean isNotified() throws RemoteException;
     public void fixFingers() throws RemoteException;
     public RemoteNode[] getSuccessorSuccessorsList() throws RemoteException;
+    public void hasFailed() throws RemoteException;
+    public void initSuccessors() throws RemoteException;
+    public void fixAllFingers() throws RemoteException;
+    public RemoteNode getNode() throws RemoteException;
 }

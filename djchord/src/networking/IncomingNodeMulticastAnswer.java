@@ -29,7 +29,6 @@
 
 package networking;
 
-import basic.SHA1;
 import basic.SHAhash;
 import chord.Node;
 import chord.RemoteNode;
@@ -38,9 +37,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,14 +81,17 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 successor.setKey(new SHAhash(buffer));
                 node.setSuccessor(successor);
                 node.setPredecessor(successor.getPredecessor());
-                node.getPredecessor().setSuccessor(node);
-                successor.setPredecessor(node);
+                node.getPredecessor().setSuccessor(node.getNode());
+                successor.setPredecessor(node.getNode());
                 //here we set this node First in chord if it is
                 if(successor.isFirst() && node.getKey().compareTo(successor.getKey())<0)
                 {
                     successor.unsetFirst();
                     node.setFirst();
                 }
+                node.initSuccessors();
+                node.fixFingers();
+                node.fixAllFingers();
 
                 in.close();
                 socket.close();
@@ -102,17 +104,25 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                     RemoteNode responder = RMIRegistry.getRemoteNode(responders_address, responders_pid);
                     try
                     {
-                        responder.redistribute_keys(SHA1.getHash(pid));
+                        responder.stabilize();
+                        responder.fixAllFingers();
+                        System.out.println("Successor not found!");
+                        MulticastSender multicast = new MulticastSender(1101, "224.1.1.1", node.getPid().getBytes(), node);
+                        multicast.send();
                     }
                     catch (RemoteException ex1)
                     {
                         Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
                     }
-                    catch (NoSuchAlgorithmException ex1)
+                    catch (UnknownHostException ex1)
                     {
                         Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                     catch (UnsupportedEncodingException ex1)
+                    {
+                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                    catch (IOException ex1)
                     {
                         Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
                     }

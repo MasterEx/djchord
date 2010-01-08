@@ -32,7 +32,6 @@ package chord;
 import basic.FileNames;
 import basic.SHA1;
 import basic.SHAhash;
-import exceptions.MyNoSuchObjectException;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.rmi.NoSuchObjectException;
@@ -63,6 +62,7 @@ public class Node implements RemoteNode {
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
+    private Check check;
 
     /**
      * constructor
@@ -82,11 +82,12 @@ public class Node implements RemoteNode {
         file_keys = setFile_keys();
         this.setSuccessor(thisnode);
         this.setPredecessor(thisnode);
-        this.fixFingers();
         for(int u=0;u<3;u++)
         {
             this.setSuccessor(u, thisnode);
         }
+        check = new Check(thisnode);
+        check.start();
     }
 
     /*
@@ -129,18 +130,46 @@ public class Node implements RemoteNode {
 
     public void stabilize() throws RemoteException
     {
-        int i = 0;
-        try
+        check.stabilize();
+    }
+
+    public void oldStabilize() throws RemoteException
+    {
+        for( int i=0;i<3;i++)
         {
-            for(;i<3;i++)
+            try
             {
-                this.getSuccessor(i).getKey();
+                this.getSuccessor(i).hasFailed();
+            }
+            catch (NoSuchObjectException e)
+            {
+                if(i==0)
+                {
+                    this.setSuccessor(0,this.getSuccessor(1));
+                    this.setSuccessor(1,this.getSuccessor(2));
+                    this.setSuccessor(2,this.getSuccessor(2).getSuccessor());
+                    this.getSuccessor().setPredecessor(thisnode);
+                    this.getPredecessor().getPredecessor().stabilize();
+                    this.getPredecessor().stabilize();
+                }
+                else if(i==1)
+                {
+                    this.setSuccessor(1,this.getSuccessor(2));
+                    this.setSuccessor(2,this.getSuccessor(2).getSuccessor());
+                    this.getSuccessor(1).setPredecessor(this.getSuccessor());
+                    this.getSuccessor().stabilize();
+                    this.getPredecessor().stabilize();
+                    
+                }
+                else
+                {
+                    this.setSuccessor(2,this.getSuccessor().getSuccessor(1));
+                    this.getSuccessor(0).stabilize();
+                    this.getSuccessor(1).stabilize();
+                }
             }
         }
-        catch (NoSuchObjectException e)
-        {
-            
-        }
+        
     }
 
     public RemoteNode find_successor(SHAhash k) throws RemoteException
@@ -184,9 +213,17 @@ public class Node implements RemoteNode {
         return null; // unreachable statement
     }
 
-    public void redistribute_keys(SHAhash k) throws RemoteException
+    public void fixAllFingers() throws RemoteException
     {
-        //this.setPredecessor(this.find_successor(k).getPredecessor());
+        check.fixAllFingers();
+    }
+
+    public void oldFixAllFingers() throws RemoteException
+    {
+        for(RemoteNode tempnode=this.getSuccessor();tempnode.equals(thisnode);tempnode=tempnode.getSuccessor())
+        {
+            tempnode.fixFingers();
+        }
     }
 
     public void mapAdd(SHAhash nodeHash,String fileName)
@@ -267,6 +304,11 @@ public class Node implements RemoteNode {
     public String getPid() throws RemoteException
     {
         return pid;
+    }
+
+    public RemoteNode getNode() throws RemoteException
+    {
+        return thisnode;
     }
 
     synchronized public boolean isFirst() throws RemoteException
@@ -376,6 +418,11 @@ public class Node implements RemoteNode {
     synchronized public void notified() throws RemoteException
     {
         this.notified = true;
+    }
+
+    public void hasFailed() throws RemoteException
+    {
+        return;
     }
 
 }
