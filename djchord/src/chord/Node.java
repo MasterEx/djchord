@@ -67,14 +67,8 @@ public class Node implements RemoteNode {
      */
     public Node() throws NoSuchAlgorithmException, UnsupportedEncodingException, RemoteException
     {
-        //the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
-        //and may not always work
         pid = this.setPid();
         RMIRegistry.addNode(this,pid);
-        file_keys = setFile_keys();
-        this.setSuccessor(thisnode);
-        this.setPredecessor(thisnode);
-        this.fixFingers();
         try
         {
             thisnode = RMIRegistry.getRemoteNode(this.getAddress(), pid);
@@ -83,6 +77,10 @@ public class Node implements RemoteNode {
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
+        file_keys = setFile_keys();
+        this.setSuccessor(thisnode);
+        this.setPredecessor(thisnode);
+        this.fixFingers();
         for(int u=0;u<3;u++)
         {
             this.setSuccessor(u, thisnode);
@@ -351,6 +349,10 @@ public class Node implements RemoteNode {
     
     public String setPid()
     {
+        /**
+         * the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
+         * and may not always work
+         */
         return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
     }
 
