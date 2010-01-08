@@ -72,8 +72,8 @@ public class Node implements RemoteNode {
         pid = this.setPid();
         RMIRegistry.addNode(this,pid);
         file_keys = setFile_keys();
-        this.setSuccessor(this);
-        this.setPredecessor(this);
+        this.setSuccessor(thisnode);
+        this.setPredecessor(thisnode);
         this.fixFingers();
         try
         {
