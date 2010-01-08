@@ -32,8 +32,10 @@ package chord;
 import basic.FileNames;
 import basic.SHA1;
 import basic.SHAhash;
+import exceptions.MyNoSuchObjectException;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -135,9 +137,9 @@ public class Node implements RemoteNode {
                 this.getSuccessor(i).getKey();
             }
         }
-        catch (RemoteException e)
+        catch (NoSuchObjectException e)
         {
-
+            
         }
     }
 
