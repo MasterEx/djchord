@@ -86,6 +86,7 @@ public class Node implements RemoteNode {
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //we have to declare folder
         file_keys = setFile_keys();
         this.setSuccessor(thisnode);
         this.setPredecessor(thisnode);
@@ -101,27 +102,74 @@ public class Node implements RemoteNode {
             ports[i] = false;
         }
     }
-    
-    public void sendFile(int port,String address,String file) throws RemoteException
+
+    /**
+     * Here are the Node methods that return and set basic Node attributes.
+     */
+
+     // get methods
+
+    public SHAhash getKey()
     {
-        FileSender sender = new FileSender(address,port,File.separator+"downloads"+File.separator+file);
-        sender.start();
+        return this.key;
     }
 
-    synchronized public boolean getAvailablePort(int port) throws RemoteException
+    public String getPid() throws RemoteException
     {
-        // if port is free
-        if(!ports[50000-port])
-        {
-            this.setPortBusy(50000-port);
-            return true;
-        }
-        return false;
+        return pid;
     }
+
+    public RemoteNode getNode() throws RemoteException
+    {
+        return thisnode;
+    }
+
+    public String getAddress()
+    {
+        return RMIRegistry.getAddress();
+    }
+
+    public String getRMIInfo() throws RemoteException
+    {
+        return this.pid+" "+this.getAddress();
+    }
+
+    // set methods
+
+    public String setPid()
+    {
+        /**
+         * the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
+         * and may not always work
+         */
+        return this.pid = ManagementFactory.getRuntimeMXBean().getName();
+    }
+
+    // other important Node methods
+
+    synchronized public void notified() throws RemoteException
+    {
+        this.notified = true;
+    }
+
+    synchronized public boolean isNotified() throws RemoteException
+    {
+        return notified;
+    }
+
+    public void hasFailed() throws RemoteException
+    {
+        return;
+    }
+
+    /**
+     * The chord relative methods
+     */
 
     /**
      * calls getSuccessorSuccessorsList and handles the returned array
      */
+    
     public void initSuccessors() throws RemoteException
     {
         RemoteNode[] temp;
@@ -157,11 +205,58 @@ public class Node implements RemoteNode {
         return this.successors;
     }
 
+    public RemoteNode find_successor(SHAhash k) throws RemoteException
+    {
+        Node search = this;
+        if (k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0)
+        {
+            return search.getSuccessor();
+        }
+        else
+        {
+            return search.closest_preceding_node(k).find_successor(k);
+        }
+    }
+    
+    /**
+     * this methos finds successors linear by checkinng the successor's successor
+     */
+    public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
+    {
+        for(RemoteNode tempnode=this.getSuccessor();tempnode==this;tempnode=tempnode.getSuccessor())
+        {
+            if((k.compareTo(tempnode.getKey())<0 || tempnode.isFirst())&& k.compareTo(tempnode.getPredecessor().getKey())>=0)
+            {
+                return tempnode;
+            }
+        }
+        return this;
+    }
+    
+    public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
+    {
+        if (k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0)
+        {
+            return fingers[159].closest_preceding_node(k);
+        }
+        for(int i=158;i>=0;i--)
+        {
+            if (k.compareTo(fingers[i].getKey())>0 && (k.compareTo(fingers[i].getSuccessor().getKey())<0 || fingers[i].getSuccessor().isFirst()))
+            {
+                 return fingers[i];
+            }
+        }
+        return null; // unreachable statement
+    }
+
     public void stabilize() throws RemoteException
     {
         check.stabilize();
     }
 
+    /**
+     * It isn't used because it has to be invoked from an other thread
+     */
     public void oldStabilize() throws RemoteException
     {
         for( int i=0;i<3;i++)
@@ -201,47 +296,6 @@ public class Node implements RemoteNode {
         
     }
 
-    public RemoteNode find_successor(SHAhash k) throws RemoteException
-    {
-        Node search = this;
-        if (k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0)
-        {
-            return search.getSuccessor();
-        }
-        else
-        {
-            return search.closest_preceding_node(k).find_successor(k);
-        }
-    }
-    
-    public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
-    {
-        for(RemoteNode tempnode=this.getSuccessor();tempnode==this;tempnode=tempnode.getSuccessor())
-        {
-            if((k.compareTo(tempnode.getKey())<0 || tempnode.isFirst())&& k.compareTo(tempnode.getPredecessor().getKey())>=0)
-            {
-                return tempnode;
-            }
-        }
-        return this;
-    }
-    
-    public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
-    {
-        if (k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0)
-        {
-            return fingers[159].closest_preceding_node(k);
-        }
-        for(int i=158;i>=0;i--)
-        {
-            if (k.compareTo(fingers[i].getKey())>0 && (k.compareTo(fingers[i].getSuccessor().getKey())<0 || fingers[i].getSuccessor().isFirst()))
-            {
-                 return fingers[i];
-            }
-        }
-        return null; // unreachable statement
-    }
-
     public void fixAllFingers() throws RemoteException
     {
         check.fixAllFingers();
@@ -255,14 +309,76 @@ public class Node implements RemoteNode {
         }
     }
 
-    public void mapAdd(SHAhash nodeHash,String fileName)
+    synchronized public void setSuccessor(RemoteNode next) throws RemoteException
     {
-        if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
+        this.successors[0] = next;
+    }
+
+    synchronized public void setSuccessor(int i,RemoteNode next) throws RemoteException
+    {
+        this.successors[i] = next;
+    }
+
+    public void setPredecessor(RemoteNode previous) throws RemoteException
+    {
+        this.predecessor = previous;
+    }
+
+    public RemoteNode getSuccessor() throws RemoteException
+    {
+        return successors[0];
+    }
+
+    public RemoteNode getSuccessor(int i) throws RemoteException
+    {
+        return successors[i];
+    }
+
+    public RemoteNode getPredecessor() throws RemoteException
+    {
+        return predecessor;
+    }
+
+    synchronized public void setFirst() throws RemoteException
+    {
+        this.first = true;
+    }
+
+    synchronized public void unsetFirst() throws RemoteException
+    {
+        this.first = false;
+    }
+
+    public void setLast() throws RemoteException
+    {
+        this.last = true;
+    }
+
+    synchronized public boolean isFirst() throws RemoteException
+    {
+        return first;
+    }
+
+    public boolean isLast() throws RemoteException
+    {
+        return last;
+    }
+
+    public void setFingers() throws RemoteException
+    {
+        SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+        for(int i=0;i<159;i++)
         {
-            this.index.put(nodeHash, fileName);
+            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
+            /*
+             * if hash is greater than max sha1 hash value it takes a value
+             * equal to value-maxValue. Then we return a RemoteNode with
+             * find_successor to the finger table
+             */
+            this.fingers[i] = this.simple_find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
         }
     }
-    
+
     public void compressFingers() throws RemoteException
     {
         compressedFingers = new Vector<RemoteNode>();
@@ -298,11 +414,15 @@ public class Node implements RemoteNode {
     }
 
     /**
-     * get methods
+     * Here are hte methods about files indexing and move.
      */
-    public SHAhash getKey()
+
+    public void mapAdd(SHAhash nodeHash,String fileName)
     {
-        return this.key;
+        if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
+        {
+            this.index.put(nodeHash, fileName);
+        }
     }
 
     public String getFolder()
@@ -315,59 +435,9 @@ public class Node implements RemoteNode {
         return this.file_keys;
     }
 
-    public RemoteNode getSuccessor() throws RemoteException
-    {
-        return successors[0];
-    }
-
-    public RemoteNode getSuccessor(int i) throws RemoteException
-    {
-        return successors[i];
-    }
-
-    public RemoteNode getPredecessor() throws RemoteException
-    {
-        return predecessor;
-    }
-
-    public String getPid() throws RemoteException
-    {
-        return pid;
-    }
-
-    public RemoteNode getNode() throws RemoteException
-    {
-        return thisnode;
-    }
-
     public boolean getPort(int i) throws RemoteException
     {
         return ports[i];
-    }
-
-    synchronized public boolean isFirst() throws RemoteException
-    {
-        return first;
-    }
-
-    public boolean isLast() throws RemoteException
-    {
-        return last;
-    }
-
-    public String getAddress()
-    {
-        return RMIRegistry.getAddress();
-    }
-
-    public String getRMIInfo() throws RemoteException
-    {
-        return this.pid+" "+this.getAddress();
-    }
-    
-    synchronized public boolean isNotified() throws RemoteException
-    {
-        return notified;
     }
 
     public RemoteNode getFileResponsible(String filehash) throws RemoteException
@@ -414,10 +484,6 @@ public class Node implements RemoteNode {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    /**
-     * set methods
-     */
     public void setKey(SHAhash key) throws RemoteException
     {
          this.key = key;
@@ -440,83 +506,9 @@ public class Node implements RemoteNode {
         return file_keys;
     }
 
-    synchronized public void setSuccessor(RemoteNode next) throws RemoteException
-    {
-        this.successors[0] = next;
-    }
-
-    synchronized public void setSuccessor(int i,RemoteNode next) throws RemoteException
-    {
-        this.successors[i] = next;
-    }
-
-    public void setPredecessor(RemoteNode previous) throws RemoteException
-    {
-        this.predecessor = previous;
-    }
-
-    synchronized public void setFirst() throws RemoteException
-    {
-        this.first = true;
-    }
-
-    synchronized public void unsetFirst() throws RemoteException
-    {
-        this.first = false;
-    }
-
-    public void setLast() throws RemoteException
-    {
-        this.last = true;
-    }
-    
-    public String setPid()
-    {
-        /**
-         * the ManagementFactory.getRuntimeMXBean().getName() is JVM dependent
-         * and may not always work
-         */
-        return this.pid = ManagementFactory.getRuntimeMXBean().getName(); 
-    }
-
-    synchronized public void setPortBusy(int i) throws RemoteException
-    {
-        ports[i]=true;
-    }
-
-    public void unsetPortBusy(int i) throws RemoteException
-    {
-        ports[i]=false;
-    }
-
-    public void setFingers() throws RemoteException
-    {
-        SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-        for(int i=0;i<159;i++)
-        {
-            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
-            /*
-             * if hash is greater than max sha1 hash value it takes a value
-             * equal to value-maxValue. Then we return a RemoteNode with
-             * find_successor to the finger table
-             */
-            this.fingers[i] = this.simple_find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
-        }
-    }
-
     public void addFile(String filehash,RemoteNode node) throws RemoteException
     {
         foreignfiles.put(filehash, node);
-    }
-    
-    synchronized public void notified() throws RemoteException
-    {
-        this.notified = true;
-    }
-
-    public void hasFailed() throws RemoteException
-    {
-        return;
     }
     
     public void sendFiles2ResponsibleNode() throws RemoteException
@@ -529,6 +521,33 @@ public class Node implements RemoteNode {
             remotenode = this.find_successor((SHAhash)entry.getKey());
             remotenode.addFile(((SHAhash)entry.getKey()).getStringHash(), thisnode);
         }
+    }
+
+    synchronized public void setPortBusy(int i) throws RemoteException
+    {
+        ports[i]=true;
+    }
+
+    public void unsetPortBusy(int i) throws RemoteException
+    {
+        ports[i]=false;
+    }
+
+    public void sendFile(int port,String address,String file) throws RemoteException
+    {
+        FileSender sender = new FileSender(address,port,File.separator+"downloads"+File.separator+file);
+        sender.start();
+    }
+
+    synchronized public boolean getAvailablePort(int port) throws RemoteException
+    {
+        // if port is free
+        if(!ports[50000-port])
+        {
+            this.setPortBusy(50000-port);
+            return true;
+        }
+        return false;
     }
 
 }
