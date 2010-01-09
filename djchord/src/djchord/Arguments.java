@@ -43,6 +43,16 @@ public class Arguments {
         System.out.println("authors : Ntanasis Periklis and Chatzipetros Mike");
         System.out.println("This application is licensed under the MIT license," +
                 "see license.txt for further information");
+
+        if(args.length == 1 && args[0].equalsIgnoreCase("-h"))
+        {
+            System.out.println("this is the help");
+        }
+        else if(args.length%2 != 0)
+        {
+            System.out.println("Syntax error: Unexpected number of arguments, use -h for help");
+            System.exit(1);
+        }
         
         while(true)
         {
