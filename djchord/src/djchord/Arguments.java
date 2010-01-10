@@ -28,6 +28,11 @@
  */
 
 package djchord;
+
+import chord.DJchord;
+import java.util.Scanner;
+import networking.RMIRegistry;
+
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
@@ -53,10 +58,65 @@ public class Arguments {
             System.out.println("Syntax error: Unexpected number of arguments, use -h for help");
             System.exit(1);
         }
+
+        int counter = 0;
         
         while(true)
         {
+            if (counter == args.length)
+            {
+                break;
+            }
 
+            if (args[counter].equalsIgnoreCase("-startrmi"))
+            {
+                if (args.length==2)
+                {
+                    RMIRegistry.createRegistry(Integer.valueOf(args[++counter]));
+                }
+                else
+                {
+                    RMIRegistry.createRegistry();
+                }
+            }
+
+            if (args[counter].equalsIgnoreCase("-createnode"))
+            {
+                DJchord chord = new DJchord();
+                chord.start();
+                System.out.println("A node was created." +
+                        "\nUse help to see the available options");
+                Scanner in = new Scanner(System.in);
+                //submenu
+                while (true)
+                {
+                    if(in.next().equalsIgnoreCase("help"))
+                    {
+                        System.out.println("exit\nhelp\ngetfile\nquit");
+                    }
+                    else if(in.next().equalsIgnoreCase("quit") || in.next().equalsIgnoreCase("exit"))
+                    {
+                        System.out.println("The process is terminating...");
+                        chord.stop();
+                        System.exit(0);
+                    }
+                    else if(in.next().equalsIgnoreCase("getfile"))
+                    {
+                        if(in.hasNext())
+                        {
+                            chord.getFile(in.next());
+                        }
+                        else
+                        {
+                            System.out.print("Give file name:");
+                            chord.getFile(in.next());
+                            System.out.println();
+                        }
+                    }
+                    in.reset();
+                }
+            }
+            counter++;
         }
     }
 

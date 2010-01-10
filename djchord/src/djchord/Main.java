@@ -45,6 +45,10 @@ public class Main {
      */
     public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException, Exception
     {
+        if(args.length>0)
+        {
+            Arguments.handler(args);
+        }
         //test code goes here!
         //SHA1.getHash("123456789");
         //System.out.println(SHA1.getHash("12346789").getStringHash()+"\n"+SHA1.getHash("223456789").getStringHash());
