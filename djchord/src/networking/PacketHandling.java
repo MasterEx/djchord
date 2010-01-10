@@ -88,15 +88,15 @@ public class PacketHandling implements Runnable{
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("successor is dead");
         }
         catch (UnknownHostException ex)
         {
-            Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("The IP address of the host could not be determined.");
         }
         catch (IOException ex)
         {
-            Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Sorry, but somenone else was quicker...Better luck next time! ;)");
         }
         finally
         {
