@@ -40,6 +40,7 @@ public class Check implements Runnable{
 
     private Thread runner;
     private RemoteNode node;
+    private boolean stabilize = false, fixfingers = false;
 
     public Check(RemoteNode node)
     {
@@ -50,12 +51,24 @@ public class Check implements Runnable{
     {
         try
         {
-            while(true)
+            if(stabilize)
             {
                 node.stabilize();
+            }
+            else if(fixfingers)
+            {
                 node.fixFingers();
                 node.fixAllFingers();
-                Thread.sleep(60000); // 1 min
+            }
+            else
+            {
+                while(true)
+                {
+                    node.stabilize();
+                    node.fixFingers();
+                    node.fixAllFingers();
+                    Thread.sleep(60000); // 1 min
+                }
             }
         }
         catch (RemoteException ex)
@@ -70,10 +83,32 @@ public class Check implements Runnable{
     }
 
     /*
-     * starts the execution of the thread
+     * starts the periodical execution of the thread
      */
     public void start()
     {
+        if (runner==null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }
+    }
+
+    public void startStabilize()
+    {
+        stabilize = true;
+        if (runner==null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }
+    }
+
+    public void startFixFIngers()
+    {
+        fixfingers = true;
         if (runner==null)
         {
             runner = new Thread(this);
