@@ -68,7 +68,7 @@ public class Node implements RemoteNode {
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
-    private Check check, checkstabilize, checkfingers;
+    private Check check, checkstabilize, checkfingers, checkfirst;
     private boolean[] ports;
 
     /**
@@ -168,10 +168,10 @@ public class Node implements RemoteNode {
 
     public void findFirst()
     {
-        if(checkstabilize.isFree())
+        if(checkfirst.isFree())
         {
-            checkstabilize = new Check(this);
-            checkstabilize.startFindFirst();
+            checkfirst = new Check(this);
+            checkfirst.startFindFirst();
         }
     }
 
