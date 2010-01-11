@@ -49,15 +49,16 @@ public class Arguments {
         System.out.println("This application is licensed under the MIT license," +
                 "see license.txt for further information");
 
-        if(args.length == 1 && args[0].equalsIgnoreCase("-h"))
+        if(args.length == 1 && args[0].equalsIgnoreCase("-h") || args.length == 1 && args[0].equalsIgnoreCase("-help"))
         {
-            System.out.println("this is the help");
+            System.out.println("this is the help:");
+            System.out.println("-createnode\n-help\n-startrmi");
         }
-        else if(args.length%2 != 0)
+        /*else if(args.length%2 != 0)
         {
             System.out.println("Syntax error: Unexpected number of arguments, use -h for help");
             System.exit(1);
-        }
+        }*/
 
         int counter = 0;
         
@@ -90,7 +91,7 @@ public class Arguments {
                 //submenu
                 while (true)
                 {
-                    if(in.next().equalsIgnoreCase("help"))
+                    if(in.next().equalsIgnoreCase("-help"))
                     {
                         System.out.println("exit\nhelp\ngetfile\nquit");
                     }
@@ -101,7 +102,7 @@ public class Arguments {
                         //race condition may occur
                         System.exit(0);
                     }
-                    else if(in.next().equalsIgnoreCase("getfile"))
+                    else if(in.next().equalsIgnoreCase("-getfile"))
                     {
                         if(in.hasNext())
                         {
