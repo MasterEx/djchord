@@ -68,7 +68,7 @@ public class Node implements RemoteNode {
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
-    private Check check;
+    private Check check, checkstabilize, checkfingers;
     private boolean[] ports;
 
     /**
@@ -251,7 +251,11 @@ public class Node implements RemoteNode {
 
     public void stabilize() throws RemoteException
     {
-        check.stabilize();
+        if(checkstabilize.isFree())
+        {
+            checkstabilize = new Check(this);
+            checkstabilize.startStabilize();
+        }
     }
 
     /**
@@ -298,7 +302,11 @@ public class Node implements RemoteNode {
 
     public void fixAllFingers() throws RemoteException
     {
-        check.fixAllFingers();
+        if(checkfingers.isFree())
+        {
+            checkfingers = new Check(this);
+            checkfingers.startStabilize();
+        }
     }
 
     public void oldFixAllFingers() throws RemoteException

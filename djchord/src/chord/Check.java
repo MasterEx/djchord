@@ -47,7 +47,7 @@ public class Check implements Runnable{
         this.node = node;
     }
 
-    public void run() 
+    synchronized public void run()
     {
         try
         {
@@ -171,6 +171,11 @@ public class Check implements Runnable{
         {
             tempnode.fixFingers();
         }
+    }
+
+    synchronized boolean isFree()
+    {
+        return true;
     }
 
 }
