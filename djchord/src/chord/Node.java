@@ -166,6 +166,25 @@ public class Node implements RemoteNode {
      * The chord relative methods
      */
 
+    public boolean exit()
+    {
+        try
+        {
+            this.getSuccessor().setPredecessor(this.getPredecessor());
+            this.getPredecessor().setSuccessor(this.getSuccessor());
+            if (this.isFirst())
+            {
+                this.getSuccessor().setFirst();
+            }
+            return true;
+        }
+        catch (RemoteException e)
+        {
+            System.err.println("The successor or the predecessor has failed "+e);
+            return false;
+        }
+    }
+
     /**
      * calls getSuccessorSuccessorsList and handles the returned array
      */
@@ -557,5 +576,4 @@ public class Node implements RemoteNode {
         }
         return false;
     }
-
 }
