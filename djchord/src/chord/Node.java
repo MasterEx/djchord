@@ -76,6 +76,7 @@ public class Node implements RemoteNode {
      */
     public Node() throws NoSuchAlgorithmException, UnsupportedEncodingException, RemoteException
     {
+        RMIRegistry.init();
         pid = this.setPid();
         RMIRegistry.addNode(this,pid);
         try
