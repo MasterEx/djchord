@@ -148,10 +148,10 @@ public class DJchord implements Runnable {
      */
     public void killNode()
     {
-        RemoteNode successor = this.node.getSuccessor();
-        this.node.exit();
         try
         {
+            RemoteNode successor = this.node.getSuccessor();
+            this.node.exit();
             successor.stabilize();
             successor.fixFingers();
             successor.fixAllFingers();
