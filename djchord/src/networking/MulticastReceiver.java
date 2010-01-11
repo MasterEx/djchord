@@ -87,32 +87,60 @@ public class MulticastReceiver extends Multicast implements Runnable{
      *binds port to socket and joins the mullticast group
      */
     @Override
-    public void openconnection() throws NotInitializedVariablesException, IOException
+    public void openconnection()
     {
-        if(group.equalsIgnoreCase("") || port==-1)
+        try 
         {
-            throw (new NotInitializedVariablesException(this.getClass()+": " +
-                    "NotInitializedVariablesException:\n port or group address " +
-                    "are not initialized"));
-        }
+            if (group.equalsIgnoreCase("") || port == -1) {
+                throw (new NotInitializedVariablesException(this.getClass() + ": " +
+                        "NotInitializedVariablesException:\n port or group address " +
+                        "are not initialized"));
+            }
 
-        socket = new MulticastSocket(port);
-        socket.joinGroup(InetAddress.getByName(group));
+            socket = new MulticastSocket(port);
+            socket.joinGroup(InetAddress.getByName(group));
+        } 
+        catch (NotInitializedVariablesException ex) 
+        {
+            System.err.println(ex.getMessage());
+        } 
+        catch (IOException ex) 
+        {
+            if (socket==null) 
+            {
+                System.err.println("I/O exception occurred while creating the MulticastSocket " + ex);
+            } 
+            else 
+            {
+                System.err.println("there is an error joining or when the address is not a multicast address "+ex);
+            }
+        }
     }
 
     /*
      *closes the open connnections
      */
     @Override
-    public void closeconnection() throws IOException, NotInitializedVariablesException
+    public void closeconnection()
     {
-        if(socket == null)
+        try 
         {
-            throw (new NotInitializedVariablesException(this.getClass()+" : " +
-                    "NotInitializedVariablesException:\n socket is not initialized"));
+            if(socket == null)
+            {
+                throw (new NotInitializedVariablesException(this.getClass() + " : " +
+                        "NotInitializedVariablesException:\n socket is not initialized"));
+            }
+            socket.leaveGroup(InetAddress.getByName(group));
+            socket.close();
         }
-        socket.leaveGroup(InetAddress.getByName(group));
-        socket.close();
+        catch (NotInitializedVariablesException ex) 
+        {
+            System.err.println(ex.getMessage());
+        }
+        catch (IOException e)
+        {
+            System.err.println("An error occured while leaving or the address is not a multicast address\n"+e);
+        }
     }
 
     /*
@@ -139,10 +167,10 @@ public class MulticastReceiver extends Multicast implements Runnable{
             }            
             closeconnection();
         }
-        catch (NotInitializedVariablesException ex)
+       /*catch (NotInitializedVariablesException ex)
         {
-                Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         catch (IOException ex)
         {
             Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
@@ -167,18 +195,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
      */
     public void stop()
     {
-        try
-        {
-            closeconnection();
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NotInitializedVariablesException ex)
-        {
-            Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        closeconnection();
         runner.interrupt();
         runner = null;
     }
