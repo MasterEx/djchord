@@ -128,16 +128,30 @@ public class DJchord implements Runnable {
      */
     public void stop()
     {
+        this.killNode();
         sendmulticast.stop();
         runner.interrupt();
         runner = null;
     }
 
-    /*
+    /**
      * starts receiving files!
      */
     public void getFile(String name)
     {
         //this.node
+    }
+
+    /**
+     *
+     * this method terminetes the node
+     */
+    public void killNode()
+    {
+        RemoteNode successor = this.node.getSuccessor();
+        this.node.exit();
+        successor.stabilize();
+        successor.fixFingers();
+        successor.fixAllFingers();
     }
 }
