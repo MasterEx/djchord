@@ -165,6 +165,30 @@ public class Node implements RemoteNode {
     /**
      * The chord relative methods
      */
+    
+    public void findFirst() throws RemoteException
+    {
+        if(SHAhash.compareTo(this.getKey().getStringHash(),"8000000000000000000000000000000000000000")>0)
+        {
+            for(RemoteNode r = this.getSuccessor();r==this;r=this.getSuccessor())
+            {
+                if(r.getKey().compareTo(r.getSuccessor().getKey())>0)
+                {
+                    r.getSuccessor().setFirst();
+                }
+            }
+        }
+        else
+        {
+            for(RemoteNode r = this.getPredecessor();r==this;r=this.getPredecessor())
+            {
+                if(r.getKey().compareTo(r.getPredecessor().getKey())<0)
+                {
+                    r.setFirst();
+                }
+            }
+        }
+    }
 
     public boolean exit()
     {

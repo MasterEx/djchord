@@ -29,6 +29,7 @@
 
 package chord;
 
+import basic.SHAhash;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 
@@ -40,7 +41,7 @@ public class Check implements Runnable{
 
     private Thread runner;
     private RemoteNode node;
-    private boolean stabilize = false, fixfingers = false;
+    private boolean stabilize = false, fixfingers = false, findfirst = false;
 
     public Check(RemoteNode node)
     {
@@ -53,20 +54,25 @@ public class Check implements Runnable{
         {
             if(stabilize)
             {
-                node.stabilize();
+                this.stabilize();
             }
             else if(fixfingers)
             {
                 node.fixFingers();
-                node.fixAllFingers();
+                this.fixAllFingers();
+            }
+            else if(findfirst)
+            {
+                this.findFirst();
             }
             else
             {
                 while(true)
                 {
-                    node.stabilize();
+                    this.stabilize();
                     node.fixFingers();
-                    node.fixAllFingers();
+                    this.fixAllFingers();
+                    this.findFirst();
                     Thread.sleep(60000); // 1 min
                 }
             }
@@ -116,6 +122,18 @@ public class Check implements Runnable{
             runner.start();
         }
     }
+
+    public void startFindFirst()
+    {
+        findfirst = true;
+        if (runner==null)
+        {
+            runner = new Thread(this);
+            runner.setDaemon(true);
+            runner.start();
+        }
+    }
+
 
     /*
      * stops the execution of the thread
@@ -170,6 +188,30 @@ public class Check implements Runnable{
         for(RemoteNode tempnode=node.getSuccessor();tempnode.equals(node);tempnode=tempnode.getSuccessor())
         {
             tempnode.fixFingers();
+        }
+    }
+
+        public void findFirst() throws RemoteException
+    {
+        if(SHAhash.compareTo(node.getKey().getStringHash(),"8000000000000000000000000000000000000000")>0)
+        {
+            for(RemoteNode r = node.getSuccessor();r==node;r=node.getSuccessor())
+            {
+                if(r.getKey().compareTo(r.getSuccessor().getKey())>0)
+                {
+                    r.getSuccessor().setFirst();
+                }
+            }
+        }
+        else
+        {
+            for(RemoteNode r = node.getPredecessor();r==node;r=node.getPredecessor())
+            {
+                if(r.getKey().compareTo(r.getPredecessor().getKey())<0)
+                {
+                    r.setFirst();
+                }
+            }
         }
     }
 

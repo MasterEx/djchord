@@ -70,5 +70,6 @@ public interface RemoteNode extends Remote{
     public boolean getAvailablePort(int port) throws RemoteException;
     public void sendFile(int port,String address,String file) throws RemoteException;
     public void addFile(String filehash,RemoteNode node) throws RemoteException;
+    public void findFirst() throws RemoteException;
     public RemoteNode getFileResponsible(String filehash) throws RemoteException;
 }
