@@ -98,6 +98,7 @@ public class Arguments {
                     {
                         System.out.println("The process is terminating...");
                         chord.stop();
+                        //race condition may occur
                         System.exit(0);
                     }
                     else if(in.next().equalsIgnoreCase("getfile"))

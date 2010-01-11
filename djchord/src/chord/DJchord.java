@@ -150,8 +150,15 @@ public class DJchord implements Runnable {
     {
         RemoteNode successor = this.node.getSuccessor();
         this.node.exit();
-        successor.stabilize();
-        successor.fixFingers();
-        successor.fixAllFingers();
+        try
+        {
+            successor.stabilize();
+            successor.fixFingers();
+            successor.fixAllFingers();
+        }
+        catch (RemoteException remoteException)
+        {
+            System.out.println("Couldn't exit properly!");
+        }
     }
 }
