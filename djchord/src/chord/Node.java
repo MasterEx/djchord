@@ -165,8 +165,17 @@ public class Node implements RemoteNode {
     /**
      * The chord relative methods
      */
-    
-    public void findFirst() throws RemoteException
+
+    public void findFirst()
+    {
+        if(checkstabilize.isFree())
+        {
+            checkstabilize = new Check(this);
+            checkstabilize.startFindFirst();
+        }
+    }
+
+    public void oldFindFirst() throws RemoteException
     {
         if(SHAhash.compareTo(this.getKey().getStringHash(),"8000000000000000000000000000000000000000")>0)
         {
