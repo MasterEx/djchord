@@ -62,98 +62,94 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     /*
      * is invoked by start()
      */
-    public void run() 
+    synchronized public void run()
     {
-        synchronized (this)
+        String responders_pid = null, responders_address = null, pid = null;
+        try
         {
-            String responders_pid = null, responders_address = null, pid = null;
+            serversocket = new ServerSocket(port);
+            serversocket.setSoTimeout(5000);// 5 sec
+            socket = serversocket.accept();// race condition may occur
+            Scanner in = new Scanner(socket.getInputStream());
+            pid = in.next();
+            String address = in.next();
+            responders_pid = in.next();
+            responders_address = in.next();
+            successor = RMIRegistry.getRemoteNode(address, pid);
+            successor.setKey(new SHAhash(buffer));
+            node.setSuccessor(successor);
+            node.setPredecessor(successor.getPredecessor());
+            node.getPredecessor().setSuccessor(node.getNode());
+            successor.setPredecessor(node.getNode());
+            //here we set this node First in chord if it is
+            if(successor.isFirst() && node.getKey().compareTo(successor.getKey())<0)
+            {
+                successor.unsetFirst();
+                node.setFirst();
+            }
+            node.initSuccessors();
+            node.fixFingers();
+            node.fixAllFingers();
+            node.sendFiles2ResponsibleNode();
+
+            in.close();
+            socket.close();
+            serversocket.close();
+        }
+        catch (NotBoundException ex)
+        {
             try
             {
-                serversocket = new ServerSocket(port);
-                serversocket.setSoTimeout(5000);// 5 sec
-                socket = serversocket.accept();// race condition may occur
-                Scanner in = new Scanner(socket.getInputStream());
-                pid = in.next();
-                String address = in.next();
-                responders_pid = in.next();
-                responders_address = in.next();
-                successor = RMIRegistry.getRemoteNode(address, pid);
-                successor.setKey(new SHAhash(buffer));
-                node.setSuccessor(successor);
-                node.setPredecessor(successor.getPredecessor());
-                node.getPredecessor().setSuccessor(node.getNode());
-                successor.setPredecessor(node.getNode());
-                //here we set this node First in chord if it is
-                if(successor.isFirst() && node.getKey().compareTo(successor.getKey())<0)
-                {
-                    successor.unsetFirst();
-                    node.setFirst();
-                }
-                node.initSuccessors();
-                node.fixFingers();
-                node.fixAllFingers();
-                node.sendFiles2ResponsibleNode();
-
-                in.close();
-                socket.close();
-                serversocket.close();
-            }
-            catch (NotBoundException ex)
-            {
+                RemoteNode responder = RMIRegistry.getRemoteNode(responders_address, responders_pid);
                 try
                 {
-                    RemoteNode responder = RMIRegistry.getRemoteNode(responders_address, responders_pid);
-                    try
-                    {
-                        responder.stabilize();
-                        responder.fixAllFingers();
-                        System.out.println("Successor not found!");
-                        MulticastSender multicast = new MulticastSender(1101, "224.1.1.1", node.getPid().getBytes(), node);
-                        multicast.send();
-                    }
-                    catch (RemoteException ex1)
-                    {
-                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
-                    catch (UnknownHostException ex1)
-                    {
-                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
-                    catch (UnsupportedEncodingException ex1)
-                    {
-                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
-                    catch (IOException ex1)
-                    {
-                        Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
+                    responder.stabilize();
+                    responder.fixAllFingers();
+                    System.out.println("Successor not found!");
+                    MulticastSender multicast = new MulticastSender(1101, "224.1.1.1", node.getPid().getBytes(), node);
+                    multicast.send();
                 }
-                catch (NotBoundException ex1)
+                catch (RemoteException ex1)
                 {
                     Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
                 }
-            }
-            catch (UnsupportedEncodingException ex)
-            {
-                Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (SocketTimeoutException ex)
-            {
-                try
+                catch (UnknownHostException ex1)
                 {
-                    flag = true;
-                    socket.close();
-                    serversocket.close();
+                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+                catch (UnsupportedEncodingException ex1)
+                {
+                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
                 }
                 catch (IOException ex1)
                 {
                     Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
                 }
             }
-            catch (IOException ex)
+            catch (NotBoundException ex1)
             {
-                Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
             }
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (SocketTimeoutException ex)
+        {
+            try
+            {
+                flag = true;
+                serversocket.close();
+            }
+            catch (IOException ex1)
+            {
+                Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
