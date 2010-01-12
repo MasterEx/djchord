@@ -41,6 +41,7 @@ import java.rmi.NotBoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -62,7 +63,7 @@ public class Node implements RemoteNode {
     private String folder,pid;
     private SHAhash[] file_keys;
     private RemoteNode[] fingers,successors = new RemoteNode[3];
-    private Map<SHAhash,String> index;
+    private Map<SHAhash,String> index = new HashMap<SHAhash,String>();
     private Map<String,RemoteNode> foreignfiles;
     private RemoteNode predecessor;
     private boolean first = false, last = false, notified = false;
@@ -87,8 +88,8 @@ public class Node implements RemoteNode {
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //we have to declare folder
-        file_keys = setFile_keys();
+        this.setFolder("downloads");
+        this.setFile_keys();
         this.setSuccessor(thisnode);
         this.setPredecessor(thisnode);
         for(int u=0;u<3;u++)
@@ -555,16 +556,16 @@ public class Node implements RemoteNode {
          this.folder = folder;
     }
 
-    public SHAhash[] setFile_keys() throws NoSuchAlgorithmException, UnsupportedEncodingException
+    public void setFile_keys() throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
         FileNames files = new FileNames(this.folder);
         String[] filenames = files.getFileNames();
+        file_keys = new SHAhash[filenames.length];
         for(int i=0;i<filenames.length;i++)
         {
             file_keys[i] = SHA1.getHash(filenames[i]);
             this.mapAdd(file_keys[i], filenames[i]);
         }
-        return file_keys;
     }
 
     public void addFile(String filehash,RemoteNode node) throws RemoteException
