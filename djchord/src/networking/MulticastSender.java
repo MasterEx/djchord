@@ -115,7 +115,10 @@ public class MulticastSender extends Multicast implements Runnable{
             }
             closeconnection();
             node.notified();
-            notifyAll();
+            synchronized(this)
+            {
+                this.notifyAll();
+            }
         }
         catch (NotInitializedVariablesException ex)
         {

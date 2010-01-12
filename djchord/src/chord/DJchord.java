@@ -80,7 +80,10 @@ public class DJchord implements Runnable {
         {
             try
             {
-                runner.wait();
+                synchronized (runner)
+                {
+                    runner.wait();
+                }
             }
             catch (InterruptedException ex)
             {
