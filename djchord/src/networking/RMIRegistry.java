@@ -129,7 +129,7 @@ public class RMIRegistry {
     * start rmiregistry in windows or
     * rmiregistry & in linux
     */
-    static public void createRegistry(int port)
+    synchronized static public void createRegistry(int port)
     {
         try
         {
