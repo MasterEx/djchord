@@ -102,16 +102,16 @@ public class Arguments {
                 DJchord chord = new DJchord();
                 chord.start();
                 System.out.println("A node was created." +
-                        "\nUse help to see the available options");
+                        "\nUse -help to see the available options");
                 Scanner in = new Scanner(System.in);
                 //submenu
                 while (true)
                 {
                     if(in.next().equalsIgnoreCase("-help"))
                     {
-                        System.out.println("exit\nhelp\ngetfile\nquit");
+                        System.out.println("exit\n-help\n-getfile\nquit");
                     }
-                    else if(in.next().equalsIgnoreCase("quit") || in.next().equalsIgnoreCase("exit"))
+                    else if(in.next().equalsIgnoreCase("-quit") || in.next().equalsIgnoreCase("-exit"))
                     {
                         System.out.println("The process is terminating...");
                         chord.stop();
