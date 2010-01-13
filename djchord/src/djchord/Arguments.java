@@ -131,6 +131,10 @@ public class Arguments {
                             System.out.println();
                         }
                     }
+                    else
+                    {
+                        System.out.println(in.next()+" : command not found");
+                    }
                     in.reset();
                 }
             }
