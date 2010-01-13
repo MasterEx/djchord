@@ -29,6 +29,11 @@
 
 package basic;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
@@ -66,16 +71,17 @@ public class SHAhash implements Comparable<SHAhash>{
         {
             for(int i=arg0_temp.length();i<this_temp.length();i++)
             {
-                this_temp = "0".concat(this_temp);
+                arg0_temp = "0".concat(arg0_temp);
             }
         }
         else if(this_temp.length()<arg0_temp.length())
         {
             for(int i=this_temp.length();i<arg0_temp.length();i++)
             {
-                arg0_temp = "0".concat(arg0_temp);
+                this_temp = "0".concat(this_temp);
             }
         }
+        System.out.println("prwto "+this_temp+", deytero "+arg0_temp);
         return this_temp.compareToIgnoreCase(arg0_temp);
     }
 
@@ -141,17 +147,32 @@ public class SHAhash implements Comparable<SHAhash>{
     }
 
     /*
-     * This method rises one hexadecimal number to the given power
+     * This method rises one hexadecimal number to the given multiply
      */
-    public static String power(String base,int exponent)
+    public static String multiply(String base,int exponent)
     {
-        for(int i=0;i<exponent;i++)
+        for(int i=0;i<exponent-1;i++)
         {
             base = SHAhash.add(base, base);
         }
         return base;
     }
 
+    public static String power(String base, int exponent)
+    {
+        String res="0";
+        String temp=base;
+        for(int i=0;i<exponent-1;i++)
+        {
+            for(String u=Integer.toHexString(0);SHAhash.compareTo(u, SHAhash.subtract(base,"1"))<0;u=SHAhash.add(u, Integer.toHexString(1)))
+            {
+                res = SHAhash.add(res, base);
+            }
+            temp = SHAhash.add(temp , res);
+            res = base;
+        }
+        return temp;
+    }
     /*
      * This method adds 2 hexadecimal numbers
      */
@@ -166,9 +187,9 @@ public class SHAhash implements Comparable<SHAhash>{
     public static String add(String hex,String hexx)
     {
         String outcome = "",temp,rest="0",t3 = "0",t4;
-        int max,t1,t2;
+        int max=0,t1,t2;
         char a,b;
-        if(hexx.compareTo(hex)>0)
+        if (SHAhash.compareTo(hexx,hex) > 0)
         {
             max = hexx.length();
         }
@@ -232,15 +253,29 @@ public class SHAhash implements Comparable<SHAhash>{
         return outcome;
     }
 
-    public static int compareTo(String one,String two)
+    public static int compareTo(String this_temp,String arg0_temp)
     {
-        if(one.length()-two.length()>0)
+        if(this_temp.length()>arg0_temp.length())
         {
-            return one.length()-two.length();
+            for(int i=arg0_temp.length();i<this_temp.length();i++)
+            {
+                arg0_temp = "0".concat(arg0_temp);
+            }
+        }
+        else if(this_temp.length()<arg0_temp.length())
+        {
+            for(int i=this_temp.length();i<arg0_temp.length();i++)
+            {
+                this_temp = "0".concat(this_temp);
+            }
+        }
+        if(this_temp.length()-arg0_temp.length()>0)
+        {
+            return this_temp.length()-arg0_temp.length();
         }
         else
         {
-            return one.compareTo(two);
+            return this_temp.compareTo(arg0_temp);
         }
     }
 
