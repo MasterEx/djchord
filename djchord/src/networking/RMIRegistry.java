@@ -129,12 +129,16 @@ public class RMIRegistry {
     * start rmiregistry in windows or
     * rmiregistry & in linux
     */
-    synchronized static public void createRegistry(int port)
+    static public void createRegistry(int port)
     {
         try
         {
             registry = LocateRegistry.createRegistry(port);
-            Thread.currentThread().wait();
+            System.out.println("RMIRegistry was created @ port: "+port);
+            synchronized(Thread.currentThread())
+            {
+                Thread.currentThread().wait();
+            }
         }
         catch (RemoteException ex)
         {
@@ -142,6 +146,7 @@ public class RMIRegistry {
         }
         catch (InterruptedException ex)
         {
+            System.out.println("RMIRegistry is terminating.");
             Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
