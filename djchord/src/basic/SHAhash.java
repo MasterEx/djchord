@@ -29,11 +29,6 @@
 
 package basic;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Ntanasis Periklis and Chatzipetros Mike

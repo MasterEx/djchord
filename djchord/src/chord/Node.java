@@ -64,7 +64,7 @@ public class Node implements RemoteNode {
     private SHAhash[] file_keys;
     private RemoteNode[] fingers = new RemoteNode[160],successors = new RemoteNode[3];
     private Map<SHAhash,String> index = new HashMap<SHAhash,String>();
-    private Map<String,RemoteNode> foreignfiles;
+    private Map<String,RemoteNode> foreignfiles  = new HashMap<String,RemoteNode>();;
     private RemoteNode predecessor;
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
@@ -79,6 +79,7 @@ public class Node implements RemoteNode {
     {
         RMIRegistry.init();
         pid = this.setPid();
+        this.key = SHA1.getHash(pid);
         RMIRegistry.addNode(this,pid);
         try
         {
@@ -428,9 +429,11 @@ public class Node implements RemoteNode {
 
     public void setFingers() throws RemoteException
     {
+        System.out.println("HERE!!! ---");
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-        for(int i=0;i<159;i++)
+        for(int i=2;i<159;i++)//from wright i
         {
+            System.out.println("HERE!!! ---> i: "+i);
             System.out.println(this.key+"");
             temp = new SHAhash(this.key.add(SHAhash.multiply(Integer.toHexString(2), i-1)));
             /*
