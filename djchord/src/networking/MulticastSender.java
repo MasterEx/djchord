@@ -108,9 +108,12 @@ public class MulticastSender extends Multicast implements Runnable{
             send();
             IncomingNodeMulticastAnswer answer = new IncomingNodeMulticastAnswer();
             answer.setNode(node);
+            System.out.println("here1");
             answer.start();
+            System.out.println("here2");
             if(answer.isAlone())
             {
+                System.out.println("---> "+answer.isAlone());
                 node.setFirst();
             }
             closeconnection();

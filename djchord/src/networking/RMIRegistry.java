@@ -72,7 +72,6 @@ public class RMIRegistry {
         try
         {
             address = InetAddress.getLocalHost().getHostAddress();
-            System.out.println(address);
         }
         catch (UnknownHostException ex)
         {

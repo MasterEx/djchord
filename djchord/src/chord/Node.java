@@ -62,7 +62,7 @@ public class Node implements RemoteNode {
     private SHAhash key;
     private String folder,pid;
     private SHAhash[] file_keys;
-    private RemoteNode[] fingers,successors = new RemoteNode[3];
+    private RemoteNode[] fingers = new RemoteNode[160],successors = new RemoteNode[3];
     private Map<SHAhash,String> index = new HashMap<SHAhash,String>();
     private Map<String,RemoteNode> foreignfiles;
     private RemoteNode predecessor;
@@ -457,13 +457,13 @@ public class Node implements RemoteNode {
             }
             if(j!=159)
             {
-                this.compressedFingers.add(fingers[i]);
-                this.compressedFingers.add(fingers[j]);
+                this.compressedFingers.addElement(fingers[i]);
+                this.compressedFingers.addElement(fingers[j]);
                 i = j;
             }
             else
             {
-                this.compressedFingers.add(fingers[i]);
+                this.compressedFingers.addElement(fingers[i]);
                 break;
             }
         }
