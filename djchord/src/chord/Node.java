@@ -431,7 +431,8 @@ public class Node implements RemoteNode {
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         for(int i=0;i<159;i++)
         {
-            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i-1)));
+            System.out.println(this.key+"");
+            temp = new SHAhash(this.key.add(SHAhash.multiply(Integer.toHexString(2), i-1)));
             /*
              * if hash is greater than max sha1 hash value it takes a value
              * equal to value-maxValue. Then we return a RemoteNode with
