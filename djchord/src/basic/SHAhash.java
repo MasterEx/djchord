@@ -155,6 +155,10 @@ public class SHAhash implements Comparable<SHAhash>{
 
     public static String power(String base, int exponent)
     {
+        if(exponent == 0)
+        {
+            return Integer.toHexString(1);
+        }
         String res="0";
         String temp=base;
         for(int i=0;i<exponent-1;i++)
