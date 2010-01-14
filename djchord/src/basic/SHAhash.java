@@ -29,11 +29,13 @@
 
 package basic;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
-public class SHAhash implements Comparable<SHAhash>{
+public class SHAhash implements Serializable, Comparable<SHAhash>{
 
     private byte[] bytehash = null;
     private String stringhash;

@@ -64,6 +64,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
      */
     synchronized public void run()
     {
+        System.out.print("geia");
         String responders_pid = null, responders_address = null, pid = null;
         try
         {
@@ -157,7 +158,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     /*
      * starts the execution of the thread
      */
-    public void start()
+    synchronized public void start()
     {
         if (runner == null)
         {
@@ -192,5 +193,10 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     public synchronized boolean isAlone()
     {
         return flag;
+    }
+
+    public Thread returnThread()
+    {
+        return this.runner;
     }
 }

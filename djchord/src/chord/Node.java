@@ -293,9 +293,13 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
-        if (k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0)
+        if ((k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0) && !this.getPid().equalsIgnoreCase(fingers[159].getPid()))
         {
             return fingers[159].closest_preceding_node(k);
+        }
+        else if(this.getPid().equalsIgnoreCase(fingers[159].getPid()))
+        {
+            return thisnode;
         }
         for(int i=158;i>=0;i--)
         {
@@ -433,7 +437,7 @@ public class Node implements RemoteNode {
     public void setFingers() throws RemoteException
     {
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-        for(int i=0;i<159;i++)
+        for(int i=0;i<160;i++)
         {
             temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i)));
             /*

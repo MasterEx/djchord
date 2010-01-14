@@ -188,6 +188,7 @@ public class DJchord implements Runnable {
         }
         catch (RemoteException ex)
         {
+            System.err.println("The successors seems down... :(");
             Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
         }
         return returnval;

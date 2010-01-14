@@ -32,6 +32,8 @@ package chord;
 import basic.SHAhash;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -79,11 +81,12 @@ public class Check implements Runnable{
         }
         catch (RemoteException ex)
         {
-            throw new RuntimeException(ex);
+
+            Logger.getLogger(Check.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (InterruptedException ex)
         {
-
+            Logger.getLogger(Check.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -152,7 +155,7 @@ public class Check implements Runnable{
             {
                 node.getSuccessor(i).hasFailed();
             }
-            catch (NoSuchObjectException e)
+            catch (RemoteException e)
             {
                 if(i==0)
                 {

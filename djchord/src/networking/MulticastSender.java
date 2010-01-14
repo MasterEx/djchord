@@ -111,7 +111,7 @@ public class MulticastSender extends Multicast implements Runnable{
             answer.start();
             try
             {
-                Thread.sleep(7000);
+                answer.returnThread().join();
             }
             catch (InterruptedException ex)
             {
