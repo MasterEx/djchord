@@ -109,12 +109,21 @@ public class MulticastSender extends Multicast implements Runnable{
             IncomingNodeMulticastAnswer answer = new IncomingNodeMulticastAnswer();
             answer.setNode(node);
             answer.start();
+            try
+            {
+                Thread.sleep(7000);
+            }
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if(answer.isAlone())
             {
                 node.setFirst();
             }
             closeconnection();
             node.notified();
+            System.out.println("FTANEI EDW! 1");
             synchronized(this)
             {
                 this.notifyAll();

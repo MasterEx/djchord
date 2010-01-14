@@ -79,19 +79,24 @@ public class DJchord implements Runnable {
         sendmulticast.start();
         for(;;)
         {
-            try
+
+            System.out.println("FTANEI EDW! 2.4");
+            synchronized (sendmulticast)
             {
-                synchronized (sendmulticast)
+                System.out.println("FTANEI EDW! 2.5");
+                try
                 {
                     sendmulticast.wait();
                 }
-            }
-            catch (InterruptedException ex)
-            {
-                try 
+                catch (InterruptedException ex)
+                {
+                    Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try
                 {
                     if (node.isNotified())
                     {
+                        System.out.println("FTANEI EDW! 2.6 BGAINEI");
                         break;
                     }
                 }
@@ -101,6 +106,7 @@ public class DJchord implements Runnable {
                 }
             }
         }
+            System.out.println("FTANEI EDW! 4");
         for(int i=0;i<2;i++)
         {
             try
@@ -112,6 +118,8 @@ public class DJchord implements Runnable {
                 Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+            System.out.println("FTANEI EDW! 5");
         MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
         receivemulticast.start();
     }

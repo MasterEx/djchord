@@ -76,7 +76,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             responders_pid = in.next();
             responders_address = in.next();
             successor = RMIRegistry.getRemoteNode(address, pid);
-            successor.setKey(new SHAhash(buffer));
+            //successor.setKey(new SHAhash(buffer));
             node.setSuccessor(successor);
             node.setPredecessor(successor.getPredecessor());
             node.getPredecessor().setSuccessor(node.getNode());
@@ -151,6 +151,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("FTANEI EDW! 2");
     }
 
     /*
