@@ -164,4 +164,21 @@ public class DJchord implements Runnable {
             System.out.println("Couldn't exit properly!");
         }
     }
+
+    /**
+     * This method return the node successor
+     */
+    public String getRMIInfo()
+    {
+        String returnval = "FAIL!!!";
+        try
+        {          
+            returnval = node.getSuccessor().getRMIInfo();
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return returnval;
+    }
 }

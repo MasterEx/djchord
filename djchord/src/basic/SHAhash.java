@@ -76,7 +76,6 @@ public class SHAhash implements Comparable<SHAhash>{
                 this_temp = "0".concat(this_temp);
             }
         }
-        System.out.println("prwto "+this_temp+", deytero "+arg0_temp);
         return this_temp.compareToIgnoreCase(arg0_temp);
     }
 
@@ -142,17 +141,8 @@ public class SHAhash implements Comparable<SHAhash>{
     }
 
     /*
-     * This method rises one hexadecimal number to the given multiply
+     * This method rises one hexadecimal number to the given power
      */
-    public static String multiply(String base,int exponent)
-    {
-        for(int i=0;i<exponent-1;i++)
-        {
-            base = SHAhash.add(base, base);
-        }
-        return base;
-    }
-
     public static String power(String base, int exponent)
     {
         if(exponent == 0)
@@ -167,11 +157,26 @@ public class SHAhash implements Comparable<SHAhash>{
             {
                 res = SHAhash.add(res, base);
             }
-            temp = SHAhash.add(temp , res);
-            res = base;
+            temp = SHAhash.multiply(temp , res);
+            res = "0";
         }
         return temp;
     }
+
+    /**
+     *
+     * A multiplication method
+     */
+    public static String multiply(String a, String b)
+    {
+        String result = Integer.toHexString(0);
+        for (String u=Integer.toHexString(0);SHAhash.compareTo(u, b)<0;u=SHAhash.add(u, Integer.toHexString(1)))
+        {
+            result = SHAhash.add(result, a);
+        }
+        return result;
+    }
+
     /*
      * This method adds 2 hexadecimal numbers
      */

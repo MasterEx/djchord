@@ -98,12 +98,15 @@ public class Node implements RemoteNode {
             this.setSuccessor(u, thisnode);
         }
         check = new Check(thisnode);
+        checkstabilize = new Check(thisnode);
+        checkfingers = new Check(thisnode);
         check.start();
         ports = new boolean[3000];
         for(int i=0;i<3000;i++)
         {
             ports[i] = false;
         }
+        System.out.println("wtf? A node!");
     }
 
     /**
@@ -429,13 +432,10 @@ public class Node implements RemoteNode {
 
     public void setFingers() throws RemoteException
     {
-        System.out.println("HERE!!! ---");
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-        for(int i=2;i<159;i++)//from wright i
+        for(int i=0;i<159;i++)
         {
-            System.out.println("HERE!!! ---> i: "+i);
-            System.out.println(this.key+"");
-            temp = new SHAhash(this.key.add(SHAhash.multiply(Integer.toHexString(2), i-1)));
+            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i)));
             /*
              * if hash is greater than max sha1 hash value it takes a value
              * equal to value-maxValue. Then we return a RemoteNode with

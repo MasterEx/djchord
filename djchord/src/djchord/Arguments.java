@@ -107,18 +107,19 @@ public class Arguments {
                 //submenu
                 while (true)
                 {
-                    if(in.next().equalsIgnoreCase("-help"))
+                    String input = in.next();
+                    if(input.equalsIgnoreCase("-help"))
                     {
-                        System.out.println("exit\n-help\n-getfile\nquit");
+                        System.out.println("-exit\n-help\n-getfile\n-getsuccessor\n-quit");
                     }
-                    else if(in.next().equalsIgnoreCase("-quit") || in.next().equalsIgnoreCase("-exit"))
+                    else if(input.equalsIgnoreCase("-quit") || input.equalsIgnoreCase("-exit"))
                     {
                         System.out.println("The process is terminating...");
                         chord.stop();
                         //race condition may occur
                         System.exit(0);
                     }
-                    else if(in.next().equalsIgnoreCase("-getfile"))
+                    else if(input.equalsIgnoreCase("-getfile"))
                     {
                         if(in.hasNext())
                         {
@@ -131,9 +132,13 @@ public class Arguments {
                             System.out.println();
                         }
                     }
+                    else if(input.equalsIgnoreCase("-getsuccessor"))
+                    {
+                        System.out.println(chord.getRMIInfo());
+                    }
                     else
                     {
-                        System.out.println(in.next()+" : command not found");
+                        System.out.println(input+" : command not found");
                     }
                     in.reset();
                 }
