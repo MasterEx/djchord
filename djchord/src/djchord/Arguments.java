@@ -101,7 +101,7 @@ public class Arguments {
             {
                 DJchord chord = new DJchord();
                 chord.start();
-                System.out.println("A node was created." +
+                System.out.println("A node is being created..." +
                         "\nUse -help to see the available options");
                 Scanner in = new Scanner(System.in);
                 //submenu

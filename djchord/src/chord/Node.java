@@ -106,7 +106,7 @@ public class Node implements RemoteNode {
         {
             ports[i] = false;
         }
-        System.out.println("wtf? A node!");
+        System.out.println("The node :"+this.getRMIInfo()+" has been created!");
     }
 
     /**

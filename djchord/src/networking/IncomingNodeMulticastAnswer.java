@@ -70,9 +70,12 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             serversocket = new ServerSocket(port);
             serversocket.setSoTimeout(5000);// 5 sec
             socket = serversocket.accept();// race condition may occur
+            System.out.println("ftanei edw prin socket");
             Scanner in = new Scanner(socket.getInputStream());
             pid = in.next();
+            System.out.println("ftanei edw ANAMESA socket");
             String address = in.next();
+            System.out.println("ftanei edw meta socket");
             responders_pid = in.next();
             responders_address = in.next();
             successor = RMIRegistry.getRemoteNode(address, pid);

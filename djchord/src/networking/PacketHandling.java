@@ -34,7 +34,6 @@ import basic.SHAhash;
 import chord.Node;
 import chord.RemoteNode;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
@@ -67,7 +66,7 @@ public class PacketHandling implements Runnable{
         pid = new String(this.packet.getData());
         try 
         {
-            sha1 = SHA1.getHash(pid);
+            sha1 = SHA1.getHash(pid.trim());
         } 
         catch (NoSuchAlgorithmException ex) 
         {
@@ -83,7 +82,9 @@ public class PacketHandling implements Runnable{
         {
             successor = this.node.simple_find_successor(sha1);
             socket = new Socket(packet.getAddress(),1100);
+            socket.setSoTimeout(6000); // 6 sec
             outstream = new PrintWriter(socket.getOutputStream());
+            System.out.println("The successor of "+pid.trim()+" is "+successor.getPid());
             outstream.write(successor.getRMIInfo()+" "+node.getRMIInfo());
         }
         catch (RemoteException ex)
@@ -102,8 +103,8 @@ public class PacketHandling implements Runnable{
         {
             try
             {
-                socket.close();
                 outstream.close();
+                socket.close();
             }
             catch (NullPointerException ex)
             {
