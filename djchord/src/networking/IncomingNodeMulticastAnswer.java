@@ -70,12 +70,9 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             serversocket = new ServerSocket(port);
             serversocket.setSoTimeout(5000);// 5 sec
             socket = serversocket.accept();// race condition may occur
-            System.out.println("ftanei edw prin socket");
             Scanner in = new Scanner(socket.getInputStream());
             pid = in.next();
-            System.out.println("ftanei edw ANAMESA socket");
             String address = in.next();
-            System.out.println("ftanei edw meta socket");
             responders_pid = in.next();
             responders_address = in.next();
             successor = RMIRegistry.getRemoteNode(address, pid);
@@ -84,6 +81,10 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             node.setPredecessor(successor.getPredecessor());
             node.getPredecessor().setSuccessor(node.getNode());
             successor.setPredecessor(node.getNode());
+            if(successor.getSuccessor().getPid().equalsIgnoreCase(successor.getPid()))
+            {
+                successor.setSuccessor(node.getNode());
+            }
             //here we set this node First in chord if it is
             if(successor.isFirst() && node.getKey().compareTo(successor.getKey())<0)
             {
@@ -93,7 +94,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             node.initSuccessors();
             node.fixFingers();
             node.fixAllFingers();
-            node.sendFiles2ResponsibleNode();
+            //node.sendFiles2ResponsibleNode();
 
             in.close();
             socket.close();
@@ -154,7 +155,6 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("FTANEI EDW! 2");
     }
 
     /*

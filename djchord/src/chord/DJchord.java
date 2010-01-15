@@ -107,19 +107,17 @@ public class DJchord implements Runnable {
             }
         }
             System.out.println("FTANEI EDW! 4");
-        for(int i=0;i<2;i++)
-        {
             try
             {
-                node.setSuccessor(i+1, node.getSuccessor().getSuccessor(i));
+                node.setSuccessor(1, node.getSuccessor().getSuccessor());
+                node.getSuccessor().setSuccessor(1, node.getSuccessor().getSuccessor().getSuccessor());
+                node.setSuccessor(2, node.getSuccessor().getSuccessor(1));
             }
             catch (RemoteException ex)
             {
                 Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-
-            System.out.println("FTANEI EDW! 5");
+        System.out.println("FTANEI EDW! 5");
         MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
         receivemulticast.start();
     }
@@ -189,6 +187,16 @@ public class DJchord implements Runnable {
         catch (RemoteException ex)
         {
             System.err.println("The successors seems down... :(");
+            try
+            {
+                node.stabilize();
+                node.fixFingers();
+                node.fixAllFingers();
+            }
+            catch (RemoteException remoteException)
+            {
+                System.out.println("------- HERE -------");
+            }
             Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
         }
         return returnval;

@@ -30,7 +30,6 @@
 package chord;
 
 import basic.SHAhash;
-import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,8 +146,17 @@ public class Check implements Runnable{
         runner = null;
     }
 
-    public void stabilize() throws RemoteException
+    public void stabilize()
     {
+        System.out.println("stabilizing...");
+        if(!node.getPredecessor().getSuccessor(1).getPid().equalsIgnoreCase(node.getSuccessor().getPid()))
+        {
+            node.getPredecessor().setSuccessor(1,node.getSuccessor());
+        }
+        if(!node.getPredecessor().getSuccessor(2).getPid().equalsIgnoreCase(node.getSuccessor(1).getPid()))
+        {
+            node.getPredecessor().setSuccessor(2,node.getSuccessor(1));
+        }
         for( int i=0;i<3;i++)
         {
             try
@@ -188,7 +196,7 @@ public class Check implements Runnable{
     
     public void fixAllFingers() throws RemoteException
     {
-        for(RemoteNode tempnode=node.getSuccessor();tempnode.equals(node);tempnode=tempnode.getSuccessor())
+        for(RemoteNode tempnode=node.getSuccessor();!tempnode.getPid().equalsIgnoreCase(node.getPid());tempnode=tempnode.getSuccessor())
         {
             tempnode.fixFingers();
         }

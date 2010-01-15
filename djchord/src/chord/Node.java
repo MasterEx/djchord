@@ -91,7 +91,6 @@ public class Node implements RemoteNode {
         }
         this.setFolder("downloads");
         this.setFile_keys();
-        this.setSuccessor(thisnode);
         this.setPredecessor(thisnode);
         for(int u=0;u<3;u++)
         {
@@ -281,14 +280,25 @@ public class Node implements RemoteNode {
      */
     public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
     {
-        for(RemoteNode tempnode=this.getSuccessor();tempnode==this;tempnode=tempnode.getSuccessor())
+        RemoteNode i=this.getSuccessor();
+        for(;i.getKey().compareTo(this.getKey())!=0;i=i.getSuccessor())
         {
-            if((k.compareTo(tempnode.getKey())<0 || tempnode.isFirst())&& k.compareTo(tempnode.getPredecessor().getKey())>=0)
+            if (!i.getPid().equalsIgnoreCase(i.getSuccessor().getPid()))
             {
-                return tempnode;
+                if(k.compareTo(i.getKey())<0 && i.isFirst())
+                {
+                    return i;
+                }
+                else if ((k.compareTo(i.getKey()) > 0 && k.compareTo(i.getSuccessor().getKey()) <= 0) || (k.compareTo(i.getKey()) > 0 && i.getSuccessor().isFirst())) {
+                    return i.getSuccessor();
+                }
+            }
+            else
+            {
+                break;
             }
         }
-        return this;
+        return i;
     }
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
@@ -367,7 +377,7 @@ public class Node implements RemoteNode {
         if(checkfingers.isFree())
         {
             checkfingers = new Check(this);
-            checkfingers.startStabilize();
+            checkfingers.startFixFIngers();
         }
     }
 
@@ -381,11 +391,13 @@ public class Node implements RemoteNode {
 
     synchronized public void setSuccessor(RemoteNode next) throws RemoteException
     {
+        System.out.println("Setting at successor[0] "+next.getRMIInfo());
         this.successors[0] = next;
     }
 
     synchronized public void setSuccessor(int i,RemoteNode next) throws RemoteException
     {
+        System.out.println("Setting at successor["+i+"] "+next.getRMIInfo());
         this.successors[i] = next;
     }
 

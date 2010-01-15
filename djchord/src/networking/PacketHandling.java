@@ -81,8 +81,14 @@ public class PacketHandling implements Runnable{
         try
         {
             successor = this.node.simple_find_successor(sha1);
+
+            //socket.bind(new Socket(responders_address));
             socket = new Socket(packet.getAddress(),1100);
-            socket.setSoTimeout(6000); // 6 sec
+            if (socket.getChannel()!=null)
+            {
+                throw new IOException();
+            }
+            //socket.setSoTimeout(6000); // 6 sec
             outstream = new PrintWriter(socket.getOutputStream());
             System.out.println("The successor of "+pid.trim()+" is "+successor.getPid());
             outstream.write(successor.getRMIInfo()+" "+node.getRMIInfo());
