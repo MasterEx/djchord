@@ -29,7 +29,6 @@
 
 package networking;
 
-import basic.SHAhash;
 import chord.Node;
 import chord.RemoteNode;
 import java.io.IOException;

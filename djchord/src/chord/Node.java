@@ -115,7 +115,7 @@ public class Node implements RemoteNode {
 
      // get methods
 
-    public SHAhash getKey()
+    public SHAhash getKey() throws RemoteException
     {
         return this.key;
     }
@@ -293,19 +293,19 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
-        if ((k.compareTo(fingers[159].getKey())>0 || k.compareTo(this.getKey())<0) && !this.getPid().equalsIgnoreCase(fingers[159].getPid()))
+        if ((k.compareTo(compressedFingers.get(compressedFingers.size()-1).getKey())>0 || k.compareTo(this.getKey())<0) && !this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
         {
-            return fingers[159].closest_preceding_node(k);
+            return compressedFingers.get(compressedFingers.size()-1).closest_preceding_node(k);
         }
-        else if(this.getPid().equalsIgnoreCase(fingers[159].getPid()))
+        else if(this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
         {
-            return thisnode;
+            return this.getSuccessor();
         }
         for(int i=158;i>=0;i--)
         {
-            if (k.compareTo(fingers[i].getKey())>0 && (k.compareTo(fingers[i].getSuccessor().getKey())<0 || fingers[i].getSuccessor().isFirst()))
+            if (k.compareTo(compressedFingers.get(i).getKey())>0 && (k.compareTo(compressedFingers.get(i).getSuccessor().getKey())<0 || compressedFingers.get(i).getSuccessor().isFirst()))
             {
-                 return fingers[i];
+                 return compressedFingers.get(i);
             }
         }
         return null; // unreachable statement

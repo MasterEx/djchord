@@ -102,8 +102,12 @@ public class PacketHandling implements Runnable{
         {
             try
             {
-                outstream.close();
                 socket.close();
+                outstream.close();
+            }
+            catch (NullPointerException ex)
+            {
+                
             }
             catch (IOException ex)
             {
