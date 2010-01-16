@@ -112,6 +112,7 @@ public class DJchord implements Runnable {
                 node.setSuccessor(1, node.getSuccessor().getSuccessor());
                 node.getSuccessor().setSuccessor(1, node.getSuccessor().getSuccessor().getSuccessor());
                 node.setSuccessor(2, node.getSuccessor().getSuccessor(1));
+                node.sendFiles2ResponsibleNode();
             }
             catch (RemoteException ex)
             {

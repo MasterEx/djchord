@@ -595,6 +595,7 @@ public class Node implements RemoteNode {
     
     public void sendFiles2ResponsibleNode() throws RemoteException
     {
+        System.out.println("in files");
         Iterator it = index.entrySet().iterator();
         RemoteNode remotenode;
         while(it.hasNext())
@@ -603,6 +604,7 @@ public class Node implements RemoteNode {
             remotenode = this.find_successor((SHAhash)entry.getKey());
             remotenode.addFile(((SHAhash)entry.getKey()).getStringHash(), thisnode);
         }
+        System.out.println("out files");
     }
 
     synchronized public void setPortBusy(int i) throws RemoteException

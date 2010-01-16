@@ -29,8 +29,6 @@
 
 package djchord;
 
-import basic.SHA1;
-import basic.SHAhash;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +47,5 @@ public class Main {
         {
             Arguments.handler(args);
         }
-        basic.Logger.println("hello");
-        basic.Logger.println("this is fucking work!");
     }
 }
