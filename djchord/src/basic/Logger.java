@@ -27,29 +27,41 @@
  * THE SOFTWARE.
  */
 
-package djchord;
+package basic;
 
-import basic.SHA1;
-import basic.SHAhash;
-import java.io.UnsupportedEncodingException;
-import java.rmi.RemoteException;
-import java.security.NoSuchAlgorithmException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.logging.Level;
+
 /**
  *
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
-public class Main {
+public class Logger {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException, Exception
+    public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+    
+    public static void println(String msg)
     {
-        if(args.length>0)
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+
+        try
         {
-            Arguments.handler(args);
+            FileWriter fwriter = new FileWriter("Log.txt",true);
+            BufferedWriter bwriter = new BufferedWriter(fwriter);
+            bwriter.write("["+sdf.format(cal.getTime())+"]: "+msg);
+            bwriter.newLine();
+            bwriter.close();
+            fwriter.close();
         }
-        basic.Logger.println("hello");
-        basic.Logger.println("this is fucking work!");
+        catch (IOException ex)
+        {
+            java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+
 }
