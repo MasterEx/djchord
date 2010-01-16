@@ -146,16 +146,65 @@ public class Check implements Runnable{
         runner = null;
     }
 
-    public void stabilize()
+    public void stabilize() throws RemoteException
     {
         System.out.println("stabilizing...");
-        if(!node.getPredecessor().getSuccessor(1).getPid().equalsIgnoreCase(node.getSuccessor().getPid()))
+        RemoteNode pred=null,pred_succ0=null,pred_succ1=null,pred_succ2=null,succ=null,succ1=null;
+        try 
         {
-            node.getPredecessor().setSuccessor(1,node.getSuccessor());
+            pred = node.getPredecessor();
         }
-        if(!node.getPredecessor().getSuccessor(2).getPid().equalsIgnoreCase(node.getSuccessor(1).getPid()))
+        catch (RemoteException ex) 
         {
-            node.getPredecessor().setSuccessor(2,node.getSuccessor(1));
+            System.err.println("My predecessor has failed");
+        }
+        try 
+        {
+            pred_succ0 = pred.getSuccessor(0);
+        }
+        catch (RemoteException ex) 
+        {
+            System.err.println("My predecessor 1st successor has failed");
+        }
+        try 
+        {
+            pred_succ1 = pred.getSuccessor(1);
+        }
+        catch (RemoteException ex)
+        {
+            System.err.println("My predecessor's 2nd successor has failed");
+        }
+        try 
+        {
+            pred_succ2 = pred.getSuccessor(2);
+        }
+        catch (RemoteException ex) 
+        {
+            System.err.println("My predecessor's 3rd successor has failed");
+        }
+        try 
+        {
+            succ = node.getSuccessor(0);
+        }
+        catch (RemoteException ex) 
+        {
+            System.err.println("My successor has failed");
+        }
+        try 
+        {
+            succ1 = node.getSuccessor(1);
+        }
+        catch (RemoteException ex) 
+        {
+            System.err.println("My 2nd successor has failed");
+        }
+        if(!pred_succ1.getPid().equalsIgnoreCase(succ.getPid()))
+        {
+            pred.setSuccessor(1,succ);
+        }
+        if(!pred_succ2.getPid().equalsIgnoreCase(succ1.getPid()))
+        {
+            pred.setSuccessor(2,succ1);
         }
         for( int i=0;i<3;i++)
         {
