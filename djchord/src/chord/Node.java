@@ -42,7 +42,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,9 +60,8 @@ public class Node implements RemoteNode {
      */
     private SHAhash key;
     private String folder,pid;
-    private SHAhash[] file_keys;
+    private String[] file_keys;
     private RemoteNode[] fingers = new RemoteNode[160],successors = new RemoteNode[3];
-    private Map<SHAhash,String> index = new HashMap<SHAhash,String>();
     private Map<String,RemoteNode> foreignfiles  = new HashMap<String,RemoteNode>();;
     private RemoteNode predecessor;
     private boolean first = false, last = false, notified = false;
@@ -214,6 +212,7 @@ public class Node implements RemoteNode {
             {
                 this.getSuccessor().setFirst();
             }
+            this.removeFilesFromResponsibleNode();
             return true;
         }
         catch (RemoteException e)
@@ -499,20 +498,12 @@ public class Node implements RemoteNode {
      * Here are hte methods about files indexing and move.
      */
 
-    public void mapAdd(SHAhash nodeHash,String fileName)
-    {
-        if(!this.index.containsKey(nodeHash)&&!this.index.containsValue(fileName))
-        {
-            this.index.put(nodeHash, fileName);
-        }
-    }
-
     public String getFolder()
     {
         return this.folder;
     }
 
-    public SHAhash[] getFile_keys()
+    public String[] getFile_keys()
     {
         return this.file_keys;
     }
@@ -576,33 +567,42 @@ public class Node implements RemoteNode {
          this.folder = folder;
     }
 
-    public void setFile_keys() throws NoSuchAlgorithmException, UnsupportedEncodingException
+    public void setFile_keys()
     {
         FileNames files = new FileNames(this.folder);
-        String[] filenames = files.getFileNames();
-        file_keys = new SHAhash[filenames.length];
-        for(int i=0;i<filenames.length;i++)
-        {
-            file_keys[i] = SHA1.getHash(filenames[i]);
-            this.mapAdd(file_keys[i], filenames[i]);
-        }
+        file_keys = files.getFileNames();
     }
 
     public void addFile(String filehash,RemoteNode node) throws RemoteException
     {
         foreignfiles.put(filehash, node);
     }
+
+    public void rmFile(String filehash) throws RemoteException
+    {
+        foreignfiles.remove(filehash);
+    }
     
     public void sendFiles2ResponsibleNode() throws RemoteException
     {
         System.out.println("in files");
-        Iterator it = index.entrySet().iterator();
         RemoteNode remotenode;
-        while(it.hasNext())
+        for(int i=0;i<file_keys.length;i++)
         {
-            Map.Entry entry = (Map.Entry) it.next();
-            remotenode = this.find_successor((SHAhash)entry.getKey());
-            remotenode.addFile(((SHAhash)entry.getKey()).getStringHash(), thisnode);
+            remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+            remotenode.addFile(file_keys[i], this.thisnode);
+        }
+        System.out.println("out files");
+    }
+
+    public void removeFilesFromResponsibleNode()throws RemoteException
+    {
+        System.out.println("rm files");
+        RemoteNode remotenode;
+        for(int i=0;i<file_keys.length;i++)
+        {
+            remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+            remotenode.rmFile(file_keys[i]);
         }
         System.out.println("out files");
     }

@@ -72,4 +72,5 @@ public interface RemoteNode extends Remote{
     public void addFile(String filehash,RemoteNode node) throws RemoteException;
     public void findFirst() throws RemoteException;
     public RemoteNode getFileResponsible(String filehash) throws RemoteException;
+    public void rmFile(String filehash) throws RemoteException;
 }

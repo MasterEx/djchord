@@ -52,10 +52,10 @@ public class Chordlib {
      */
 
 
-    public void map_insert(Node djnode, SHAhash hash, String name)
+    /*public void map_insert(Node djnode, SHAhash hash, String name)
     {
-        djnode.mapAdd(hash, name);
-    }
+    djnode.mapAdd(hash, name);
+    }*/
 
     public SHAhash[] hashFiles(Node djnode) throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
