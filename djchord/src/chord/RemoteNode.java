@@ -73,4 +73,6 @@ public interface RemoteNode extends Remote{
     public void findFirst() throws RemoteException;
     public RemoteNode getFileResponsible(String filehash) throws RemoteException;
     public void rmFile(String filehash) throws RemoteException;
+    public void sendFiles2ResponsibleNode() throws RemoteException;
+    public RemoteNode simple_find_successor(SHAhash k) throws RemoteException;
 }

@@ -249,29 +249,19 @@ public class Check implements Runnable{
         {
             tempnode.fixFingers();
         }
+        node.sendFiles2ResponsibleNode();
     }
 
-        public void findFirst() throws RemoteException
+    public void findFirst() throws RemoteException
     {
-        if(SHAhash.compareTo(node.getKey().getStringHash(),"8000000000000000000000000000000000000000")>0)
+        RemoteNode first = node.simple_find_successor((new SHAhash("0000000000000000000000000000000000000000")));
+        if(!first.isFirst())
         {
-            for(RemoteNode r = node.getSuccessor();r==node;r=node.getSuccessor())
-            {
-                if(r.getKey().compareTo(r.getSuccessor().getKey())>0)
-                {
-                    r.getSuccessor().setFirst();
-                }
-            }
+            first.setFirst();
         }
-        else
+        if(node.isFirst() && !node.getPid().equalsIgnoreCase(first.getPid()))
         {
-            for(RemoteNode r = node.getPredecessor();r==node;r=node.getPredecessor())
-            {
-                if(r.getKey().compareTo(r.getPredecessor().getKey())<0)
-                {
-                    r.setFirst();
-                }
-            }
+            node.unsetFirst();
         }
     }
 
