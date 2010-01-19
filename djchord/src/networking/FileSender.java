@@ -135,4 +135,9 @@ public class FileSender implements Runnable{
         return status;
     }
 
+    public Thread getThread()
+    {
+        return this.runner;
+    }
+
 }

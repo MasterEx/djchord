@@ -539,6 +539,16 @@ public class Node implements RemoteNode {
             FileReceiver receiver = new FileReceiver(port,File.separator+"remote_files"+File.separator+filename);
             receiver.start();
             responsible.sendFile(port, this.getAddress(), filename);
+            try
+            {
+                receiver.getThread().join();
+            }
+            catch (InterruptedException ex)
+            {
+                System.out.println("File reception was interrupted");
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.unsetPortBusy(port);
         }
         catch (NoSuchAlgorithmException ex)
         {
@@ -621,6 +631,16 @@ public class Node implements RemoteNode {
     {
         FileSender sender = new FileSender(address,port,File.separator+"downloads"+File.separator+file);
         sender.start();
+        try
+        {
+            sender.getThread().join();
+        }
+        catch (InterruptedException ex)
+        {
+            System.out.println("The file was unable to be sent");
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.unsetPortBusy(port);
     }
 
     synchronized public boolean getAvailablePort(int port) throws RemoteException

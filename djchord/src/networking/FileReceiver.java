@@ -146,4 +146,9 @@ public class FileReceiver implements Runnable{
         return status;
     }
 
+    public Thread getThread()
+    {
+        return this.runner;
+    }
+
 }

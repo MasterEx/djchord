@@ -152,7 +152,7 @@ public class DJchord implements Runnable {
      */
     public void getFile(String name)
     {
-        //this.node
+        this.node.getFile(name);
     }
 
     /**
