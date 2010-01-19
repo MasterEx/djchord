@@ -531,7 +531,7 @@ public class Node implements RemoteNode {
         }
         try
         {
-            RemoteNode responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
+            RemoteNode responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
             while(!responsible.getAvailablePort(port))
             {
                 port++;

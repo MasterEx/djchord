@@ -127,6 +127,7 @@ public class Arguments {
                         }
                         else
                         {
+                            in.reset();
                             System.out.print("Give file name:");
                             chord.getFile(in.next());
                             System.out.println();
