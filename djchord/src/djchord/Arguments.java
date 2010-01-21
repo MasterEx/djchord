@@ -137,6 +137,10 @@ public class Arguments {
                     {
                         System.out.println(chord.getRMIInfo());
                     }
+                    else if(input.equalsIgnoreCase("-showallsuccessors"))
+                    {
+                        chord.showAllSuccessors();
+                    }
                     else
                     {
                         System.out.println(input+" : command not found");

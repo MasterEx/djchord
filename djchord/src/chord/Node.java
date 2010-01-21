@@ -69,6 +69,7 @@ public class Node implements RemoteNode {
     private RemoteNode thisnode = null;
     private Check check, checkstabilize, checkfingers, checkfirst;
     private boolean[] ports;
+    private boolean empty_folder=true;
 
     /**
      * constructor
@@ -581,6 +582,10 @@ public class Node implements RemoteNode {
     {
         FileNames files = new FileNames(this.folder);
         file_keys = files.getFileNames();
+        if(file_keys!=null)
+        {
+            this.empty_folder = false;
+        }
     }
 
     public void addFile(String filehash,RemoteNode node) throws RemoteException
@@ -595,26 +600,40 @@ public class Node implements RemoteNode {
     
     public void sendFiles2ResponsibleNode() throws RemoteException
     {
-        System.out.println("in files");
-        RemoteNode remotenode;
-        for(int i=0;i<file_keys.length;i++)
+        if(!this.empty_folder)
         {
-            remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
-            remotenode.addFile(file_keys[i], this.thisnode);
+            System.out.println("in files");
+            RemoteNode remotenode;
+            for(int i=0;i<file_keys.length;i++)
+            {
+                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                remotenode.addFile(file_keys[i], this.thisnode);
+            }
+            System.out.println("out files");
         }
-        System.out.println("out files");
+        else
+        {
+            System.out.println("The folder is empty or doesn't exist");
+        }
     }
 
     public void removeFilesFromResponsibleNode()throws RemoteException
     {
-        System.out.println("rm files");
-        RemoteNode remotenode;
-        for(int i=0;i<file_keys.length;i++)
+        if(!this.empty_folder)
         {
-            remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
-            remotenode.rmFile(file_keys[i]);
+            System.out.println("rm files");
+            RemoteNode remotenode;
+            for(int i=0;i<file_keys.length;i++)
+            {
+                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                remotenode.rmFile(file_keys[i]);
+            }
+            System.out.println("out files");
         }
-        System.out.println("out files");
+        else
+        {
+            System.out.println("The folder is empty or doesn't exist");
+        }
     }
 
     synchronized public void setPortBusy(int i) throws RemoteException

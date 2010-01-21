@@ -202,4 +202,31 @@ public class DJchord implements Runnable {
         }
         return returnval;
     }
+    public void showAllSuccessors()
+    {
+        try
+        {
+            System.out.println("I'm "+node.getRMIInfo());
+            for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
+            {
+                System.out.println("My next successor is "+i.getRMIInfo());
+            }
+            
+        }
+        catch (RemoteException ex)
+        {
+            System.err.println("The successors seems down... :(");
+            try
+            {
+                node.stabilize();
+                node.fixFingers();
+                node.fixAllFingers();
+            }
+            catch (RemoteException remoteException)
+            {
+                System.out.println("------- HERE -------");
+            }
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
