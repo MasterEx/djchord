@@ -551,6 +551,7 @@ public class Node implements RemoteNode {
 
     public RemoteNode getFileResponsible(String filehash) throws RemoteException
     {
+        System.out.println("here!!! --> "+this.foreignfiles.get(filehash).getPid());
         return this.foreignfiles.get(filehash);
     }
 
@@ -568,16 +569,20 @@ public class Node implements RemoteNode {
         try
         {
             RemoteNode responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
+            System.out.println(responsible==null);
+            System.out.println(port);
             while(!responsible.getAvailablePort(port))
             {
                 port++;
             }
+            this.ports[port] = true;
             FileReceiver receiver = new FileReceiver(port,File.separator+"remote_files"+File.separator+filename);
             receiver.start();
             responsible.sendFile(port, this.getAddress(), filename);
             try
             {
                 receiver.getThread().join();
+                this.ports[port] = false;
             }
             catch (InterruptedException ex)
             {
@@ -626,6 +631,7 @@ public class Node implements RemoteNode {
 
     public void addFile(String filehash,RemoteNode node) throws RemoteException
     {
+        System.out.println("Now putting"+filehash+" and "+node.getPid()+" in this node:"+this.pid);
         foreignfiles.put(filehash, node);
     }
 
