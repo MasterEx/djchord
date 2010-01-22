@@ -39,7 +39,6 @@ import java.lang.management.ManagementFactory;
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Vector;
@@ -62,7 +61,7 @@ public class Node implements RemoteNode {
     private String folder,pid;
     private String[] file_keys;
     private RemoteNode[] fingers = new RemoteNode[160],successors = new RemoteNode[3];
-    private Map<String,RemoteNode> foreignfiles  = new HashMap<String,RemoteNode>();;
+    private HashMap<String,RemoteNode> foreignfiles  = new HashMap<String,RemoteNode>();;
     private RemoteNode predecessor;
     private boolean first = false, last = false, notified = false;
     private Vector<RemoteNode> compressedFingers;
