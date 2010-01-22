@@ -121,17 +121,8 @@ public class Arguments {
                     }
                     else if(input.equalsIgnoreCase("-getfile"))
                     {
-                        if(in.hasNext())
-                        {
-                            chord.getFile(in.next());
-                        }
-                        else
-                        {
-                            in.reset();
-                            System.out.print("Give file name:");
-                            chord.getFile(in.next());
-                            System.out.println();
-                        }
+                        chord.getFile(in.next());
+                        System.out.println();
                     }
                     else if(input.equalsIgnoreCase("-getsuccessor"))
                     {

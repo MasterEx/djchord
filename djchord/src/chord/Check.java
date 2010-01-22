@@ -74,6 +74,7 @@ public class Check implements Runnable{
                     node.fixFingers();
                     //this.fixAllFingers();
                     this.findFirst();
+                    node.sendFiles2ResponsibleNode();
                     Thread.sleep(60000); // 1 min
                 }
             }
