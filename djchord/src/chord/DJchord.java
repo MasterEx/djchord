@@ -162,7 +162,7 @@ public class DJchord implements Runnable {
             this.node.exit();
             successor.stabilize();
             successor.fixFingers();
-            successor.fixAllFingers();
+            //successor.fixAllFingers();
         }
         catch (RemoteException remoteException)
         {
@@ -187,7 +187,7 @@ public class DJchord implements Runnable {
             {
                 node.stabilize();
                 node.fixFingers();
-                node.fixAllFingers();
+                //node.fixAllFingers();
             }
             catch (RemoteException remoteException)
             {
@@ -215,7 +215,7 @@ public class DJchord implements Runnable {
             {
                 node.stabilize();
                 node.fixFingers();
-                node.fixAllFingers();
+                //node.fixAllFingers();
             }
             catch (RemoteException remoteException)
             {

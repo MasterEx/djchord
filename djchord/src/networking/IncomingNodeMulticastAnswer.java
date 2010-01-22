@@ -63,10 +63,10 @@ public class IncomingNodeMulticastAnswer implements Runnable{
      */
     synchronized public void run()
     {
-        System.out.print("geia");
         String responders_pid = null, responders_address = null, pid = null;
         try
         {
+            System.out.println("Socket opened<--------------");
             serversocket = new ServerSocket(port);
             serversocket.setSoTimeout(5000);// 5 sec
             socket = serversocket.accept();// race condition may occur
@@ -93,11 +93,12 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             }
             node.initSuccessors();
             node.fixFingers();
-            node.fixAllFingers();
+            //node.fixAllFingers();
 
             in.close();
             socket.close();
             serversocket.close();
+            System.out.println("Socket closed<--------------");
         }
         catch (NotBoundException ex)
         {
@@ -144,6 +145,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             {
                 flag = true;
                 serversocket.close();
+                System.out.println("Socket closed<--------------");
             }
             catch (IOException ex1)
             {

@@ -524,10 +524,12 @@ public class Node implements RemoteNode {
         compressedFingers.trimToSize();
     }
 
-    public void fixFingers() throws RemoteException
+    public synchronized void fixFingers() throws RemoteException
     {
+        System.out.println("fingers start here<-----------");
         this.setFingers();
         this.compressFingers();
+        System.out.println("fingers end here<-----------");
     }
 
     /**

@@ -60,7 +60,7 @@ public class Check implements Runnable{
             else if(fixfingers)
             {
                 node.fixFingers();
-                this.fixAllFingers();
+                //this.fixAllFingers();
             }
             else if(findfirst)
             {
@@ -72,7 +72,7 @@ public class Check implements Runnable{
                 {
                     this.stabilize();
                     node.fixFingers();
-                    this.fixAllFingers();
+                    //this.fixAllFingers();
                     this.findFirst();
                     Thread.sleep(60000); // 1 min
                 }
@@ -266,10 +266,10 @@ public class Check implements Runnable{
     
     public void fixAllFingers() throws RemoteException
     {
-        for(RemoteNode tempnode=node.getSuccessor();!tempnode.getPid().equalsIgnoreCase(node.getPid());tempnode=tempnode.getSuccessor())
+        /*for(RemoteNode tempnode=node.getSuccessor();!tempnode.getPid().equalsIgnoreCase(node.getPid());tempnode=tempnode.getSuccessor())
         {
-            tempnode.fixFingers();
-        }
+        tempnode.fixFingers();
+        }*/
         //node.sendFiles2ResponsibleNode();
     }
 
