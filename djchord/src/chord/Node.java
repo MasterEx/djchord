@@ -554,13 +554,13 @@ public class Node implements RemoteNode {
         return this.foreignfiles.get(filehash);
     }
 
-    synchronized public void getFile(String filename)
+    public void getFile(String filename)
     {
         boolean contin = true;
         RemoteNode responsible = null;
         try
         {
-            responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
+            responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
             if (responsible == null)
             {
                 throw new NullPointerException();
@@ -604,14 +604,16 @@ public class Node implements RemoteNode {
                 {
                     port++;
                 }
-                this.ports[port] = true;
-                FileReceiver receiver = new FileReceiver(port,File.separator+"remote_files"+File.separator+filename);
+                this.ports[50000-port] = true;
+                System.out.println("this come here: "+File.separator+"remote_files"+File.separator+filename);
+                FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename);
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
                 try
                 {
                     receiver.getThread().join();
-                    this.ports[port] = false;
+                    System.out.println("File was sent successfully");
+                    this.ports[50000-port] = false;
                 }
                 catch (InterruptedException ex)
                 {
@@ -711,12 +713,12 @@ public class Node implements RemoteNode {
 
     public void unsetPortBusy(int i) throws RemoteException
     {
-        ports[i]=false;
+        ports[50000-i]=false;
     }
 
     public void sendFile(int port,String address,String file) throws RemoteException
     {
-        FileSender sender = new FileSender(address,port,File.separator+"downloads"+File.separator+file);
+        FileSender sender = new FileSender(address,port,"downloads"+File.separator+file);
         sender.start();
         try
         {

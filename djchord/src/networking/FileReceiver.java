@@ -65,12 +65,13 @@ public class FileReceiver implements Runnable{
             int currentbyte=0;
             while(true)
             {
-                out.write(currentbyte = in.read());
+                currentbyte = in.read();
                 if(currentbyte == -1)
                 {
                     status = true;
                     break;
                 }
+                out.write(currentbyte);
             }
             if (echo)
             {
