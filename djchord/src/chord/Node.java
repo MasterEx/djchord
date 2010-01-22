@@ -617,6 +617,7 @@ public class Node implements RemoteNode {
     {
         FileNames files = new FileNames(this.folder);
         file_keys = files.getFileNames();
+        files = null;
         if(file_keys!=null)
         {
             this.empty_folder = false;
