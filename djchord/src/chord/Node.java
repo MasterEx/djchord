@@ -550,45 +550,21 @@ public class Node implements RemoteNode {
 
     public RemoteNode getFileResponsible(String filehash) throws RemoteException
     {
-        System.out.println("here!!! --> "+this.foreignfiles.get(filehash).getPid());
+        //System.out.println("here!!! --> "+this.foreignfiles.get(filehash).getPid());
         return this.foreignfiles.get(filehash);
     }
 
     synchronized public void getFile(String filename)
     {
-        int port = 0;
-        for(int i=0;i<ports.length;i++)
-        {
-            if(!ports[i])
-            {
-                port = 50000+i;
-                break;
-            }
-        }
+        boolean contin = true;
+        RemoteNode responsible = null;
         try
         {
-            RemoteNode responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
-            System.out.println(responsible==null);
-            System.out.println(port);
-            while(!responsible.getAvailablePort(port))
+            responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(SHA1.getHash(filename).getStringHash());
+            if (responsible == null)
             {
-                port++;
+                throw new NullPointerException();
             }
-            this.ports[port] = true;
-            FileReceiver receiver = new FileReceiver(port,File.separator+"remote_files"+File.separator+filename);
-            receiver.start();
-            responsible.sendFile(port, this.getAddress(), filename);
-            try
-            {
-                receiver.getThread().join();
-                this.ports[port] = false;
-            }
-            catch (InterruptedException ex)
-            {
-                System.out.println("File reception was interrupted");
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            this.unsetPortBusy(port);
         }
         catch (NoSuchAlgorithmException ex)
         {
@@ -596,15 +572,66 @@ public class Node implements RemoteNode {
         }
         catch (UnsupportedEncodingException ex)
         {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (IOException ex)
+        catch (NullPointerException ex)
         {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            contin = false;
+            System.out.println("FILE DOESN'T EXIST!!!");
+        }
+
+        if(contin)
+        {
+            int port = 0;
+            for(int i=0;i<ports.length;i++)
+            {
+                if(!ports[i])
+                {
+                    port = 50000+i;
+                    break;
+                }
+            }
+            try
+            {
+
+                System.out.println(responsible==null);
+                System.out.println(port);
+                while(!responsible.getAvailablePort(port))
+                {
+                    port++;
+                }
+                this.ports[port] = true;
+                FileReceiver receiver = new FileReceiver(port,File.separator+"remote_files"+File.separator+filename);
+                receiver.start();
+                responsible.sendFile(port, this.getAddress(), filename);
+                try
+                {
+                    receiver.getThread().join();
+                    this.ports[port] = false;
+                }
+                catch (InterruptedException ex)
+                {
+                    System.out.println("File reception was interrupted");
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                this.unsetPortBusy(port);
+            }
+            catch (UnsupportedEncodingException ex)
+            {
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (RemoteException ex)
+            {
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     public void setKey(SHAhash key) throws RemoteException
