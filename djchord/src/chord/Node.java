@@ -237,37 +237,43 @@ public class Node implements RemoteNode {
     
     public RemoteNode[] getSuccessorSuccessorsList() throws RemoteException
     {
-        int counter = 0; // how many times this node is in successors list
+        this.setSuccessor(1,this.getSuccessor().getSuccessor());
+        this.setSuccessor(2,this.getSuccessor().getSuccessor().getSuccessor());
+        /*int counter = 0; // how many times this node is in successors list
         for(int i=0;i<successors.length;i++)
         {
-            if(successors[i].getPid().equalsIgnoreCase(this.getPid()))
-            {
-                counter++;
-            }
+        if(successors[i].getPid().equalsIgnoreCase(this.getPid()))
+        {
+        counter++;
+        }
         }
         switch (counter)
         {
-            case 1:this.setSuccessor(1,this.getPredecessor());
-            try
-            {
-                this.setSuccessor(2, RMIRegistry.getRemoteNode(this.getAddress(), pid));
-            }
-            catch (NotBoundException ex)
-            {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            break;
-            case 3:this.setSuccessor(1, this.getPredecessor()); break;
+        case 1:this.setSuccessor(1,this.getPredecessor());
+        try
+        {
+        this.setSuccessor(2, RMIRegistry.getRemoteNode(this.getAddress(), pid));
         }
+        catch (NotBoundException ex)
+        {
+        Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        break;
+        case 3:this.setSuccessor(1, this.getPredecessor()); break;
+        }*/
         return this.successors;
     }
 
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
-        if (k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0)
+        if ((k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0) || (k.compareTo(search.getKey())>0 && search.getSuccessor().isFirst()))
         {
             return search.getSuccessor();
+        }
+        else if(k.compareTo(search.getKey())<0 && search.isFirst())
+        {
+            return search;
         }
         else
         {
@@ -303,22 +309,39 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
-        if ((k.compareTo(compressedFingers.get(compressedFingers.size()-1).getKey())>0 || k.compareTo(this.getKey())<0) && !this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
+        if(this.compressedFingers.size()==1)
         {
-            return compressedFingers.get(compressedFingers.size()-1).closest_preceding_node(k);
+            return compressedFingers.get(0);
+        }
+        else if(k.compareTo(this.compressedFingers.get(this.compressedFingers.size()-1).getKey())>0)
+        {
+            return this.compressedFingers.get(this.compressedFingers.size()-1).closest_preceding_node(k);
+        }
+        for(int i=this.compressedFingers.size()-2;i>=0;i--)
+        {
+            if(k.compareTo(this.compressedFingers.get(i).getKey())>0)
+            {
+                return this.compressedFingers.get(i);
+            }
+        }
+        System.out.println("You didn't consider all the possibilities as far as the fingers are concerned... Calling simple_find_successor(k)");
+        return this.simple_find_successor(k);
+        /*if ((k.compareTo(compressedFingers.get(compressedFingers.size()-1).getKey())>0 || k.compareTo(this.getKey())<0) && !this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
+        {
+        return compressedFingers.get(compressedFingers.size()-1).closest_preceding_node(k);
         }
         else if(this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
         {
-            return this.getSuccessor();
+        return this.getSuccessor();
         }
         for(int i=158;i>=0;i--)
         {
-            if (k.compareTo(compressedFingers.get(i).getKey())>0 && (k.compareTo(compressedFingers.get(i).getSuccessor().getKey())<0 || compressedFingers.get(i).getSuccessor().isFirst()))
-            {
-                 return compressedFingers.get(i);
-            }
+        if (k.compareTo(compressedFingers.get(i).getKey())>0 && (k.compareTo(compressedFingers.get(i).getSuccessor().getKey())<0 || compressedFingers.get(i).getSuccessor().isFirst()))
+        {
+        return compressedFingers.get(i);
         }
-        return null; // unreachable statement
+        }
+        return null; // unreachable statement*/
     }
 
     public void stabilize() throws RemoteException
@@ -464,28 +487,40 @@ public class Node implements RemoteNode {
     public void compressFingers() throws RemoteException
     {
         compressedFingers = new Vector<RemoteNode>();
-        int j=0, i=0;
-        for(;i<159;i++)
+        for(int i=0;i<=159;i++)
         {
-            for(;j<159;j++)
+            if(this.compressedFingers.contains(fingers[i]))
             {
-                if(!fingers[i].getPid().equalsIgnoreCase(fingers[j].getPid()))
-                {
-                    break;
-                }
-            }
-            if(j!=159)
-            {
-                this.compressedFingers.addElement(fingers[i]);
-                this.compressedFingers.addElement(fingers[j]);
-                i = j;
+                continue;
             }
             else
             {
-                this.compressedFingers.addElement(fingers[i]);
-                break;
+                System.out.println("den to eixe "+i);
+                this.compressedFingers.add(fingers[i]);
             }
         }
+        /*int j=0, i=0;
+        for(;i<159;i++)
+        {
+        for(;j<159;j++)
+        {
+        if(!fingers[i].getPid().equalsIgnoreCase(fingers[j].getPid()))
+        {
+        break;
+        }
+        }
+        if(j!=159)
+        {
+        this.compressedFingers.addElement(fingers[i]);
+        this.compressedFingers.addElement(fingers[j]);
+        i = j;
+        }
+        else
+        {
+        this.compressedFingers.addElement(fingers[i]);
+        break;
+        }
+        }*/
         compressedFingers.trimToSize();
     }
 

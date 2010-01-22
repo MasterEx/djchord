@@ -106,9 +106,9 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 RemoteNode responder = RMIRegistry.getRemoteNode(responders_address, responders_pid);
                 try
                 {
+                    System.out.println("Successor not found!");
                     responder.stabilize();
                     responder.fixAllFingers();
-                    System.out.println("Successor not found!");
                     MulticastSender multicast = new MulticastSender(1101, "224.1.1.1", node.getPid().getBytes(), node);
                     multicast.send();
                 }

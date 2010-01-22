@@ -149,7 +149,7 @@ public class Check implements Runnable{
     public void stabilize() throws RemoteException
     {
         System.out.println("stabilizing...");
-        RemoteNode pred=null,pred_succ0=null,pred_succ1=null,pred_succ2=null,succ=null,succ1=null;
+        RemoteNode pred=null,pred_succ0=null,pred_succ1=null,pred_succ2=null,succ=null,succ1=null,succ2=null;
         try 
         {
             pred = node.getPredecessor();
@@ -164,7 +164,7 @@ public class Check implements Runnable{
         }
         catch (RemoteException ex) 
         {
-            System.err.println("My predecessor 1st successor has failed");
+            System.err.println("My predecessor's 1st successor has failed");
         }
         try 
         {
@@ -190,13 +190,25 @@ public class Check implements Runnable{
         {
             System.err.println("My successor has failed");
         }
-        try 
+        try
         {
             succ1 = node.getSuccessor(1);
         }
-        catch (RemoteException ex) 
+        catch (RemoteException ex)
         {
             System.err.println("My 2nd successor has failed");
+        }
+        try
+        {
+            succ2 = node.getSuccessor(2);
+        }
+        catch (RemoteException ex)
+        {
+            System.err.println("My 3rd successor has failed");
+        }
+        if(!pred_succ0.getPid().equalsIgnoreCase(node.getPid()))
+        {
+            pred.setSuccessor(node);
         }
         if(!pred_succ1.getPid().equalsIgnoreCase(succ.getPid()))
         {
@@ -206,6 +218,14 @@ public class Check implements Runnable{
         {
             pred.setSuccessor(2,succ1);
         }
+        if(!succ1.getPid().equalsIgnoreCase(succ.getSuccessor().getPid()))
+        {
+            node.setSuccessor(1,succ.getSuccessor());
+        }
+        if(!succ2.getPid().equalsIgnoreCase(succ1.getSuccessor().getPid()))
+        {
+            node.setSuccessor(2,succ1.getSuccessor());
+        }
         for( int i=0;i<3;i++)
         {
             try
@@ -214,6 +234,7 @@ public class Check implements Runnable{
             }
             catch (RemoteException e)
             {
+                System.err.println("Successor "+i+" failed");
                 if(i==0)
                 {
                     node.setSuccessor(0,node.getSuccessor(1));
@@ -240,7 +261,7 @@ public class Check implements Runnable{
                 }
             }
         }
-
+        System.out.println("ended stabilizing.");
     }
     
     public void fixAllFingers() throws RemoteException
@@ -249,7 +270,7 @@ public class Check implements Runnable{
         {
             tempnode.fixFingers();
         }
-        node.sendFiles2ResponsibleNode();
+        //node.sendFiles2ResponsibleNode();
     }
 
     public void findFirst() throws RemoteException

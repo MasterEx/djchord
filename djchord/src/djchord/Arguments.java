@@ -110,7 +110,7 @@ public class Arguments {
                     String input = in.next();
                     if(input.equalsIgnoreCase("-help"))
                     {
-                        System.out.println("-exit\n-help\n-getfile\n-getsuccessor\n-quit");
+                        System.out.println("-exit\n-help\n-getfile\n-getsuccessor\n-quit\n-showallsuccessors");
                     }
                     else if(input.equalsIgnoreCase("-quit") || input.equalsIgnoreCase("-exit"))
                     {

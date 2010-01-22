@@ -79,11 +79,8 @@ public class DJchord implements Runnable {
         sendmulticast.start();
         for(;;)
         {
-
-            System.out.println("FTANEI EDW! 2.4");
             synchronized (sendmulticast)
             {
-                System.out.println("FTANEI EDW! 2.5");
                 try
                 {
                     sendmulticast.wait();
@@ -96,7 +93,7 @@ public class DJchord implements Runnable {
                 {
                     if (node.isNotified())
                     {
-                        System.out.println("FTANEI EDW! 2.6 BGAINEI");
+                        System.out.println("Notified");
                         break;
                     }
                 }
@@ -106,19 +103,17 @@ public class DJchord implements Runnable {
                 }
             }
         }
-            System.out.println("FTANEI EDW! 4");
-            try
-            {
-                node.setSuccessor(1, node.getSuccessor().getSuccessor());
-                node.getSuccessor().setSuccessor(1, node.getSuccessor().getSuccessor().getSuccessor());
-                node.setSuccessor(2, node.getSuccessor().getSuccessor(1));
-                node.sendFiles2ResponsibleNode();
-            }
-            catch (RemoteException ex)
-            {
-                Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        System.out.println("FTANEI EDW! 5");
+        try
+        {
+            node.setSuccessor(1, node.getSuccessor().getSuccessor());
+            node.getSuccessor().setSuccessor(1, node.getSuccessor().getSuccessor().getSuccessor());
+            node.setSuccessor(2, node.getSuccessor().getSuccessor(1));
+            //node.sendFiles2ResponsibleNode();
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
         MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
         receivemulticast.start();
     }

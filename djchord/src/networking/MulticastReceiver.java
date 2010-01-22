@@ -161,6 +161,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
         try
         {
             openconnection();
+            System.out.println("Started waiting for multicast calls");
             while(run)
             {
                 new PacketHandling(receive(new byte[1024]),this.node);
