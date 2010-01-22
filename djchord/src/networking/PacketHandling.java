@@ -86,12 +86,13 @@ public class PacketHandling implements Runnable{
             socket = new Socket(packet.getAddress(),1100);
             if (socket.getChannel()!=null)
             {
-                throw new IOException();
+                throw new IOException("something went horribly wrong");
             }
             //socket.setSoTimeout(6000); // 6 sec
             outstream = new PrintWriter(socket.getOutputStream());
             System.out.println("The successor of "+pid.trim()+" is "+successor.getPid());
             outstream.write(successor.getRMIInfo()+" "+node.getRMIInfo());
+
         }
         catch (RemoteException ex)
         {
@@ -129,6 +130,7 @@ public class PacketHandling implements Runnable{
      */
     PacketHandling(DatagramPacket packet,Node node)
     {
+        System.out.println("beginning packet handling");
         this.node = node;
         this.packet = packet;
         if(runner == null)

@@ -150,6 +150,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
     {
         DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
         this.socket.receive(packet);
+        System.out.println("received packet here<-------");
         return packet;
     }
 
@@ -165,7 +166,9 @@ public class MulticastReceiver extends Multicast implements Runnable{
             while(run)
             {
                 new PacketHandling(receive(new byte[1024]),this.node);
-            }            
+                System.out.println("received packet");
+            }
+            System.out.println("closed connection");
             closeconnection();
         }
        /*catch (NotInitializedVariablesException ex)
