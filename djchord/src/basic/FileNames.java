@@ -101,17 +101,8 @@ public class FileNames {
                         }
                         if(count==0)
                         {
-                            if(tempstringarray[j].contains("."))
-                            {
-                                temp2=tempstringarray[j].split("\\.");
-                                retval[pos] = temp2[0];
-                                pos++;
-                            }
-                            else 
-                            {
-                                retval[pos] = tempstringarray[j];
-                                pos++;
-                            }
+                            retval[pos] = tempstringarray[j];
+                            pos++;
                         }
                     }
                 }
