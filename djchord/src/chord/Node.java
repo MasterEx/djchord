@@ -290,7 +290,6 @@ public class Node implements RemoteNode {
      */
     public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
     {
-        //this.findFirst2();
         RemoteNode next = this;
         if(this.getPid().equalsIgnoreCase(this.getSuccessor().getPid()))
         {
@@ -298,10 +297,8 @@ public class Node implements RemoteNode {
         }
         else
         {
-            System.out.println("this="+this.getPid());
             do
             {
-                System.out.println("next="+next.getPid());
                 if(k.compareTo(next.getKey())>0 && (k.compareTo(next.getSuccessor().getKey())<=0 || next.getKey().compareTo(next.getSuccessor().getKey())>0))
                 {
                     return next.getSuccessor();
@@ -313,7 +310,6 @@ public class Node implements RemoteNode {
                 next = next.getSuccessor();
             }
             while(!next.getPid().equalsIgnoreCase(this.getPid()));
-            System.out.println("returning this.successor");
             return this.getSuccessor();
         }
         /*RemoteNode i=this.getSuccessor();
