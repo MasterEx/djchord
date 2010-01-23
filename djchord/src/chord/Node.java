@@ -97,6 +97,7 @@ public class Node implements RemoteNode {
         check = new Check(thisnode);
         checkstabilize = new Check(thisnode);
         checkfingers = new Check(thisnode);
+        checkfirst = new Check(thisnode);
         check.start();
         ports = new boolean[3000];
         for(int i=0;i<3000;i++)
@@ -289,25 +290,54 @@ public class Node implements RemoteNode {
      */
     public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
     {
-        RemoteNode i=this.getSuccessor();
+        //this.findFirst2();
+        RemoteNode next = this;
+        if(this.getPid().equalsIgnoreCase(this.getSuccessor().getPid()))
+        {
+            return this;
+        }
+        else
+        {
+            System.out.println("this="+this.getPid());
+            do
+            {
+                System.out.println("next="+next.getPid());
+                if(k.compareTo(next.getKey())>0 && (k.compareTo(next.getSuccessor().getKey())<=0 || next.getKey().compareTo(next.getSuccessor().getKey())>0))
+                {
+                    return next.getSuccessor();
+                }
+                else if(k.compareTo(next.getKey())<=0 && (k.compareTo(next.getPredecessor().getKey())>0 || next.getKey().compareTo(next.getPredecessor().getKey())<0))
+                {
+                    return next;
+                }
+                next = next.getSuccessor();
+            }
+            while(!next.getPid().equalsIgnoreCase(this.getPid()));
+            System.out.println("returning this.successor");
+            return this.getSuccessor();
+        }
+        /*RemoteNode i=this.getSuccessor();
         for(;i.getKey().compareTo(this.getKey())!=0;i=i.getSuccessor())
         {
-            if (!i.getPid().equalsIgnoreCase(i.getSuccessor().getPid()))
-            {
-                if(k.compareTo(i.getKey())<0 && i.isFirst())
-                {
-                    return i;
-                }
-                else if ((k.compareTo(i.getKey()) > 0 && k.compareTo(i.getSuccessor().getKey()) <= 0) || (k.compareTo(i.getKey()) > 0 && i.getSuccessor().isFirst())) {
-                    return i.getSuccessor();
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
+        if (!i.getPid().equalsIgnoreCase(i.getSuccessor().getPid()))
+        {
+        if((k.compareTo(i.getKey())<0 && i.isFirst()) || (k.compareTo(i.getKey())<=0 && k.compareTo(i.getPredecessor().getKey())>0))
+        {
         return i;
+        }
+        else if ((k.compareTo(i.getKey()) > 0 && k.compareTo(i.getSuccessor().getKey()) <= 0) || (k.compareTo(i.getKey()) > 0 && i.getSuccessor().isFirst()))
+        {
+        return i.getSuccessor();
+        }
+        }
+        else
+        {
+        System.out.println("else<-------");
+        break;
+        }
+        }
+        System.out.println("for<-------");
+        return i;*/
     }
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
@@ -466,6 +496,7 @@ public class Node implements RemoteNode {
 
     synchronized public void setFirst() throws RemoteException
     {
+        System.out.println("Setting this as first");
         this.first = true;
     }
 
@@ -679,7 +710,7 @@ public class Node implements RemoteNode {
 
     public void addFile(String filehash,RemoteNode node) throws RemoteException
     {
-        System.out.println("Now putting"+filehash+" and "+node.getPid()+" in this node:"+this.pid);
+        System.out.println("Now putting "+filehash+" and "+node.getPid()+" in this node:"+this.pid);
         foreignfiles.put(filehash, node);
     }
 

@@ -112,6 +112,7 @@ public class MulticastSender extends Multicast implements Runnable{
             try
             {
                 answer.returnThread().join();
+                System.out.println("Epitelous vrika ton successor mou!");
             }
             catch (InterruptedException ex)
             {

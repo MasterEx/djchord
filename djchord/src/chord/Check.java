@@ -276,6 +276,25 @@ public class Check implements Runnable{
 
     public void findFirst() throws RemoteException
     {
+        /*RemoteNode check=node;
+        while(true)
+        {
+        if(check.isFirst())
+        {
+        check.unsetFirst();
+        break;
+        }
+        check.getPredecessor();
+        }
+        do
+        {
+        if(check.getKey().compareTo(check.getPredecessor().getKey())<0)
+        {
+        check.setFirst();
+        }
+        check = check.getPredecessor();
+        }
+        while(!check.getPid().equalsIgnoreCase(node.getPid()));*/
         RemoteNode first = node.simple_find_successor((new SHAhash("0000000000000000000000000000000000000000")));
         if(!first.isFirst())
         {
