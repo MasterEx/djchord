@@ -80,7 +80,7 @@ public class PacketHandling implements Runnable{
         PrintWriter outstream = null;
         try
         {
-            successor = this.node.find_successor(sha1);
+            successor = this.node.simple_find_successor(sha1);
             //socket.bind(new Socket(responders_address));
             try
             {

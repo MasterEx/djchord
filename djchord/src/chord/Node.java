@@ -755,7 +755,7 @@ public class Node implements RemoteNode {
     synchronized public boolean getAvailablePort(int port) throws RemoteException
     {
         // if port is free
-        if(!ports[50000-port])
+        if(!ports[port-50000])
         {
             this.setPortBusy(port);
             return true;
