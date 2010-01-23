@@ -292,4 +292,9 @@ public class Check implements Runnable{
         return true;
     }
 
+    public Thread getThread()
+    {
+        return runner;
+    }
+
 }

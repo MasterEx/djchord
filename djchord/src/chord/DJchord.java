@@ -165,10 +165,12 @@ public class DJchord implements Runnable {
     {
         try
         {
-            RemoteNode successor = this.node.getSuccessor();
+            RemoteNode successor = this.node.getSuccessor(), predecessor = this.node.getPredecessor();
             this.node.exit();
-            successor.stabilize();
+            successor.joinedStabilize();
             successor.fixFingers();
+            predecessor.joinedStabilize();
+            predecessor.fixFingers();
             //successor.fixAllFingers();
         }
         catch (RemoteException remoteException)

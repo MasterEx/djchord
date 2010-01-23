@@ -352,6 +352,23 @@ public class Node implements RemoteNode {
         }
     }
 
+    public void joinedStabilize() throws RemoteException
+    {
+        if(checkstabilize.isFree())
+        {
+            checkstabilize = new Check(this);
+            checkstabilize.startStabilize();
+        }
+        try
+        {
+            checkstabilize.getThread().join();
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * It isn't used because it has to be invoked from an other thread
      */
