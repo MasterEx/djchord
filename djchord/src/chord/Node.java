@@ -604,7 +604,7 @@ public class Node implements RemoteNode {
                 {
                     port++;
                 }
-                this.ports[50000-port] = true;
+                this.setPortBusy(port);
                 System.out.println("this come here: "+File.separator+"remote_files"+File.separator+filename);
                 FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename);
                 receiver.start();
@@ -613,7 +613,6 @@ public class Node implements RemoteNode {
                 {
                     receiver.getThread().join();
                     System.out.println("File was sent successfully");
-                    this.ports[50000-port] = false;
                 }
                 catch (InterruptedException ex)
                 {
@@ -708,7 +707,7 @@ public class Node implements RemoteNode {
 
     synchronized public void setPortBusy(int i) throws RemoteException
     {
-        ports[i]=true;
+        ports[50000-i]=true;
     }
 
     public void unsetPortBusy(int i) throws RemoteException
@@ -737,7 +736,7 @@ public class Node implements RemoteNode {
         // if port is free
         if(!ports[50000-port])
         {
-            this.setPortBusy(50000-port);
+            this.setPortBusy(port);
             return true;
         }
         return false;
