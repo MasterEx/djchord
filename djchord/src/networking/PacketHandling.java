@@ -81,8 +81,15 @@ public class PacketHandling implements Runnable{
         try
         {
             successor = this.node.find_successor(sha1);
-
             //socket.bind(new Socket(responders_address));
+            try
+            {
+                Thread.sleep(2000); //sleep for 2 secs
+            }
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+            }
             socket = new Socket(packet.getAddress(),1100);
             if (socket.getChannel()!=null)
             {
