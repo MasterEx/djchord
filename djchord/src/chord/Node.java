@@ -274,6 +274,10 @@ public class Node implements RemoteNode {
         {
             return search;
         }
+        else if(k.compareTo(search.getKey())<0)
+        {
+            return search.getPredecessor().find_successor(k);
+        }
         else
         {
             return search.closest_preceding_node(k).find_successor(k);
@@ -314,7 +318,7 @@ public class Node implements RemoteNode {
         }
         else if(k.compareTo(this.compressedFingers.get(this.compressedFingers.size()-1).getKey())>0)
         {
-            return this.compressedFingers.get(this.compressedFingers.size()-1).closest_preceding_node(k);
+            return this.compressedFingers.get(this.compressedFingers.size()-1);
         }
         for(int i=this.compressedFingers.size()-2;i>=0;i--)
         {
