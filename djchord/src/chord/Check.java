@@ -300,6 +300,7 @@ public class Check implements Runnable{
         if(!first.isFirst())
         {
             first.setFirst();
+            first.getSuccessor().unsetFirst();
         }
         if(node.isFirst() && !node.getPid().equalsIgnoreCase(first.getPid()))
         {
