@@ -609,7 +609,8 @@ public class Node implements RemoteNode {
         RemoteNode responsible = null;
         try
         {
-            responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
+            System.out.println("getFIle find_successor");
+            responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
             if (responsible == null)
             {
                 throw new NullPointerException();
@@ -724,7 +725,8 @@ public class Node implements RemoteNode {
             RemoteNode remotenode;
             for(int i=0;i<file_keys.length;i++)
             {
-                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                System.out.println("sendFiles2ResponsibleNode find_successor");
+                remotenode = this.find_successor((new SHAhash(file_keys[i])));
                 remotenode.addFile(file_keys[i], this.thisnode);
             }
             System.out.println("out files");
@@ -743,7 +745,8 @@ public class Node implements RemoteNode {
             RemoteNode remotenode;
             for(int i=0;i<file_keys.length;i++)
             {
-                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                System.out.println("removeFilesFromResponsibleNode find_successor");
+                remotenode = this.find_successor((new SHAhash(file_keys[i])));
                 remotenode.rmFile(file_keys[i]);
             }
             System.out.println("out files");

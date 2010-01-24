@@ -115,6 +115,8 @@ public class DJchord implements Runnable {
         }
         try
         {
+            node.joinedStabilize();
+            node.fixFingers();
             node.sendFiles2ResponsibleNode();
         }
         catch (RemoteException ex)
