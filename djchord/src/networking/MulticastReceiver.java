@@ -162,11 +162,18 @@ public class MulticastReceiver extends Multicast implements Runnable{
         try
         {
             openconnection();
+            DatagramPacket temp;
+            String previous = "";
             System.out.println("Started waiting for multicast calls");
             while(run)
             {
-                new PacketHandling(receive(new byte[1024]),this.node);
-                System.out.println("received packet");
+                temp = receive(new byte[1024]);
+                if (!(new String(temp.getData())).equalsIgnoreCase(previous))
+                {
+                    new PacketHandling(temp, this.node);
+                    System.out.println("received packet");
+                    previous = new String(temp.getData());
+                }
             }
             System.out.println("closed connection");
             closeconnection();
