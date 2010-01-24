@@ -210,6 +210,15 @@ public class Node implements RemoteNode {
             this.joinedStabilize();
             this.getSuccessor().setPredecessor(this.getPredecessor());
             this.getPredecessor().setSuccessor(this.getSuccessor());
+            this.getPredecessor().initSuccessors();
+            if(!this.getPredecessor().getPredecessor().getPid().equalsIgnoreCase(this.getPid()))
+            {
+                this.getPredecessor().getPredecessor().initSuccessors();
+            }
+            if(!this.getPredecessor().getPredecessor().getPredecessor().getPid().equalsIgnoreCase(this.getPid()))
+            {
+                this.getPredecessor().getPredecessor().getPredecessor().initSuccessors();
+            }
             if (this.isFirst())
             {
                 this.getSuccessor().setFirst();

@@ -92,6 +92,11 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 node.setFirst();
             }
             node.initSuccessors();
+            node.getPredecessor().initSuccessors();
+            if(!node.getPredecessor().getPredecessor().getPid().equalsIgnoreCase(node.getPid()))
+            {
+                node.getPredecessor().getPredecessor().initSuccessors();
+            }
             node.fixFingers();
             //node.fixAllFingers();
 

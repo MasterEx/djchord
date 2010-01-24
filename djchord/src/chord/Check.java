@@ -151,118 +151,123 @@ public class Check implements Runnable{
     public void stabilize() throws RemoteException
     {
         System.out.println("stabilizing...");
-        RemoteNode pred=null,pred_succ0=null,pred_succ1=null,pred_succ2=null,succ=null,succ1=null,succ2=null;
-        try 
+        try
         {
-            pred = node.getPredecessor();
+           node.getSuccessor().hasFailed(); 
         }
-        catch (RemoteException ex) 
+        catch(RemoteException e)
         {
-            System.err.println("My predecessor has failed");
-        }
-        try 
-        {
-            pred_succ0 = pred.getSuccessor(0);
-        }
-        catch (RemoteException ex) 
-        {
-            System.err.println("My predecessor's 1st successor has failed");
-        }
-        try 
-        {
-            pred_succ1 = pred.getSuccessor(1);
-        }
-        catch (RemoteException ex)
-        {
-            System.err.println("My predecessor's 2nd successor has failed");
-        }
-        try 
-        {
-            pred_succ2 = pred.getSuccessor(2);
-        }
-        catch (RemoteException ex) 
-        {
-            System.err.println("My predecessor's 3rd successor has failed");
-        }
-        try 
-        {
-            succ = node.getSuccessor(0);
-        }
-        catch (RemoteException ex) 
-        {
-            System.err.println("My successor has failed");
+            System.out.println("My successor has failed :(");
+            node.setSuccessor(node.getSuccessor(1));
+            node.setSuccessor(1,node.getSuccessor(0).getSuccessor());
+            node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
+            node.getSuccessor().setPredecessor(node.getNode());
         }
         try
         {
-            succ1 = node.getSuccessor(1);
+           node.getSuccessor(1).hasFailed(); 
         }
-        catch (RemoteException ex)
+        catch(RemoteException e)
         {
-            System.err.println("My 2nd successor has failed");
+            System.out.println("My 2nd successor has failed :(");
+            node.setSuccessor(1,node.getSuccessor(2));
+            node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
+            node.getSuccessor(1).setPredecessor(node.getSuccessor());
         }
         try
         {
-            succ2 = node.getSuccessor(2);
+           node.getSuccessor(2).hasFailed(); 
+        }
+        catch(RemoteException e)
+        {
+            System.out.println("My 3rd successor has failed :(");
+            try
+            {
+                node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
+            }
+            catch(RemoteException ex)
+            {
+                node.setSuccessor(2,node.getSuccessor(1).getSuccessor(1));
+            }
+            node.getSuccessor(2).setPredecessor(node.getSuccessor(1));
+        }
+        /*RemoteNode pred=null,pred_succ0=null,pred_succ1=null,pred_succ2=null,succ=null,succ1=null,succ2=null;
+        try 
+        {
+        pred = node.getPredecessor();
+        }
+        catch (RemoteException ex) 
+        {
+        System.err.println("My predecessor has failed");
+        }
+        try 
+        {
+        pred_succ0 = pred.getSuccessor(0);
+        }
+        catch (RemoteException ex) 
+        {
+        System.err.println("My predecessor's 1st successor has failed");
+        }
+        try 
+        {
+        pred_succ1 = pred.getSuccessor(1);
         }
         catch (RemoteException ex)
         {
-            System.err.println("My 3rd successor has failed");
+        System.err.println("My predecessor's 2nd successor has failed");
+        }
+        try 
+        {
+        pred_succ2 = pred.getSuccessor(2);
+        }
+        catch (RemoteException ex) 
+        {
+        System.err.println("My predecessor's 3rd successor has failed");
+        }
+        try 
+        {
+        succ = node.getSuccessor(0);
+        }
+        catch (RemoteException ex) 
+        {
+        System.err.println("My successor has failed");
+        }
+        try
+        {
+        succ1 = node.getSuccessor(1);
+        }
+        catch (RemoteException ex)
+        {
+        System.err.println("My 2nd successor has failed");
+        }
+        try
+        {
+        succ2 = node.getSuccessor(2);
+        }
+        catch (RemoteException ex)
+        {
+        System.err.println("My 3rd successor has failed");
         }
         if(!pred_succ0.getPid().equalsIgnoreCase(node.getPid()))
         {
-            pred.setSuccessor(node);
+        pred.setSuccessor(node);
         }
         if(!pred_succ1.getPid().equalsIgnoreCase(succ.getPid()))
         {
-            pred.setSuccessor(1,succ);
+        pred.setSuccessor(1,succ);
         }
         if(!pred_succ2.getPid().equalsIgnoreCase(succ1.getPid()))
         {
-            pred.setSuccessor(2,succ1);
+        pred.setSuccessor(2,succ1);
         }
         if(!succ1.getPid().equalsIgnoreCase(succ.getSuccessor().getPid()))
         {
-            node.setSuccessor(1,succ.getSuccessor());
+        node.setSuccessor(1,succ.getSuccessor());
         }
         if(!succ2.getPid().equalsIgnoreCase(succ1.getSuccessor().getPid()))
         {
-            node.setSuccessor(2,succ1.getSuccessor());
-        }
-        for( int i=0;i<3;i++)
-        {
-            try
-            {
-                node.getSuccessor(i).hasFailed();
-            }
-            catch (RemoteException e)
-            {
-                System.err.println("Successor "+i+" failed");
-                if(i==0)
-                {
-                    node.setSuccessor(0,node.getSuccessor(1));
-                    node.setSuccessor(1,node.getSuccessor(2));
-                    node.setSuccessor(2,node.getSuccessor(2).getSuccessor());
-                    node.getSuccessor().setPredecessor(node);
-                    node.getPredecessor().getPredecessor().stabilize();
-                    node.getPredecessor().stabilize();
-                }
-                else if(i==1)
-                {
-                    node.setSuccessor(1,node.getSuccessor(2));
-                    node.setSuccessor(2,node.getSuccessor(2).getSuccessor());
-                    node.getSuccessor(1).setPredecessor(node.getSuccessor());
-                    node.getSuccessor().stabilize();
-                    node.getPredecessor().stabilize();
-
-                }
-                else
-                {
-                    node.setSuccessor(2,node.getSuccessor().getSuccessor(1));
-                    node.getSuccessor(0).stabilize();
-                    node.getSuccessor(1).stabilize();
-                }
-            }
-        }
+        node.setSuccessor(2,succ1.getSuccessor());
+        }*/
         System.out.println("ended stabilizing.");
     }
     
