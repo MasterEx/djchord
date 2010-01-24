@@ -67,7 +67,7 @@ public class Node implements RemoteNode {
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
     private Check check, checkstabilize, checkfingers, checkfirst;
-    private boolean[] ports;
+    private volatile boolean[] ports;
     private boolean empty_folder=true;
 
     /**
@@ -277,20 +277,17 @@ public class Node implements RemoteNode {
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
-        if ((k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0) || (k.compareTo(search.getKey())>0 && search.getKey().compareTo(search.getSuccessor().getKey())>0))
+        if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) || (k.compareTo(search.getSuccessor().getKey())<0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
         {
             return search.getSuccessor();
         }
-        else if(k.compareTo(search.getKey())<0 && search.getKey().compareTo(search.getPredecessor().getKey())<0)
+        else if((k.compareTo(search.getKey())<0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) || (k.compareTo(search.getPredecessor().getKey())>0 && search.getKey().compareTo(search.getPredecessor().getKey())<=0))
         {
             return search;
         }
-        else if(k.compareTo(search.getKey())<0)
-        {
-            return search.getPredecessor().find_successor(k);
-        }
         else
         {
+            System.out.println("else<------------------------------");
             return search.closest_preceding_node(k).find_successor(k);
         }
     }
@@ -348,17 +345,14 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
+        int i;
         if(this.compressedFingers.size()==1)
         {
             return compressedFingers.get(0);
         }
-        else if(k.compareTo(this.compressedFingers.get(this.compressedFingers.size()-1).getKey())>0)
+        for(i=this.compressedFingers.size()-1;i>=0;i--)
         {
-            return this.compressedFingers.get(this.compressedFingers.size()-1);
-        }
-        for(int i=this.compressedFingers.size()-2;i>=0;i--)
-        {
-            if(k.compareTo(this.compressedFingers.get(i).getKey())>0)
+            if(this.compressedFingers.get(i).getKey().compareTo(k)<0 && this.compressedFingers.get(i).getKey().compareTo(this.getKey())>0)
             {
                 return this.compressedFingers.get(i);
             }
@@ -618,7 +612,7 @@ public class Node implements RemoteNode {
         RemoteNode responsible = null;
         try
         {
-            System.out.println("getFIle find_successor");
+            System.out.println("get FIle find_successor");
             responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
             if (responsible == null)
             {
@@ -656,8 +650,6 @@ public class Node implements RemoteNode {
             }
             try
             {
-
-                System.out.println(responsible==null);
                 System.out.println(port);
                 while(!responsible.getAvailablePort(port))
                 {
@@ -779,12 +771,12 @@ public class Node implements RemoteNode {
 
     synchronized public void setPortBusy(int i) throws RemoteException
     {
-        ports[50000-i]=true;
+        ports[i-50000]=true;
     }
 
     public void unsetPortBusy(int i) throws RemoteException
     {
-        ports[50000-i]=false;
+        ports[i-50000]=false;
     }
 
     public void sendFile(int port,String address,String file) throws RemoteException
