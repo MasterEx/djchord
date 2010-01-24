@@ -81,7 +81,7 @@ public class PacketHandling implements Runnable{
         try
         {
             System.out.println("Edw to allaksa me tin kanoniki find successor");
-            successor = this.node.find_successor(sha1);
+            successor = this.node.simple_find_successor(sha1);
             //socket.bind(new Socket(responders_address));
             try
             {

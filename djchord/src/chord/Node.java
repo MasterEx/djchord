@@ -268,11 +268,11 @@ public class Node implements RemoteNode {
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
-        if ((k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0) || (k.compareTo(search.getKey())>0 && search.getSuccessor().isFirst()))
+        if ((k.compareTo(search.getKey())>0 && k.compareTo(search.getSuccessor().getKey())<=0) || (k.compareTo(search.getKey())>0 && search.getKey().compareTo(search.getSuccessor().getKey())>0))
         {
             return search.getSuccessor();
         }
-        else if(k.compareTo(search.getKey())<0 && search.isFirst())
+        else if(k.compareTo(search.getKey())<0 && search.getKey().compareTo(search.getPredecessor().getKey())<0)
         {
             return search;
         }
@@ -610,7 +610,7 @@ public class Node implements RemoteNode {
         try
         {
             System.out.println("getFIle find_successor");
-            responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
+            responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
             if (responsible == null)
             {
                 throw new NullPointerException();
@@ -726,7 +726,7 @@ public class Node implements RemoteNode {
             for(int i=0;i<file_keys.length;i++)
             {
                 System.out.println("sendFiles2ResponsibleNode find_successor");
-                remotenode = this.find_successor((new SHAhash(file_keys[i])));
+                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
                 remotenode.addFile(file_keys[i], this.thisnode);
             }
             System.out.println("out files");
@@ -746,7 +746,7 @@ public class Node implements RemoteNode {
             for(int i=0;i<file_keys.length;i++)
             {
                 System.out.println("removeFilesFromResponsibleNode find_successor");
-                remotenode = this.find_successor((new SHAhash(file_keys[i])));
+                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
                 remotenode.rmFile(file_keys[i]);
             }
             System.out.println("out files");
