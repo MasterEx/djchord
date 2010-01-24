@@ -706,10 +706,10 @@ public class Node implements RemoteNode {
         }
     }
 
-    public void addFile(String filehash,RemoteNode node) throws RemoteException
+    public void addFile(String filename,RemoteNode node) throws RemoteException
     {
-        System.out.println("Now putting "+filehash+" and "+node.getPid()+" in this node:"+this.pid);
-        foreignfiles.put(filehash, node);
+        System.out.println("Now putting "+filename+" and "+node.getPid()+" in this node:"+this.pid);
+        foreignfiles.put(filename, node);
     }
 
     public void rmFile(String filehash) throws RemoteException
@@ -722,11 +722,22 @@ public class Node implements RemoteNode {
         if(!this.empty_folder)
         {
             System.out.println("in files");
-            RemoteNode remotenode;
+            RemoteNode remotenode=null;
             for(int i=0;i<file_keys.length;i++)
             {
                 System.out.println("sendFiles2ResponsibleNode find_successor");
-                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                try
+                {
+                    remotenode = this.simple_find_successor(SHA1.getHash(file_keys[i]));
+                }
+                catch (NoSuchAlgorithmException ex)
+                {
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (UnsupportedEncodingException ex)
+                {
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 remotenode.addFile(file_keys[i], this.thisnode);
             }
             System.out.println("out files");
