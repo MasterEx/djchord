@@ -62,7 +62,7 @@ public class PacketHandling implements Runnable{
      */
     public void run()
     {
-        //here we will learn next nodes ip and name
+        //here we will learn next nodes' ip and name
         pid = new String(this.packet.getData());
         try 
         {
@@ -70,19 +70,17 @@ public class PacketHandling implements Runnable{
         } 
         catch (NoSuchAlgorithmException ex) 
         {
-            Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         } 
         catch (UnsupportedEncodingException ex) 
         {
-            Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         Socket socket = null;
         PrintWriter outstream = null;
         try
         {
-            System.out.println("Edw to allaksa me tin kanoniki find successor");
             successor = this.node.find_successor(sha1);
-            //socket.bind(new Socket(responders_address));
             try
             {
                 Thread.sleep(2000); //sleep for 2 secs
@@ -92,27 +90,22 @@ public class PacketHandling implements Runnable{
                 Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
             }
             socket = new Socket(packet.getAddress(),1100);
-            if (socket.getChannel()!=null)
-            {
-                throw new IOException("something went horribly wrong");
-            }
-            //socket.setSoTimeout(6000); // 6 sec
             outstream = new PrintWriter(socket.getOutputStream());
-            System.out.println("The successor of "+pid.trim()+" is "+successor.getPid());
+            basic.Logger.inf("The successor of "+pid.trim()+" is "+successor.getPid());
             outstream.write(successor.getRMIInfo()+" "+node.getRMIInfo());
 
         }
         catch (RemoteException ex)
         {
-            System.err.println("successor is dead");
+            basic.Logger.war("successor is dead");
         }
         catch (UnknownHostException ex)
         {
-            System.err.println("The IP address of the host could not be determined.");
+            basic.Logger.err("The IP address of the host could not be determined.");
         }
         catch (IOException ex)
         {
-            System.err.println("Sorry, but somenone else was quicker...Better luck next time! ;)");
+            basic.Logger.war("Sorry, but somenone else was quicker...Better luck next time! ;)");
         }
         finally
         {
@@ -127,7 +120,7 @@ public class PacketHandling implements Runnable{
             }
             catch (IOException ex)
             {
-                Logger.getLogger(PacketHandling.class.getName()).log(Level.SEVERE, null, ex);
+                basic.Logger.err(ex.getMessage());
             }
             runner.interrupt();
         }
@@ -138,7 +131,6 @@ public class PacketHandling implements Runnable{
      */
     PacketHandling(DatagramPacket packet,Node node)
     {
-        System.out.println("beginning packet handling");
         this.node = node;
         this.packet = packet;
         if(runner == null)

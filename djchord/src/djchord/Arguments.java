@@ -54,11 +54,6 @@ public class Arguments {
             System.out.println("this is the help:");
             System.out.println("-createnode\n-help\n-startrmi");
         }
-        /*else if(args.length%2 != 0)
-        {
-            System.out.println("Syntax error: Unexpected number of arguments, use -h for help");
-            System.exit(1);
-        }*/
 
         int counter = 0;
         
@@ -121,7 +116,7 @@ public class Arguments {
                     }
                     else if(input.equalsIgnoreCase("-getfile"))
                     {
-                        chord.getFile(in.next());
+                        chord.getFile(in.nextLine().trim());
                         System.out.println();
                     }
                     else if(input.equalsIgnoreCase("-getsuccessor"))

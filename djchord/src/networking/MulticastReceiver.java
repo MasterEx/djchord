@@ -102,17 +102,17 @@ public class MulticastReceiver extends Multicast implements Runnable{
         } 
         catch (NotInitializedVariablesException ex) 
         {
-            System.err.println(ex.getMessage());
+            basic.Logger.err(ex.getMessage());
         } 
         catch (IOException ex) 
         {
             if (socket==null) 
             {
-                System.err.println("I/O exception occurred while creating the MulticastSocket " + ex);
+                basic.Logger.err("I/O exception occurred while creating the MulticastSocket ");
             } 
             else 
             {
-                System.err.println("there is an error joining or when the address is not a multicast address "+ex);
+                basic.Logger.err("There was an error joining or the address is not a multicast address ");
             }
         }
     }
@@ -135,11 +135,11 @@ public class MulticastReceiver extends Multicast implements Runnable{
         }
         catch (NotInitializedVariablesException ex) 
         {
-            System.err.println(ex.getMessage());
+            basic.Logger.err(ex.getMessage());
         }
         catch (IOException e)
         {
-            System.err.println("An error occured while leaving or the address is not a multicast address\n"+e);
+            basic.Logger.err("An error occured while leaving or the address is not a multicast address\n"+e);
         }
     }
 
@@ -150,7 +150,6 @@ public class MulticastReceiver extends Multicast implements Runnable{
     {
         DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
         this.socket.receive(packet);
-        System.out.println("received packet here<-------");
         return packet;
     }
 
@@ -165,26 +164,21 @@ public class MulticastReceiver extends Multicast implements Runnable{
             DatagramPacket temp;
             String previous = "";
             System.out.println("Started waiting for multicast calls");
+            basic.Logger.inf("Started waiting for multicast calls");
             while(run)
             {
                 temp = receive(new byte[1024]);
                 if (!(new String(temp.getData())).equalsIgnoreCase(previous))
                 {
                     new PacketHandling(temp, this.node);
-                    System.out.println("received packet");
                     previous = new String(temp.getData());
                 }
             }
-            System.out.println("closed connection");
             closeconnection();
         }
-       /*catch (NotInitializedVariablesException ex)
-        {
-        Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         catch (IOException ex)
         {
-            Logger.getLogger(MulticastReceiver.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
     }
 

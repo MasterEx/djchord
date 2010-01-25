@@ -52,21 +52,22 @@ public class DJchord implements Runnable {
      */
     public void run()
     {
+        basic.Logger.inf("********** PROCESS INITIATED **********");
         try
         {
             node = new Node();
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (NoSuchAlgorithmException ex)
         {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (UnsupportedEncodingException ex)
         {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         try
         {
@@ -74,7 +75,7 @@ public class DJchord implements Runnable {
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         sendmulticast.start();
         for(;;)
@@ -87,19 +88,18 @@ public class DJchord implements Runnable {
                 }
                 catch (InterruptedException ex)
                 {
-                    Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+                    basic.Logger.err(ex.getMessage());
                 }
                 try
                 {
                     if (node.isNotified())
                     {
-                        System.out.println("Notified");
                         break;
                     }
                 }
                 catch (RemoteException ex1)
                 {
-                    Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex1);
+                    basic.Logger.err(ex1.getMessage());
                 }
             }
         }
@@ -111,7 +111,7 @@ public class DJchord implements Runnable {
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         try
         {
@@ -121,7 +121,7 @@ public class DJchord implements Runnable {
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
         receivemulticast.start();
@@ -173,11 +173,10 @@ public class DJchord implements Runnable {
             successor.fixFingers();
             predecessor.joinedStabilize();
             predecessor.fixFingers();
-            //successor.fixAllFingers();
         }
         catch (RemoteException remoteException)
         {
-            System.out.println("Couldn't exit properly!");
+            basic.Logger.war("Couldn't exit properly!");
         }
     }
 
@@ -193,18 +192,17 @@ public class DJchord implements Runnable {
         }
         catch (RemoteException ex)
         {
-            System.err.println("The successors seems down... :(");
+            basic.Logger.war("The successors seems down... :(");
             try
             {
                 node.stabilize();
                 node.fixFingers();
-                //node.fixAllFingers();
             }
             catch (RemoteException remoteException)
             {
-                System.out.println("------- HERE -------");
+                basic.Logger.err(remoteException.getMessage());
             }
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         return returnval;
     }
@@ -213,26 +211,27 @@ public class DJchord implements Runnable {
         try
         {
             System.out.println("I'm "+node.getRMIInfo());
+            basic.Logger.inf("I'm "+node.getRMIInfo());
             for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
             {
                 System.out.println("My next successor is "+i.getRMIInfo());
+                basic.Logger.inf("My next successor is "+i.getRMIInfo());
             }
             
         }
         catch (RemoteException ex)
         {
-            System.err.println("The successors seems down... :(");
+            basic.Logger.err("The successors seems down... :(");
             try
             {
                 node.stabilize();
                 node.fixFingers();
-                //node.fixAllFingers();
             }
             catch (RemoteException remoteException)
             {
-                System.out.println("------- HERE -------");
+                basic.Logger.err(remoteException.getMessage());
             }
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
     }
 }

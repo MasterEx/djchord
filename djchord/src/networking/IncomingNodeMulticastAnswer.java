@@ -55,7 +55,6 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     private ServerSocket serversocket;
     private Node node;
     private RemoteNode successor;
-    private byte[] buffer = new byte[20];
     private boolean flag = false;
 
     /*
@@ -66,7 +65,6 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         String responders_pid = null, responders_address = null, pid = null;
         try
         {
-            System.out.println("Socket opened<--------------");
             serversocket = new ServerSocket(port);
             serversocket.setSoTimeout(10000);// 10 sec
             socket = serversocket.accept();// race condition may occur
@@ -76,7 +74,6 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             responders_pid = in.next();
             responders_address = in.next();
             successor = RMIRegistry.getRemoteNode(address, pid);
-            //successor.setKey(new SHAhash(buffer));
             node.setSuccessor(successor);
             node.setPredecessor(successor.getPredecessor());
             node.getPredecessor().setSuccessor(node.getNode());
@@ -85,12 +82,6 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             {
                 successor.setSuccessor(node.getNode());
             }
-            //here we set this node First in chord if it is
-            if(successor.isFirst() && node.getKey().compareTo(successor.getKey())<0)
-            {
-                successor.unsetFirst();
-                node.setFirst();
-            }
             node.initSuccessors();
             node.getPredecessor().initSuccessors();
             if(!node.getPredecessor().getPredecessor().getPid().equalsIgnoreCase(node.getPid()))
@@ -98,12 +89,10 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 node.getPredecessor().getPredecessor().initSuccessors();
             }
             node.fixFingers();
-            //node.fixAllFingers();
 
             in.close();
             socket.close();
             serversocket.close();
-            System.out.println("Socket closed<--------------");
         }
         catch (NotBoundException ex)
         {
@@ -112,37 +101,37 @@ public class IncomingNodeMulticastAnswer implements Runnable{
                 RemoteNode responder = RMIRegistry.getRemoteNode(responders_address, responders_pid);
                 try
                 {
-                    System.out.println("Successor not found!");
+                    basic.Logger.war("Successor not found!");
                     responder.stabilize();
-                    responder.fixAllFingers();
+                    responder.fixFingers();
                     MulticastSender multicast = new MulticastSender(1101, "224.1.1.1", node.getPid().getBytes(), node);
                     multicast.send();
                 }
                 catch (RemoteException ex1)
                 {
-                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    basic.Logger.err(ex1.getMessage());
                 }
                 catch (UnknownHostException ex1)
                 {
-                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    basic.Logger.err(ex1.getMessage());
                 }
                 catch (UnsupportedEncodingException ex1)
                 {
-                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    basic.Logger.err(ex1.getMessage());
                 }
                 catch (IOException ex1)
                 {
-                    Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                    basic.Logger.err(ex1.getMessage());
                 }
             }
             catch (NotBoundException ex1)
             {
-                Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                basic.Logger.err(ex1.getMessage());
             }
         }
         catch (UnsupportedEncodingException ex)
         {
-            Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (SocketTimeoutException ex)
         {
@@ -150,16 +139,15 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             {
                 flag = true;
                 serversocket.close();
-                System.out.println("Socket closed<--------------");
             }
             catch (IOException ex1)
             {
-                Logger.getLogger(IncomingNodeMulticastAnswer.class.getName()).log(Level.SEVERE, null, ex1);
+                basic.Logger.err(ex1.getMessage());
             }
         }
         catch (IOException ex)
         {
-            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
     }
 
@@ -187,7 +175,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         }
         catch (IOException ex)
         {
-            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         runner.interrupt();
         runner = null;

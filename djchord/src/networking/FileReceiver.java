@@ -48,7 +48,7 @@ public class FileReceiver implements Runnable{
     private String destination;
     private Thread runner;
     private int port;
-    private boolean echo = false;
+    private boolean echo = true;
     private boolean status = false;
 
     /*
@@ -75,8 +75,8 @@ public class FileReceiver implements Runnable{
             }
             if (echo)
             {
-                System.out.println("File was successfully received:\n\t" +
-                        "Size:\t"+socket.getSendBufferSize()  +"" +
+                System.out.println("File was successfully received:\n" +
+                        "\tSize:\t"+socket.getSendBufferSize()  +
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
             }
             in.close();

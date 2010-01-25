@@ -64,4 +64,19 @@ public class Logger {
         }
     }
 
+    public static void war(String msg)
+    {
+        Logger.println("Warning:     "+msg);
+    }
+
+    public static void inf(String msg)
+    {
+        Logger.println("Information: "+msg);
+    }
+
+    public static void err(String msg)
+    {
+        Logger.println("Error:       "+msg);
+    }
+
 }

@@ -110,7 +110,11 @@ public class FileNames {
         }
         catch (NullPointerException e)
         {
-            System.err.println("The folder is empty or doesn't exist");
+            boolean success = (new File("downloads")).mkdir();
+            if (success)
+            {
+                basic.Logger.inf("\"downloads\" folder was created!");
+            }
         }
         return retval;
     }

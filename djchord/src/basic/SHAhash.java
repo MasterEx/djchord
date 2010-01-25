@@ -226,7 +226,6 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
             temp = Integer.toHexString(t1+t2);
             if(Integer.valueOf(rest)!=0)
             {
-                //is there any case of having second rest?
                 t3 = String.valueOf(temp.charAt(temp.length()-1));
                 t3 = Integer.toHexString(Integer.parseInt(t3, 16)+Integer.parseInt(rest, 16));
                 t4 = String.valueOf(t3.charAt(t3.length()-1));

@@ -112,19 +112,13 @@ public class MulticastSender extends Multicast implements Runnable{
             try
             {
                 answer.returnThread().join();
-                System.out.println("Epitelous vrika ton successor mou!");
             }
             catch (InterruptedException ex)
             {
-                Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if(answer.isAlone())
-            {
-                node.setFirst();
+                basic.Logger.war("IncomingNodeMulticastAnswer was unable to be terminated");
             }
             closeconnection();
             node.notified();
-            System.out.println("FTANEI EDW! 1");
             synchronized(this)
             {
                 this.notifyAll();
@@ -132,15 +126,15 @@ public class MulticastSender extends Multicast implements Runnable{
         }
         catch (NotInitializedVariablesException ex)
         {
-            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (UnknownHostException ex)
         {
-            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (IOException ex)
         {
-            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
     }
 
@@ -168,15 +162,15 @@ public class MulticastSender extends Multicast implements Runnable{
         }
         catch (UnknownHostException ex)
         {
-            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (IOException ex)
         {
-            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (NotInitializedVariablesException ex)
         {
-            Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         runner.interrupt();
         runner = null;

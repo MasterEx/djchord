@@ -53,16 +53,16 @@ public class RMIRegistry {
     private static int port = 1099; //this is the default port of java RMI
     private static String address;
 
-    /*
-* This method works like java RMI tutorial example
-* http://java.sun.com/docs/books/tutorial/rmi/overview.html
-* and as the example we have to start RMI registry before the
-* execution of our applications.
-* It is start rmiregistry fow windows (or javaw if start not available)
-* and rmiregistry & for linux.
-* We also use a security manager, so we need to specify a security policy
-* file so that the code is granted the security permissions it needs to run.
-*/
+    /**
+    * This method works like java RMI tutorial example
+    * http://java.sun.com/docs/books/tutorial/rmi/overview.html
+    * and as the example we have to start RMI registry before the
+    * execution of our applications.
+    * It is start rmiregistry fow windows (or javaw if start not available)
+    * and rmiregistry & for linux.
+    * We also use a security manager, so we need to specify a security policy
+    * file so that the code is granted the security permissions it needs to run.
+    */
     static public boolean init(boolean security)
     {
         if(init)
@@ -109,7 +109,7 @@ public class RMIRegistry {
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
 
     }
@@ -160,11 +160,11 @@ public class RMIRegistry {
         }
         catch (AccessException ex)
         {
-            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         return null;
     }

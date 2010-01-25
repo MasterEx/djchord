@@ -36,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
-import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.security.NoSuchAlgorithmException;
 import java.rmi.RemoteException;
@@ -63,10 +62,10 @@ public class Node implements RemoteNode {
     private RemoteNode[] fingers = new RemoteNode[160],successors = new RemoteNode[3];
     private HashMap<String,RemoteNode> foreignfiles  = new HashMap<String,RemoteNode>();;
     private RemoteNode predecessor;
-    private boolean first = false, last = false, notified = false;
+    private boolean notified = false;
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
-    private Check check, checkstabilize, checkfingers, checkfirst;
+    private Check check, checkstabilize;
     private volatile boolean[] ports;
     private boolean empty_folder=true;
 
@@ -85,10 +84,9 @@ public class Node implements RemoteNode {
         }
         catch (NotBoundException ex)
         {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         this.setFolder("downloads");
-        this.setFile_keys();
         this.setPredecessor(thisnode);
         for(int u=0;u<3;u++)
         {
@@ -96,8 +94,6 @@ public class Node implements RemoteNode {
         }
         check = new Check(thisnode);
         checkstabilize = new Check(thisnode);
-        checkfingers = new Check(thisnode);
-        checkfirst = new Check(thisnode);
         check.start();
         ports = new boolean[3000];
         for(int i=0;i<3000;i++)
@@ -105,6 +101,7 @@ public class Node implements RemoteNode {
             ports[i] = false;
         }
         System.out.println("The node :"+this.getRMIInfo()+" has been created!");
+        basic.Logger.inf("The node :"+this.getRMIInfo()+" has been created!");
     }
 
     /**
@@ -170,39 +167,6 @@ public class Node implements RemoteNode {
      * The chord relative methods
      */
 
-    public void findFirst()
-    {
-        if(checkfirst.isFree())
-        {
-            checkfirst = new Check(this);
-            checkfirst.startFindFirst();
-        }
-    }
-
-    public void oldFindFirst() throws RemoteException
-    {
-        if(SHAhash.compareTo(this.getKey().getStringHash(),"8000000000000000000000000000000000000000")>0)
-        {
-            for(RemoteNode r = this.getSuccessor();r==this;r=this.getSuccessor())
-            {
-                if(r.getKey().compareTo(r.getSuccessor().getKey())>0)
-                {
-                    r.getSuccessor().setFirst();
-                }
-            }
-        }
-        else
-        {
-            for(RemoteNode r = this.getPredecessor();r==this;r=this.getPredecessor())
-            {
-                if(r.getKey().compareTo(r.getPredecessor().getKey())<0)
-                {
-                    r.setFirst();
-                }
-            }
-        }
-    }
-
     public boolean exit()
     {
         try
@@ -219,16 +183,12 @@ public class Node implements RemoteNode {
             {
                 this.getPredecessor().getPredecessor().getPredecessor().initSuccessors();
             }
-            if (this.isFirst())
-            {
-                this.getSuccessor().setFirst();
-            }
             this.removeFilesFromResponsibleNode();
             return true;
         }
         catch (RemoteException e)
         {
-            System.err.println("The successor or the predecessor has failed "+e);
+            basic.Logger.err("The successor or the predecessor has failed ");
             return false;
         }
     }
@@ -249,28 +209,6 @@ public class Node implements RemoteNode {
     {
         this.setSuccessor(1,this.getSuccessor().getSuccessor());
         this.setSuccessor(2,this.getSuccessor().getSuccessor().getSuccessor());
-        /*int counter = 0; // how many times this node is in successors list
-        for(int i=0;i<successors.length;i++)
-        {
-        if(successors[i].getPid().equalsIgnoreCase(this.getPid()))
-        {
-        counter++;
-        }
-        }
-        switch (counter)
-        {
-        case 1:this.setSuccessor(1,this.getPredecessor());
-        try
-        {
-        this.setSuccessor(2, RMIRegistry.getRemoteNode(this.getAddress(), pid));
-        }
-        catch (NotBoundException ex)
-        {
-        Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        break;
-        case 3:this.setSuccessor(1, this.getPredecessor()); break;
-        }*/
         return this.successors;
     }
 
@@ -287,7 +225,6 @@ public class Node implements RemoteNode {
         }
         else
         {
-            System.out.println("else<------------------------------");
             return search.closest_preceding_node(k).find_successor(k);
         }
     }
@@ -319,28 +256,6 @@ public class Node implements RemoteNode {
             while(!next.getPid().equalsIgnoreCase(this.getPid()));
             return this.getSuccessor();
         }
-        /*RemoteNode i=this.getSuccessor();
-        for(;i.getKey().compareTo(this.getKey())!=0;i=i.getSuccessor())
-        {
-        if (!i.getPid().equalsIgnoreCase(i.getSuccessor().getPid()))
-        {
-        if((k.compareTo(i.getKey())<0 && i.isFirst()) || (k.compareTo(i.getKey())<=0 && k.compareTo(i.getPredecessor().getKey())>0))
-        {
-        return i;
-        }
-        else if ((k.compareTo(i.getKey()) > 0 && k.compareTo(i.getSuccessor().getKey()) <= 0) || (k.compareTo(i.getKey()) > 0 && i.getSuccessor().isFirst()))
-        {
-        return i.getSuccessor();
-        }
-        }
-        else
-        {
-        System.out.println("else<-------");
-        break;
-        }
-        }
-        System.out.println("for<-------");
-        return i;*/
     }
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
@@ -357,24 +272,7 @@ public class Node implements RemoteNode {
                 return this.compressedFingers.get(i);
             }
         }
-        System.out.println("You didn't consider all the possibilities as far as the fingers are concerned... Calling simple_find_successor(k)");
-        return this.simple_find_successor(k);
-        /*if ((k.compareTo(compressedFingers.get(compressedFingers.size()-1).getKey())>0 || k.compareTo(this.getKey())<0) && !this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
-        {
-        return compressedFingers.get(compressedFingers.size()-1).closest_preceding_node(k);
-        }
-        else if(this.getPid().equalsIgnoreCase(compressedFingers.get(compressedFingers.size()-1).getPid()))
-        {
-        return this.getSuccessor();
-        }
-        for(int i=158;i>=0;i--)
-        {
-        if (k.compareTo(compressedFingers.get(i).getKey())>0 && (k.compareTo(compressedFingers.get(i).getSuccessor().getKey())<0 || compressedFingers.get(i).getSuccessor().isFirst()))
-        {
-        return compressedFingers.get(i);
-        }
-        }
-        return null; // unreachable statement*/
+        return null;// unreachable statement
     }
 
     public void stabilize() throws RemoteException
@@ -399,78 +297,19 @@ public class Node implements RemoteNode {
         }
         catch (InterruptedException ex)
         {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * It isn't used because it has to be invoked from an other thread
-     */
-    public void oldStabilize() throws RemoteException
-    {
-        for( int i=0;i<3;i++)
-        {
-            try
-            {
-                this.getSuccessor(i).hasFailed();
-            }
-            catch (NoSuchObjectException e)
-            {
-                if(i==0)
-                {
-                    this.setSuccessor(0,this.getSuccessor(1));
-                    this.setSuccessor(1,this.getSuccessor(2));
-                    this.setSuccessor(2,this.getSuccessor(2).getSuccessor());
-                    this.getSuccessor().setPredecessor(thisnode);
-                    this.getPredecessor().getPredecessor().stabilize();
-                    this.getPredecessor().stabilize();
-                }
-                else if(i==1)
-                {
-                    this.setSuccessor(1,this.getSuccessor(2));
-                    this.setSuccessor(2,this.getSuccessor(2).getSuccessor());
-                    this.getSuccessor(1).setPredecessor(this.getSuccessor());
-                    this.getSuccessor().stabilize();
-                    this.getPredecessor().stabilize();
-                    
-                }
-                else
-                {
-                    this.setSuccessor(2,this.getSuccessor().getSuccessor(1));
-                    this.getSuccessor(0).stabilize();
-                    this.getSuccessor(1).stabilize();
-                }
-            }
-        }
-        
-    }
-
-    public void fixAllFingers() throws RemoteException
-    {
-        if(checkfingers.isFree())
-        {
-            checkfingers = new Check(this);
-            checkfingers.startFixFIngers();
-        }
-    }
-
-    public void oldFixAllFingers() throws RemoteException
-    {
-        for(RemoteNode tempnode=this.getSuccessor();tempnode.equals(thisnode);tempnode=tempnode.getSuccessor())
-        {
-            tempnode.fixFingers();
+            basic.Logger.err(ex.getMessage());
         }
     }
 
     synchronized public void setSuccessor(RemoteNode next) throws RemoteException
     {
-        System.out.println("Setting at successor[0] "+next.getRMIInfo());
+        basic.Logger.inf("Setting at successor[0] "+next.getRMIInfo());
         this.successors[0] = next;
     }
 
     synchronized public void setSuccessor(int i,RemoteNode next) throws RemoteException
     {
-        System.out.println("Setting at successor["+i+"] "+next.getRMIInfo());
+        basic.Logger.inf("Setting at successor["+i+"] "+next.getRMIInfo());
         this.successors[i] = next;
     }
 
@@ -492,32 +331,6 @@ public class Node implements RemoteNode {
     public RemoteNode getPredecessor() throws RemoteException
     {
         return predecessor;
-    }
-
-    synchronized public void setFirst() throws RemoteException
-    {
-        System.out.println("Setting this as first");
-        this.first = true;
-    }
-
-    synchronized public void unsetFirst() throws RemoteException
-    {
-        this.first = false;
-    }
-
-    public void setLast() throws RemoteException
-    {
-        this.last = true;
-    }
-
-    synchronized public boolean isFirst() throws RemoteException
-    {
-        return first;
-    }
-
-    public boolean isLast() throws RemoteException
-    {
-        return last;
     }
 
     public void setFingers() throws RemoteException
@@ -546,32 +359,9 @@ public class Node implements RemoteNode {
             }
             else
             {
-                System.out.println("den to eixe "+i);
                 this.compressedFingers.add(fingers[i]);
             }
         }
-        /*int j=0, i=0;
-        for(;i<159;i++)
-        {
-        for(;j<159;j++)
-        {
-        if(!fingers[i].getPid().equalsIgnoreCase(fingers[j].getPid()))
-        {
-        break;
-        }
-        }
-        if(j!=159)
-        {
-        this.compressedFingers.addElement(fingers[i]);
-        this.compressedFingers.addElement(fingers[j]);
-        i = j;
-        }
-        else
-        {
-        this.compressedFingers.addElement(fingers[i]);
-        break;
-        }
-        }*/
         compressedFingers.trimToSize();
     }
 
@@ -602,7 +392,6 @@ public class Node implements RemoteNode {
 
     public RemoteNode getFileResponsible(String filehash) throws RemoteException
     {
-        //System.out.println("here!!! --> "+this.foreignfiles.get(filehash).getPid());
         return this.foreignfiles.get(filehash);
     }
 
@@ -612,7 +401,6 @@ public class Node implements RemoteNode {
         RemoteNode responsible = null;
         try
         {
-            System.out.println("get FIle find_successor");
             responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
             if (responsible == null)
             {
@@ -621,20 +409,21 @@ public class Node implements RemoteNode {
         }
         catch (NoSuchAlgorithmException ex)
         {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (UnsupportedEncodingException ex)
         {
-             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (RemoteException ex)
         {
-             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
         catch (NullPointerException ex)
         {
             contin = false;
             System.out.println("FILE DOESN'T EXIST!!!");
+            basic.Logger.war("FILE DOESN'T EXIST!!!");
         }
 
         if(contin)
@@ -650,39 +439,36 @@ public class Node implements RemoteNode {
             }
             try
             {
-                System.out.println(port);
                 while(!responsible.getAvailablePort(port))
                 {
                     port++;
                 }
                 this.setPortBusy(port);
-                System.out.println("this come here: "+File.separator+"remote_files"+File.separator+filename);
                 FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename);
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
                 try
                 {
                     receiver.getThread().join();
-                    System.out.println("File was sent successfully");
+                    basic.Logger.inf("File "+filename+" was successfully received");
                 }
                 catch (InterruptedException ex)
                 {
-                    System.out.println("File reception was interrupted");
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    basic.Logger.err("File reception was interrupted");
                 }
                 this.unsetPortBusy(port);
             }
             catch (UnsupportedEncodingException ex)
             {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                basic.Logger.err(ex.getMessage());
             }
             catch (RemoteException ex)
             {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                basic.Logger.err(ex.getMessage());
             }
             catch (IOException ex)
             {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                basic.Logger.err(ex.getMessage());
             }
         }
     }
@@ -709,7 +495,7 @@ public class Node implements RemoteNode {
 
     public void addFile(String filename,RemoteNode node) throws RemoteException
     {
-        System.out.println("Now putting "+filename+" and "+node.getPid()+" in this node:"+this.pid);
+        basic.Logger.inf("Now putting "+filename+" and "+node.getPid()+" in this node");
         foreignfiles.put(filename, node);
     }
 
@@ -720,32 +506,30 @@ public class Node implements RemoteNode {
     
     public void sendFiles2ResponsibleNode() throws RemoteException
     {
+        this.setFile_keys();
         if(!this.empty_folder)
         {
-            System.out.println("in files");
             RemoteNode remotenode=null;
             for(int i=0;i<file_keys.length;i++)
             {
-                System.out.println("sendFiles2ResponsibleNode find_successor");
                 try
                 {
                     remotenode = this.simple_find_successor(SHA1.getHash(file_keys[i]));
                 }
                 catch (NoSuchAlgorithmException ex)
                 {
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    basic.Logger.err(ex.getMessage());
                 }
                 catch (UnsupportedEncodingException ex)
                 {
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    basic.Logger.err(ex.getMessage());
                 }
                 remotenode.addFile(file_keys[i], this.thisnode);
             }
-            System.out.println("out files");
         }
         else
         {
-            System.out.println("The folder is empty or doesn't exist");
+            basic.Logger.war("The folder is empty");
         }
     }
 
@@ -753,19 +537,16 @@ public class Node implements RemoteNode {
     {
         if(!this.empty_folder)
         {
-            System.out.println("rm files");
             RemoteNode remotenode;
             for(int i=0;i<file_keys.length;i++)
             {
-                System.out.println("removeFilesFromResponsibleNode find_successor");
                 remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
                 remotenode.rmFile(file_keys[i]);
             }
-            System.out.println("out files");
         }
         else
         {
-            System.out.println("The folder is empty or doesn't exist");
+            basic.Logger.war("The folder is empty or doesn't exist");
         }
     }
 
@@ -790,7 +571,8 @@ public class Node implements RemoteNode {
         catch (InterruptedException ex)
         {
             System.out.println("The file was unable to be sent");
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err("The file was unable to be sent");
+            basic.Logger.err(ex.getMessage());
         }
         this.unsetPortBusy(port);
     }
