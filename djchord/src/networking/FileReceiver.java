@@ -29,6 +29,7 @@
 
 package networking;
 
+import chord.RemoteNode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -52,6 +53,7 @@ public class FileReceiver implements Runnable{
     private int port;
     private boolean echo = true;
     private boolean status = false;
+    private RemoteNode node = null;
 
     /*
      * is invoked by start()
@@ -97,6 +99,10 @@ public class FileReceiver implements Runnable{
                         "\tSize:\t"+bytecounter  +" bytes"+
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
             }
+            if(node!=null)
+            {
+                node.unsetPortBusy(port);
+            }
             in.close();
             out.close();
             socket.close();
@@ -113,6 +119,13 @@ public class FileReceiver implements Runnable{
      */
     public FileReceiver(int port,String destination) throws IOException
     {
+        this.port = port;
+        this.destination = destination;
+    }
+
+    public FileReceiver(int port,String destination,RemoteNode node) throws IOException
+    {
+        this.node = node;
         this.port = port;
         this.destination = destination;
     }

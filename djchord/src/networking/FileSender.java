@@ -29,11 +29,13 @@
 
 package networking;
 
+import chord.RemoteNode;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,6 +53,7 @@ public class FileSender implements Runnable{
     private PrintWriter outstream;
     private Thread runner;
     private boolean status = false;
+    private RemoteNode node = null;
 
     /*
      * is invoked by start()
@@ -85,13 +88,32 @@ public class FileSender implements Runnable{
         {
             Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
         }
+        finally
+        {
+            if (node!=null)
+            {
+                try
+                {
+                    node.unsetPortBusy(port);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     /*
      * constructor
-     */
-    public FileSender(String address,int port, String source)
+     */public FileSender(String address,int port, String source)
     {
+        this.address = address;
+        this.port = port;
+        this.source = source;
+    }
+
+    public FileSender(String address,int port, String source,RemoteNode node)
+    {
+        this.node = node;
         this.address = address;
         this.port = port;
         this.source = source;               

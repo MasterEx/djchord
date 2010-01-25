@@ -566,17 +566,6 @@ public class Node implements RemoteNode {
     {
         FileSender sender = new FileSender(address,port,"downloads"+File.separator+file);
         sender.start();
-        try
-        {
-            sender.getThread().join();
-        }
-        catch (InterruptedException ex)
-        {
-            System.out.println("The file was unable to be sent");
-            basic.Logger.err("The file was unable to be sent");
-            basic.Logger.err(ex.getMessage());
-        }
-        this.unsetPortBusy(port);
     }
 
     synchronized public boolean getAvailablePort(int port) throws RemoteException
