@@ -40,8 +40,6 @@ import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -66,7 +64,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         try
         {
             serversocket = new ServerSocket(port);
-            serversocket.setSoTimeout(10000);// 10 sec
+            serversocket.setSoTimeout(5000);// 3 sec
             socket = serversocket.accept();// race condition may occur
             Scanner in = new Scanner(socket.getInputStream());
             pid = in.next();

@@ -66,7 +66,7 @@ public class Node implements RemoteNode {
     private Vector<RemoteNode> compressedFingers;
     private RemoteNode thisnode = null;
     private Check check, checkstabilize;
-    private volatile boolean[] ports;
+    private boolean[] ports;
     private boolean empty_folder=true;
 
     /**
@@ -101,8 +101,8 @@ public class Node implements RemoteNode {
         {
             ports[i] = false;
         }
-        System.out.println("The node :"+this.getRMIInfo()+" has been created!");
-        basic.Logger.inf("The node :"+this.getRMIInfo()+" has been created!");
+        System.out.println("The node: "+this.getRMIInfo()+" has been created!");
+        basic.Logger.inf("The node: "+this.getRMIInfo()+" has been created!");
     }
 
     /**
@@ -446,7 +446,7 @@ public class Node implements RemoteNode {
                     port++;
                 }
                 this.setPortBusy(port);
-                FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename);
+                FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename,this.thisnode);
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
                 basic.Logger.inf("File "+filename+" was successfully received");

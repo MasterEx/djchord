@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -54,6 +54,8 @@ public class FileReceiver implements Runnable{
     private boolean echo = true;
     private boolean status = false;
     private RemoteNode node = null;
+    private final int BYTE_BUFFER_SIZE = 65536;
+    private byte[] buffer;
 
     /*
      * is invoked by start()
@@ -63,10 +65,11 @@ public class FileReceiver implements Runnable{
         int bytecounter = 0;
         try
         {
+            buffer = new byte[BYTE_BUFFER_SIZE];
             serversocket = new ServerSocket(port);
             socket = serversocket.accept();
             FileOutputStream out = null;
-            InputStreamReader in = new InputStreamReader(socket.getInputStream());
+            InputStream in = socket.getInputStream();
             try
             {
                 out = new FileOutputStream(destination);
@@ -82,20 +85,22 @@ public class FileReceiver implements Runnable{
 
             }
             int currentbyte=0;
+            long startTime = System.currentTimeMillis();
             while(true)
             {
-                currentbyte = in.read();
+                currentbyte = in.read(buffer);
                 if(currentbyte == -1)
                 {
                     status = true;
                     break;
                 }
-                bytecounter++;
-                out.write(currentbyte);
+                bytecounter+=currentbyte;
+                out.write(buffer,0,currentbyte);
             }
+            long endTime = System.currentTimeMillis();
             if (echo)
             {
-                System.out.println("File was successfully received:\n" +
+                System.out.println("File was successfully received in "+((endTime-startTime)/1000)+" sec:\n" +
                         "\tSize:\t"+bytecounter  +" bytes"+
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
             }

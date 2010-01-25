@@ -32,7 +32,7 @@ package networking;
 import chord.RemoteNode;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -50,10 +50,12 @@ public class FileSender implements Runnable{
     private String address;
     private int port;
     private Socket socket;
-    private PrintWriter outstream;
+    private OutputStream outstream;
     private Thread runner;
     private boolean status = false;
     private RemoteNode node = null;
+    private final int BYTE_BUFFER_SIZE = 65536;
+    private byte[] buffer = new byte[BYTE_BUFFER_SIZE];
 
     /*
      * is invoked by start()
@@ -64,17 +66,17 @@ public class FileSender implements Runnable{
         {
             socket = new Socket(address, port);
             input = new FileInputStream(source);
-            outstream = new PrintWriter(socket.getOutputStream(),true);
+            outstream = socket.getOutputStream();
             int currentbyte = 0;
             while(true)
             {
-                currentbyte = input.read();
+                currentbyte = input.read(buffer);
                 if(currentbyte == -1)
                 {
                     status = true;
                     break;
                 }
-                outstream.write(currentbyte);
+                outstream.write(buffer,0,currentbyte);
             }
             outstream.close();
             input.close();
