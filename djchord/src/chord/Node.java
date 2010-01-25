@@ -424,7 +424,7 @@ public class Node implements RemoteNode {
         catch (NullPointerException ex)
         {
             contin = false;
-            System.out.println("FILE DOESN'T EXIST!!!");
+            System.out.print("FILE DOESN'T EXIST!!!");
             basic.Logger.war("FILE DOESN'T EXIST!!!");
         }
 
