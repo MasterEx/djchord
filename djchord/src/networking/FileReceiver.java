@@ -100,7 +100,7 @@ public class FileReceiver implements Runnable{
             long endTime = System.currentTimeMillis();
             if (echo)
             {
-                System.out.println("File was successfully received in "+((endTime-startTime)/1000)+" sec:\n" +
+                System.out.println("File was successfully received in "+((endTime-startTime)/1000D)+" sec:\n" +
                         "\tSize:\t"+bytecounter  +" bytes"+
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
             }
