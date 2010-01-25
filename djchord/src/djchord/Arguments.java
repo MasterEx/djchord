@@ -116,7 +116,7 @@ public class Arguments {
                     }
                     else if(input.equalsIgnoreCase("-getfile"))
                     {
-                        chord.getFile(in.nextLine().trim());
+                        chord.getFile(in.next().trim());
                         System.out.println();
                     }
                     else if(input.equalsIgnoreCase("-getsuccessor"))
