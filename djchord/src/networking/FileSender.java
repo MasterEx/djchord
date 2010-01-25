@@ -96,8 +96,11 @@ public class FileSender implements Runnable{
             {
                 try
                 {
+                    System.out.println("Trying to unset port "+port+" as busy");
                     node.unsetPortBusy(port);
-                } catch (RemoteException ex) {
+                } 
+                catch (RemoteException ex)
+                {
                     Logger.getLogger(FileSender.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -106,7 +109,8 @@ public class FileSender implements Runnable{
 
     /*
      * constructor
-     */public FileSender(String address,int port, String source)
+     */
+    public FileSender(String address,int port, String source)
     {
         this.address = address;
         this.port = port;

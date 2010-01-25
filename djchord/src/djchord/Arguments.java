@@ -112,6 +112,7 @@ public class Arguments {
                         System.out.println("The process is terminating...");
                         chord.stop();
                         //race condition may occur
+                        basic.Logger.inf("The process is now being terminated...");
                         System.exit(0);
                     }
                     else if(input.equalsIgnoreCase("-getfile"))
