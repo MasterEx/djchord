@@ -58,6 +58,7 @@ public class FileReceiver implements Runnable{
      */
     public void run() 
     {
+        int bytecounter = 0;
         try
         {
             serversocket = new ServerSocket(port);
@@ -87,12 +88,13 @@ public class FileReceiver implements Runnable{
                     status = true;
                     break;
                 }
+                bytecounter++;
                 out.write(currentbyte);
             }
             if (echo)
             {
                 System.out.println("File was successfully received:\n" +
-                        "\tSize:\t"+socket.getSendBufferSize()  +
+                        "\tSize:\t"+bytecounter  +" bytes"+
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
             }
             in.close();
