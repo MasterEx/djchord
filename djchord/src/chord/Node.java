@@ -449,16 +449,7 @@ public class Node implements RemoteNode {
                 FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename);
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
-                try
-                {
-                    receiver.getThread().join();
-                    basic.Logger.inf("File "+filename+" was successfully received");
-                }
-                catch (InterruptedException ex)
-                {
-                    basic.Logger.err("File reception was interrupted");
-                }
-                this.unsetPortBusy(port);
+                basic.Logger.inf("File "+filename+" was successfully received");
             }
             catch (UnsupportedEncodingException ex)
             {
