@@ -52,7 +52,7 @@ public class Arguments {
         if(args.length == 1 && args[0].equalsIgnoreCase("-h") || args.length == 1 && args[0].equalsIgnoreCase("-help"))
         {
             System.out.println("this is the help:");
-            System.out.println("-createnode\tCreates a new node\n-help\t\tPrints this\n-startrmi\tStarts the rmregistry");
+            System.out.println("-createnode\tCreates a new node\n-help\t\tPrints this\n-startrmi\tStarts the rmiregistry");
         }
 
         int counter = 0;

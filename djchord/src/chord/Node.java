@@ -41,8 +41,6 @@ import java.security.NoSuchAlgorithmException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import networking.FileReceiver;
 import networking.FileSender;
 import networking.RMIRegistry;
