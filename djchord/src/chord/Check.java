@@ -60,6 +60,35 @@ public class Check implements Runnable{
             {
                 while(true)
                 {
+                    if(node.getPort(2995))
+                    {
+                        for(int i=0;i<2900;i++)
+                        {
+                            node.unsetPortBusy(i);
+                        }
+                        new Thread(new Runnable()
+                        {
+                            public void run()
+                            {
+                                try
+                                {
+                                    Thread.sleep(60000);
+                                }
+                                catch (InterruptedException ex)
+                                {
+                                    Logger.getLogger(Check.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                try
+                                {
+                                    node.unsetPortBusy(2995);
+                                }
+                                catch (RemoteException ex)
+                                {
+                                    Logger.getLogger(Check.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        }).start();
+                    }
                     this.stabilize();
                     try
                     {

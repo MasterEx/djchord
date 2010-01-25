@@ -103,11 +103,10 @@ public class FileReceiver implements Runnable{
                 System.out.println("File was successfully received in "+((endTime-startTime)/1000D)+" sec:\n" +
                         "\tSize:\t"+bytecounter  +" bytes"+
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
-            }
-            if(node!=null)
+            }/*if(node!=null)
             {
-                node.unsetPortBusy(port);
-            }
+            node.unsetPortBusy(port);
+            }*/
             in.close();
             out.close();
             socket.close();
