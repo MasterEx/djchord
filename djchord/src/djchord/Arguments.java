@@ -52,7 +52,7 @@ public class Arguments {
         if(args.length == 1 && args[0].equalsIgnoreCase("-h") || args.length == 1 && args[0].equalsIgnoreCase("-help"))
         {
             System.out.println("this is the help:");
-            System.out.println("-createnode\n-help\n-startrmi");
+            System.out.println("-createnode\tCreates a new node\n-help\tPrints this\n-startrmi\tStarts the rmregistry");
         }
 
         int counter = 0;
@@ -105,7 +105,7 @@ public class Arguments {
                     String input = in.next();
                     if(input.equalsIgnoreCase("-help"))
                     {
-                        System.out.println("-exit\n-help\n-getfile\n-getsuccessor\n-quit\n-showallsuccessors");
+                        System.out.println("-exit\tTerminates the process\n-help\tPrints this\n-getfile\tCopies a file to remote_files - example: -getfile file.dat\n-getsuccessor\tPrints the successor of this node\n-quit\tAs exit\n-showallsuccessors\tPrints all the nodes");
                     }
                     else if(input.equalsIgnoreCase("-quit") || input.equalsIgnoreCase("-exit"))
                     {
