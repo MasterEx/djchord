@@ -344,7 +344,7 @@ public class Node implements RemoteNode {
              * equal to value-maxValue. Then we return a RemoteNode with
              * find_successor to the finger table
              */
-            this.fingers[i] = this.simple_find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
+            this.fingers[i] = this.find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
         }
     }
 
@@ -401,7 +401,7 @@ public class Node implements RemoteNode {
         RemoteNode responsible = null;
         try
         {
-            responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
+            responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
             if (responsible == null)
             {
                 throw new NullPointerException();
@@ -417,6 +417,7 @@ public class Node implements RemoteNode {
         }
         catch (RemoteException ex)
         {
+            System.out.println("File was unable to be sent, please try again later.");
             basic.Logger.err(ex.getMessage());
         }
         catch (NullPointerException ex)
@@ -447,7 +448,6 @@ public class Node implements RemoteNode {
                 FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename,this.thisnode);
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
-                basic.Logger.inf("File "+filename+" was successfully received");
             }
             catch (UnsupportedEncodingException ex)
             {
@@ -505,7 +505,7 @@ public class Node implements RemoteNode {
             {
                 try
                 {
-                    remotenode = this.simple_find_successor(SHA1.getHash(file_keys[i]));
+                    remotenode = this.find_successor(SHA1.getHash(file_keys[i]));
                 }
                 catch (NoSuchAlgorithmException ex)
                 {
@@ -531,7 +531,7 @@ public class Node implements RemoteNode {
             RemoteNode remotenode;
             for(int i=0;i<file_keys.length;i++)
             {
-                remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                remotenode = this.find_successor((new SHAhash(file_keys[i])));
                 remotenode.rmFile(file_keys[i]);
             }
         }
