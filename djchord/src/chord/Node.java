@@ -87,6 +87,7 @@ public class Node implements RemoteNode {
             basic.Logger.err(ex.getMessage());
         }
         this.setFolder("downloads");
+        this.setFile_keys();
         this.setPredecessor(thisnode);
         for(int u=0;u<3;u++)
         {
@@ -272,7 +273,8 @@ public class Node implements RemoteNode {
                 return this.compressedFingers.get(i);
             }
         }
-        return null;// unreachable statement
+        System.out.println("FTANEI EDW ENW DE PREPEI!!!!");
+        return this.simple_find_successor(k);// unreachable statement(??)
     }
 
     public void stabilize() throws RemoteException

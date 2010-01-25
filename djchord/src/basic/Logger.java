@@ -44,7 +44,7 @@ public class Logger {
 
     public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
     
-    public static void println(String msg)
+    synchronized public static void println(String msg)
     {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);

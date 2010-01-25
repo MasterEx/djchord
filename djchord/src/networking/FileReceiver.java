@@ -29,6 +29,8 @@
 
 package networking;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -60,8 +62,22 @@ public class FileReceiver implements Runnable{
         {
             serversocket = new ServerSocket(port);
             socket = serversocket.accept();
+            FileOutputStream out = null;
             InputStreamReader in = new InputStreamReader(socket.getInputStream());
-            FileOutputStream out = new FileOutputStream(destination);
+            try
+            {
+                out = new FileOutputStream(destination);
+            }
+            catch (FileNotFoundException ex)
+            {
+                boolean success = (new File("remote_files")).mkdir();
+                if (success)
+                {
+                    basic.Logger.inf("\"remote_files\" folder was created!");
+                    out = new FileOutputStream(destination);
+                }
+
+            }
             int currentbyte=0;
             while(true)
             {
