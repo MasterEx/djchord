@@ -29,11 +29,10 @@
         
 package chord;
 
+import djchord.GUI;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import networking.MulticastReceiver;
 import networking.MulticastSender;
 
@@ -46,6 +45,8 @@ public class DJchord implements Runnable {
     private Node node;
     private MulticastSender sendmulticast;
     private Thread runner;
+    private boolean output; // true for system false for gui
+    private GUI gui;
 
     /*
      * is invoked by start()
@@ -55,7 +56,7 @@ public class DJchord implements Runnable {
         basic.Logger.inf("********** PROCESS INITIATED **********");
         try
         {
-            node = new Node();
+            node = new Node(this.output,this.gui);
         }
         catch (RemoteException ex)
         {
@@ -124,6 +125,11 @@ public class DJchord implements Runnable {
             basic.Logger.err(ex.getMessage());
         }
         MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
+        receivemulticast.setOutput(output);
+        if(!output)
+        {
+            receivemulticast.setGUI(gui);
+        }
         receivemulticast.start();
     }
 
@@ -210,11 +216,25 @@ public class DJchord implements Runnable {
     {
         try
         {
-            System.out.println("I'm "+node.getRMIInfo());
+            if(output)
+            {
+                System.out.println("I'm "+node.getRMIInfo());
+            }
+            else
+            {
+                this.gui.append("I'm "+node.getRMIInfo());
+            }
             basic.Logger.inf("I'm "+node.getRMIInfo());
             for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
             {
-                System.out.println("My next successor is "+i.getRMIInfo());
+                if(output)
+                {
+                    System.out.println("My next successor is "+i.getRMIInfo());
+                }
+                else
+                {
+                    this.gui.append("My next successor is "+i.getRMIInfo());
+                }
                 basic.Logger.inf("My next successor is "+i.getRMIInfo());
             }
             
@@ -233,5 +253,15 @@ public class DJchord implements Runnable {
             }
             basic.Logger.err(ex.getMessage());
         }
+    }
+
+    public DJchord(boolean output)
+    {
+        this.output = output;
+    }
+
+    public void setGui(GUI gui)
+    {
+        this.gui = gui;
     }
 }

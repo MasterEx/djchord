@@ -30,6 +30,7 @@
 package networking;
 
 import chord.Node;
+import djchord.GUI;
 import exceptions.NotInitializedVariablesException;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -45,6 +46,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
     private Thread runner;
     private boolean run = true; //terminates the loop
     private Node node;
+    private GUI gui;
+    private boolean output; // true for system false for gui
 
     /*
      * constructor
@@ -161,7 +164,14 @@ public class MulticastReceiver extends Multicast implements Runnable{
             openconnection();
             DatagramPacket temp;
             String previous = "";
-            System.out.println("Started waiting for multicast calls");
+            if(output)
+            {
+                System.out.println("Started waiting for multicast calls");
+            }
+            else
+            {
+                this.gui.append("Started waiting for multicast calls");
+            }
             basic.Logger.inf("Started waiting for multicast calls");
             while(run)
             {
@@ -209,6 +219,16 @@ public class MulticastReceiver extends Multicast implements Runnable{
     public void terminate()
     {
         run = false;
+    }
+
+    public void setOutput(boolean output)
+    {
+        this.output = output;
+    }
+
+    public void setGUI(GUI gui)
+    {
+        this.gui = gui;
     }
 
 }

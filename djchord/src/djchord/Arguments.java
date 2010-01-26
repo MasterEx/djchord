@@ -94,7 +94,7 @@ public class Arguments {
 
             if (args[counter].equalsIgnoreCase("-createnode"))
             {
-                DJchord chord = new DJchord();
+                DJchord chord = new DJchord(true);
                 chord.start();
                 System.out.println("A node is being created..." +
                         "\nUse -help to see the available options");

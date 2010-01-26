@@ -47,5 +47,6 @@ public class Main {
         {
             Arguments.handler(args);
         }
+        djchord.GUI.start();
     }
 }

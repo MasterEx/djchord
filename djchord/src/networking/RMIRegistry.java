@@ -31,6 +31,7 @@ package networking;
 
 import chord.Node;
 import chord.RemoteNode;
+import djchord.GUI;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.AccessException;
@@ -178,6 +179,19 @@ public class RMIRegistry {
     static public void createRegistry()
     {
         createRegistry(1099);
+    }
+
+    static public void createRegistryGUI(GUI gui)
+    {
+        try
+        {
+            registry = LocateRegistry.createRegistry(port);
+            gui.append("RMIRegistry was created @ port: "+port);
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(RMIRegistry.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     static public String getAddress()
