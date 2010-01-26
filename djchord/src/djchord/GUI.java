@@ -116,6 +116,11 @@ public class GUI extends javax.swing.JFrame {
 
         jButton3.setText("show files");
         jButton3.setEnabled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("show all successors");
         jButton4.setEnabled(false);
@@ -264,6 +269,11 @@ public class GUI extends javax.swing.JFrame {
         this.append("Trying to retrieve file: "+filename);
         chord.getFile(filename);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        chord.getFiles();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
     * @param args the command line arguments

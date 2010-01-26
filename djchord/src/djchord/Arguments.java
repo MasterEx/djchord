@@ -107,7 +107,7 @@ public class Arguments {
                     String input = in.next();
                     if(input.equalsIgnoreCase("-help"))
                     {
-                        System.out.println("-exit\t\t\tTerminates the process\n-help\t\t\tPrints this\n-getfile\t\tCopies a file to remote_files - example: -getfile file.dat\n-getsuccessor\t\tPrints the successor of this node\n-quit\t\t\tAs exit\n-showallsuccessors\tPrints all the nodes");
+                        System.out.println("-exit\t\t\tTerminates the process\n-help\t\t\tPrints this\n-getfile\t\tCopies a file to remote_files - example: -getfile file.dat\n-getsuccessor\t\tPrints the successor of this node\n-quit\t\t\tAs exit\n-showfiles\t\tShows all the files in chord\n-showallsuccessors\tPrints all the nodes");
                     }
                     else if(input.equalsIgnoreCase("-quit") || input.equalsIgnoreCase("-exit"))
                     {
@@ -131,6 +131,10 @@ public class Arguments {
                     else if(input.equalsIgnoreCase("-showallsuccessors"))
                     {
                         chord.showAllSuccessors();
+                    }
+                    else if(input.equalsIgnoreCase("-showfiles"))
+                    {
+                        chord.getFiles();
                     }
                     else
                     {

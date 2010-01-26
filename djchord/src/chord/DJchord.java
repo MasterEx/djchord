@@ -263,4 +263,64 @@ public class DJchord implements Runnable {
     {
         this.gui = gui;
     }
+
+    public void getFiles()
+    {
+        try
+        {
+            if(output)
+            {
+                System.out.println("My files are");
+                String[] files = node.getFile_keys();
+                for(int i=0;i<files.length;i++)
+                {
+                    System.out.println(files[i]);
+                }
+            }
+            else
+            {
+                this.gui.append("My files are");
+                String[] files = node.getFile_keys();
+                for(int i=0;i<files.length;i++)
+                {
+                    this.gui.append(files[i]);
+                }
+            }
+            for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
+            {
+                String[] files = i.getFile_keys();
+                if(output)
+                {
+                    System.out.println("My next successor files are: ");
+                    for(int j=0;j<files.length;j++)
+                    {
+                        System.out.println(files[j]);
+                    }
+                }
+                else
+                {
+                    this.gui.append("My next successor files are: ");
+                    for(int j=0;j<files.length;j++)
+                    {
+                        this.gui.append(files[j]);
+                    }
+                }
+            }
+
+        }
+        catch (RemoteException ex)
+        {
+            basic.Logger.err("The successors seems down... :(");
+            try
+            {
+                node.stabilize();
+                node.fixFingers();
+            }
+            catch (RemoteException remoteException)
+            {
+                basic.Logger.err(remoteException.getMessage());
+            }
+            basic.Logger.err(ex.getMessage());
+        }
+    }
 }

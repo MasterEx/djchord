@@ -414,7 +414,7 @@ public class Node implements RemoteNode {
         return this.folder;
     }
 
-    public String[] getFile_keys()
+    public String[] getFile_keys() throws RemoteException
     {
         return this.file_keys;
     }
