@@ -46,7 +46,11 @@ public class Main {
         if(args.length>0)
         {
             Arguments.handler(args);
+            System.exit(0);
         }
-        djchord.GUI.start();
+        else
+        {
+            djchord.GUI.start();
+        }
     }
 }

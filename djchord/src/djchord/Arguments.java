@@ -92,6 +92,7 @@ public class Arguments {
                 }
             }
 
+            boolean exit = false;
             if (args[counter].equalsIgnoreCase("-createnode"))
             {
                 DJchord chord = new DJchord(true);
@@ -113,7 +114,8 @@ public class Arguments {
                         chord.stop();
                         //race condition may occur
                         basic.Logger.inf("The process is now being terminated...");
-                        System.exit(0);
+                        exit = true;
+                        break;
                     }
                     else if(input.equalsIgnoreCase("-getfile"))
                     {
@@ -134,6 +136,10 @@ public class Arguments {
                         System.out.println(input+" : command not found");
                     }
                     in.reset();
+                }
+                if(exit)
+                {
+                   break;
                 }
             }
             counter++;
