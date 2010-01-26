@@ -53,7 +53,6 @@ public class DJchord implements Runnable {
      */
     public void run()
     {
-        basic.Logger.inf("********** PROCESS INITIATED **********");
         try
         {
             node = new Node(this.output,this.gui);
@@ -218,22 +217,22 @@ public class DJchord implements Runnable {
         {
             if(output)
             {
-                System.out.println("I'm "+node.getRMIInfo());
+                System.out.println("I'm "+node.getRMIInfo()+" with hash:\n"+node.getKey().getStringHash());
             }
             else
             {
-                this.gui.append("I'm "+node.getRMIInfo());
+                this.gui.append("I'm "+node.getRMIInfo()+" with hash:\n"+node.getKey().getStringHash());
             }
             basic.Logger.inf("I'm "+node.getRMIInfo());
             for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
             {
                 if(output)
                 {
-                    System.out.println("My next successor is "+i.getRMIInfo());
+                    System.out.println("My next successor is "+i.getRMIInfo()+" with hash:\n"+i.getKey().getStringHash());
                 }
                 else
                 {
-                    this.gui.append("My next successor is "+i.getRMIInfo());
+                    this.gui.append("My next successor is "+i.getRMIInfo()+" with hash:\n"+i.getKey().getStringHash());
                 }
                 basic.Logger.inf("My next successor is "+i.getRMIInfo());
             }
