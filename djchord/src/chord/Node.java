@@ -266,8 +266,25 @@ public class Node implements RemoteNode {
         }
         if(this.compressedFingers.get(this.compressedFingers.size()-1).getKey().compareTo(k)<0)
         {
-            System.out.println("loop");
-            return this.compressedFingers.get(this.compressedFingers.size()-1).closest_preceding_node(k);
+            if(this.getKey().compareTo(k)<0)
+            {
+                if (this.getKey().compareTo(this.compressedFingers.get(this.compressedFingers.size()-1).getKey())<0)
+                {
+                    return this.compressedFingers.get(this.compressedFingers.size()-1);
+                }
+                else if(this.getKey().compareTo(this.compressedFingers.get(this.compressedFingers.size()-2).getKey())<0)
+                {
+                    return this.compressedFingers.get(this.compressedFingers.size()-2);
+                }
+                else
+                {
+                    return this.getSuccessor();
+                }
+            }
+            else
+            {
+                return this.getPredecessor();
+            }
         }
         for(i=this.compressedFingers.size()-1;i>=0;i--)
         {
