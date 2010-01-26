@@ -108,7 +108,7 @@ public class GUI extends javax.swing.JFrame {
 
         jTextArea1.setColumns(20);
         jTextArea1.setEditable(false);
-        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 12));
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -135,7 +135,8 @@ public class GUI extends javax.swing.JFrame {
 
         jTextField1.setText("here give a file name");
         jTextField1.setEnabled(false);
-        jTextField1.setPreferredSize(new java.awt.Dimension(120, 20));
+        jTextField1.setMinimumSize(new java.awt.Dimension(10, 30));
+        jTextField1.setPreferredSize(new java.awt.Dimension(146, 25));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -157,7 +158,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel1))
@@ -185,7 +186,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(jButton4)
                     .addComponent(jButton3)
                     .addComponent(jButton5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -211,6 +212,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        basic.Logger.inf("======== PROCESS INITIATED (GUI MODE) ========");
         this.chord = new DJchord(false);
         chord.setGui(this);
         chord.start();
@@ -226,6 +228,15 @@ public class GUI extends javax.swing.JFrame {
         jButton4.setVisible(true);
         jButton5.setVisible(true);
         jTextField1.setVisible(true);
+        try
+                {
+                    final GUI g = this;
+                    Runtime.getRuntime().addShutdownHook(new ThreadImpl(g));
+                }
+                catch (Throwable t)
+                {
+                    System.err.println("ShutdownHook not supported at this version of java");
+                }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -259,7 +270,8 @@ public class GUI extends javax.swing.JFrame {
     */
     public static void start() {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {try {
+            public void run() {
+                try {
 	    // Set System L&F
             UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
@@ -298,6 +310,24 @@ public class GUI extends javax.swing.JFrame {
         jTextArea1.append(txt+"\n");
         jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
 
+    }
+
+    private class ThreadImpl extends Thread {
+
+        private final GUI g;
+
+        public ThreadImpl(GUI g) {
+            this.g = g;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("this comes here");
+            g.append("The process is terminating...");
+            chord.stop();
+            //race condition may occur
+            basic.Logger.inf("The process is now being terminated...");
+        }
     }
 
 }
