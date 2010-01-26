@@ -264,6 +264,11 @@ public class Node implements RemoteNode {
         {
             return compressedFingers.get(0);
         }
+        if(this.compressedFingers.get(this.compressedFingers.size()-1).getKey().compareTo(k)<0)
+        {
+            System.out.println("loop");
+            return this.compressedFingers.get(this.compressedFingers.size()-1).closest_preceding_node(k);
+        }
         for(i=this.compressedFingers.size()-1;i>=0;i--)
         {
             if(this.compressedFingers.get(i).getKey().compareTo(k)<0 && this.compressedFingers.get(i).getKey().compareTo(this.getKey())>0)
