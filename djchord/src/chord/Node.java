@@ -47,7 +47,7 @@ import networking.FileSender;
 import networking.RMIRegistry;
 
 /**
- *
+ * A node of the chord.
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class Node implements RemoteNode {
@@ -71,7 +71,9 @@ public class Node implements RemoteNode {
     private boolean output;
 
     /**
-     * constructor
+     * Constructor.
+     * @param output Sets the messages outpput.
+     * @param gui Sets the gui, if any.
      */    
     public Node(boolean output,GUI gui) throws NoSuchAlgorithmException, UnsupportedEncodingException, RemoteException
     {
@@ -121,26 +123,50 @@ public class Node implements RemoteNode {
 
      // get methods
 
+    /**
+     * Returns this node hash key.
+     * @return A SHAhash object.
+     * @throws RemoteException
+     */
     public SHAhash getKey() throws RemoteException
     {
         return this.key;
     }
 
+    /**
+     * Returns this node process id.
+     * @return PID in string.
+     * @throws RemoteException
+     */
     public String getPid() throws RemoteException
     {
         return pid;
     }
 
+    /**
+     * Returns the RemoteNode object of this node.
+     * @return A RemoteNode object.
+     * @throws RemoteException
+     */
     public RemoteNode getNode() throws RemoteException
     {
         return thisnode;
     }
 
+    /**
+     * Returns this node ip address.
+     * @return ip address in string for.
+     */
     public String getAddress()
     {
         return RMIRegistry.getAddress();
     }
 
+    /**
+     * Returns the RMI informations of this node.
+     * @return The RMI information in string form.
+     * @throws RemoteException
+     */
     public String getRMIInfo() throws RemoteException
     {
         return this.pid+" "+this.getAddress();
@@ -148,6 +174,10 @@ public class Node implements RemoteNode {
 
     // set methods
 
+    /**
+     * Sets the PID. May be JVM dependent.
+     * @return Thia PID.
+     */
     public String setPid()
     {
         /**
@@ -159,16 +189,29 @@ public class Node implements RemoteNode {
 
     // other important Node methods
 
+    /**
+     * Marks this node as notified.
+     * @throws RemoteException
+     */
     synchronized public void notified() throws RemoteException
     {
         this.notified = true;
     }
 
+    /**
+     * Returns thue if this node is notified.
+     * @return True if notified, false otherwise.
+     * @throws RemoteException
+     */
     synchronized public boolean isNotified() throws RemoteException
     {
         return notified;
     }
 
+    /**
+     * This method does nothing but help us know if a RemoteNode is alive.
+     * @throws RemoteException
+     */
     public void hasFailed() throws RemoteException
     {
         return;
@@ -178,6 +221,10 @@ public class Node implements RemoteNode {
      * The chord relative methods
      */
 
+    /**
+     * This method exits properly this node form the chord.
+     * @return True if all are ok.
+     */
     public boolean exit()
     {
         try
@@ -205,7 +252,7 @@ public class Node implements RemoteNode {
     }
 
     /**
-     * calls getSuccessorSuccessorsList and handles the returned array
+     * Calls getSuccessorSuccessorsList and handles the returned array.
      */
     
     public void initSuccessors() throws RemoteException
@@ -215,7 +262,12 @@ public class Node implements RemoteNode {
         this.setSuccessor(1, temp[0]);
         this.setSuccessor(2, temp[1]);
     }
-    
+
+    /**
+     * Returns the successor's list.
+     * @return A RemoteNode array.
+     * @throws RemoteException
+     */
     public RemoteNode[] getSuccessorSuccessorsList() throws RemoteException
     {
         this.setSuccessor(1,this.getSuccessor().getSuccessor());
@@ -223,6 +275,12 @@ public class Node implements RemoteNode {
         return this.successors;
     }
 
+    /**
+     * The find succesors method.
+     * @param k A hash key in SHAhash form.
+     * @return The succeding node.
+     * @throws RemoteException
+     */
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         int hop = 0;
@@ -248,6 +306,13 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * As find successors but logs the total number of hops.
+     * @param k A hash key in SHAhash form.
+     * @param hop The previous hop number (int).
+     * @return The succeding node.
+     * @throws RemoteException
+     */
     public RemoteNode find_successor_hops(SHAhash k,int hop) throws RemoteException
     {
         hop++;
@@ -274,7 +339,9 @@ public class Node implements RemoteNode {
     }
     
     /**
-     * this methos finds successors linear by checkinng the successor's successor
+     * This methd finds successors linear by checkinng the successor's successor.
+     * @param k A hash key in SHAhash form.
+     * @return A the succesding node.
      */
     public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
     {
@@ -301,7 +368,13 @@ public class Node implements RemoteNode {
             return this.getSuccessor();
         }
     }
-    
+
+    /**
+     * It is used by find successor.
+     * @param k A hash key in SHAhash form.
+     * @return The preceding node.
+     * @throws RemoteException
+     */
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
         SHAhash LAST_FINGER_HASH = this.compressedFingers.get(this.compressedFingers.size()-1).getKey();
@@ -404,6 +477,10 @@ public class Node implements RemoteNode {
         return this.simple_find_successor(k);// unreachable statement(??)
     }
 
+    /**
+     * Runs the stabilize thread once for this node.
+     * @throws RemoteException
+     */
     public void stabilize() throws RemoteException
     {
         if(checkstabilize.isFree())
@@ -413,6 +490,10 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * As stabilize but waits for the stabilize to end.
+     * @throws RemoteException
+     */
     public void joinedStabilize() throws RemoteException
     {
         if(checkstabilize.isFree())
@@ -430,38 +511,74 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * Set this node next successor.
+     * @param next A RemoteNode.
+     * @throws RemoteException
+     */
     synchronized public void setSuccessor(RemoteNode next) throws RemoteException
     {
         basic.Logger.inf("Setting at successor[0] "+next.getRMIInfo());
         this.successors[0] = next;
     }
 
+    /**
+     * Set this node one of the next 3 successors.
+     * @param i Which successor.
+     * @param next The next node.
+     * @throws RemoteException
+     */
     synchronized public void setSuccessor(int i,RemoteNode next) throws RemoteException
     {
         basic.Logger.inf("Setting at successor["+i+"] "+next.getRMIInfo());
         this.successors[i] = next;
     }
 
+    /**
+     * Sets this node predecessor.
+     * @param previous The previous node.
+     * @throws RemoteException
+     */
     public void setPredecessor(RemoteNode previous) throws RemoteException
     {
         this.predecessor = previous;
     }
 
+    /**
+     * Returns the next node.
+     * @return The next node.
+     * @throws RemoteException
+     */
     public RemoteNode getSuccessor() throws RemoteException
     {
         return successors[0];
     }
 
+    /**
+     * Returns one of the 3 next nodes.
+     * @param i
+     * @return One next node.
+     * @throws RemoteException
+     */
     public RemoteNode getSuccessor(int i) throws RemoteException
     {
         return successors[i];
     }
 
+    /**
+     * Returns the previous node.
+     * @return The previous node.
+     * @throws RemoteException
+     */
     public RemoteNode getPredecessor() throws RemoteException
     {
         return predecessor;
     }
 
+    /**
+     * Creates the finger table.
+     * @throws RemoteException
+     */
     public void setFingers() throws RemoteException
     {
         SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
@@ -477,6 +594,10 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * A new finger vector without nodes' doubles.
+     * @throws RemoteException
+     */
     public void compressFingers() throws RemoteException
     {
         compressedFingers = new Vector<RemoteNode>();
@@ -494,6 +615,10 @@ public class Node implements RemoteNode {
         compressedFingers.trimToSize();
     }
 
+    /**
+     * It calls setFingers and compressFingers.
+     * @throws RemoteException
+     */
     public void fixFingers() throws RemoteException
     {
         this.setFingers();
@@ -504,26 +629,51 @@ public class Node implements RemoteNode {
      * Here are hte methods about files indexing and move.
      */
 
+    /**
+     * It returns the folder that our files are located.
+     * @return The folder in string form.
+     */
     public String getFolder()
     {
         return this.folder;
     }
 
+    /**
+     * Returns an array with our files.
+     * @return String array with file names.
+     * @throws RemoteException
+     */
     public String[] getFile_keys() throws RemoteException
     {
         return this.file_keys;
     }
 
+    /**
+     * Return if the specific port is available.
+     * @param i An integer from 0 to 3000.
+     * @return True if is in use or false if not.
+     * @throws RemoteException
+     */
     public boolean getPort(int i) throws RemoteException
     {
         return ports[i];
     }
 
+    /**
+     * Let us know who has localy this file.
+     * @param filehash Hash key in string.
+     * @return The responsible node.
+     * @throws RemoteException
+     */
     public RemoteNode getFileResponsible(String filehash) throws RemoteException
     {
         return this.foreignfiles.get(filehash);
     }
 
+    /**
+     * It downloads the specified file.
+     * @param filename Filename in string.
+     */
     public void getFile(String filename)
     {
         boolean contin = true;
@@ -611,16 +761,29 @@ public class Node implements RemoteNode {
             }
         }
     }
+
+    /**
+     * Sets this node hash key.
+     * @param key A SHAhash key.
+     * @throws RemoteException
+     */
     public void setKey(SHAhash key) throws RemoteException
     {
          this.key = key;
     }
 
+    /**
+     * Sets the folder where we have our local files.
+     * @param folder Folder name in string.
+     */
     public void setFolder(String folder)
     {
          this.folder = folder;
     }
 
+    /**
+     * Uses FileNames to specify our files.
+     */
     public void setFile_keys()
     {
         FileNames files = new FileNames(this.folder);
@@ -632,17 +795,32 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * Sets a file with hash less or equals to ours to our responsibility.
+     * @param filename String file name.
+     * @param node The node that owns the file.
+     * @throws RemoteException
+     */
     public void addFile(String filename,RemoteNode node) throws RemoteException
     {
         basic.Logger.inf("Now putting "+filename+" and "+node.getPid()+" in this node");
         foreignfiles.put(filename, node);
     }
 
+    /**
+     * Removes a file from our responsibility.
+     * @param filehash String file name.
+     * @throws RemoteException
+     */
     public void rmFile(String filehash) throws RemoteException
     {
         foreignfiles.remove(filehash);
     }
-    
+
+    /**
+     * Sends our files to responsible nodes.
+     * @throws RemoteException
+     */
     public void sendFiles2ResponsibleNode() throws RemoteException
     {
         this.setFile_keys();
@@ -672,6 +850,10 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * Remove our files from the responsible nodes.
+     * @throws RemoteException
+     */
     public void removeFilesFromResponsibleNode()throws RemoteException
     {
         if(!this.empty_folder)
@@ -689,22 +871,45 @@ public class Node implements RemoteNode {
         }
     }
 
+    /**
+     * Set a port as busy.
+     * @param i Integer from 50000 to 53000.
+     * @throws RemoteException
+     */
     synchronized public void setPortBusy(int i) throws RemoteException
     {
         ports[i-50000]=true;
     }
 
+    /**
+     * Sets a port available again.
+     * @param i Integer from 50000 to 53000.
+     * @throws RemoteException
+     */
     public void unsetPortBusy(int i) throws RemoteException
     {
         ports[i-50000]=false;
     }
 
+    /**
+     * Sends a file to the node that requested it.
+     * @param port Port that we will use.
+     * @param address IP address of our destination.
+     * @param file The file that we will send.
+     * @throws RemoteException
+     */
     public void sendFile(int port,String address,String file) throws RemoteException
     {
         FileSender sender = new FileSender(address,port,"downloads"+File.separator+file);
         sender.start();
     }
 
+    /**
+     * Returns true if port is available.
+     * @param port The port that we check.
+     * @return True if port's available or false otherwise.
+     * @throws RemoteException
+     */
     synchronized public boolean getAvailablePort(int port) throws RemoteException
     {
         // if port is free

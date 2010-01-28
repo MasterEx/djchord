@@ -27,22 +27,8 @@
  * THE SOFTWARE.
  */
 
-package exceptions;
-
 /**
- * This exception is thrown when there unitialized variables.
- *@author Ntanasis Periklis and Chatzipetros Mike
+ * This package contains all the networking related classes.
  */
-public class NotInitializedVariablesException extends Exception {
+package networking;
 
-    public NotInitializedVariablesException()
-    {
-
-    }
-
-    public NotInitializedVariablesException(String msg)
-    {
-        super(msg);
-    }
-
-}

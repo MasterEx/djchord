@@ -34,7 +34,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
+ * The interface that our node implements in order to use RMI.
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public interface RemoteNode extends Remote{

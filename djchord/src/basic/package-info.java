@@ -27,22 +27,8 @@
  * THE SOFTWARE.
  */
 
-package exceptions;
-
 /**
- * This exception is thrown when there unitialized variables.
- *@author Ntanasis Periklis and Chatzipetros Mike
+ * This package contains all general and basic methods. Most methods here are static.
  */
-public class NotInitializedVariablesException extends Exception {
+package basic;
 
-    public NotInitializedVariablesException()
-    {
-
-    }
-
-    public NotInitializedVariablesException(String msg)
-    {
-        super(msg);
-    }
-
-}

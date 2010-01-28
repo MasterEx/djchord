@@ -27,22 +27,8 @@
  * THE SOFTWARE.
  */
 
+/**
+ * This package contains all the custom exceptions.
+ */
 package exceptions;
 
-/**
- * This exception is thrown when there unitialized variables.
- *@author Ntanasis Periklis and Chatzipetros Mike
- */
-public class NotInitializedVariablesException extends Exception {
-
-    public NotInitializedVariablesException()
-    {
-
-    }
-
-    public NotInitializedVariablesException(String msg)
-    {
-        super(msg);
-    }
-
-}

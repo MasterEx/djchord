@@ -34,7 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class contains the methods of the periodical check and fix of chord.
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class Check implements Runnable{
@@ -43,11 +43,18 @@ public class Check implements Runnable{
     private RemoteNode node;
     private boolean stabilize = false;
 
+    /**
+     *
+     * @param node A RemoteNode object.
+     */
     public Check(RemoteNode node)
     {
         this.node = node;
     }
 
+    /**
+     * The standar run method.
+     */
     synchronized public void run()
     {
         try
@@ -124,8 +131,8 @@ public class Check implements Runnable{
 
     }
 
-    /*
-     * starts the periodical execution of the thread
+    /**
+     * Starts the periodical execution of the thread.
      */
     public void start()
     {
@@ -137,6 +144,9 @@ public class Check implements Runnable{
         }
     }
 
+    /**
+     * Starts a tread that onlly runs once the stabilize.
+     */
     public void startStabilize()
     {
         stabilize = true;
@@ -148,7 +158,7 @@ public class Check implements Runnable{
         }
     }
 
-    /*
+    /**
      * stops the execution of the thread
      */
     public void stop()
@@ -157,6 +167,10 @@ public class Check implements Runnable{
         runner = null;
     }
 
+    /**
+     * The stabilize method xhexks and fixes the next 3 successors of this node.
+     * @throws RemoteException
+     */
     public void stabilize() throws RemoteException
     {
         basic.Logger.inf("stabilizing...");
@@ -203,11 +217,19 @@ public class Check implements Runnable{
         basic.Logger.inf("ended stabilizing.");
     }
 
+    /**
+     * Returns the current status of the thread.
+     * @return True if the thread had stoped it's execution.
+     */
     synchronized boolean isFree()
     {
         return true;
     }
 
+    /**
+     * Returns this thread in case we want to join it.
+     * @return This thread.
+     */
     public Thread getThread()
     {
         return runner;

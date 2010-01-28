@@ -37,13 +37,17 @@ import java.util.Calendar;
 import java.util.logging.Level;
 
 /**
- *
- *@author Ntanasis Periklis and Chatzipetros Mike
+ * Logger contains static methods for writting in files.
+ * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class Logger {
 
     public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-    
+
+    /**
+     * Appends a string to Log.txt in our current directory with a date/time prefix.
+     * @param msg The string that we want to append.
+     */
     synchronized public static void println(String msg)
     {
         Calendar cal = Calendar.getInstance();
@@ -64,16 +68,28 @@ public class Logger {
         }
     }
 
+    /**
+     * Calls the println() method with te Warning prefix.
+     * @param msg The string that we want to append.
+     */
     public static void war(String msg)
     {
         Logger.println("Warning:     "+msg);
     }
 
+    /**
+     * Calls the println() method with te Information prefix.
+     * @param msg The string that we want to append.
+     */
     public static void inf(String msg)
     {
         Logger.println("Information: "+msg);
     }
 
+    /**
+     * Calls the println() method with te Error prefix.
+     * @param msg The string that we want to append.
+     */
     public static void err(String msg)
     {
         Logger.println("Error:       "+msg);

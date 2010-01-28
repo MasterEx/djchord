@@ -42,7 +42,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class contains hte methods for receiving Files. The methods use
+ * TCP for sending files and create new thread for this purpose.
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
 public class FileReceiver implements Runnable{
@@ -60,8 +61,8 @@ public class FileReceiver implements Runnable{
     private GUI gui;
     private boolean output;
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start().
      */
     public void run() 
     {
@@ -131,8 +132,10 @@ public class FileReceiver implements Runnable{
         }
     }
 
-    /*
-     * constructor
+    /**
+     *
+     * @param port The port that we will use.
+     * @param destination The destination folder.
      */
     public FileReceiver(int port,String destination) throws IOException
     {
@@ -140,6 +143,13 @@ public class FileReceiver implements Runnable{
         this.destination = destination;
     }
 
+    /**
+     *
+     * @param port
+     * @param destination
+     * @param node The node that will receive the files.
+     * @throws IOException
+     */
     public FileReceiver(int port,String destination,RemoteNode node) throws IOException
     {
         this.node = node;
@@ -147,8 +157,9 @@ public class FileReceiver implements Runnable{
         this.destination = destination;
     }
 
-    /*
-     * constructor
+    /**
+     *
+     * @param echo Prints extra messages.
      */
     public FileReceiver(int port,String destination,boolean echo)
     {
@@ -157,8 +168,8 @@ public class FileReceiver implements Runnable{
         this.echo = echo;
     }
 
-    /*
-     * starts the execution of the thread
+    /**
+     * Starts the execution of the thread.
      */
     public void start()
     {
@@ -170,8 +181,8 @@ public class FileReceiver implements Runnable{
         }
     }
 
-    /*
-     * stops the execution of the thread
+    /**
+     * Stops the execution of the thread.
      */
     public void stop()
     {
@@ -187,24 +198,36 @@ public class FileReceiver implements Runnable{
         runner = null;
     }
 
-    /*
-     * returns true if file is received
+    /**
+     * Returns true if file is received.
      */
     public boolean getstatus()
     {
         return status;
     }
 
+    /**
+     * Return this thread in case of join.
+     * @return This thread.
+     */
     public Thread getThread()
     {
         return this.runner;
     }
-    
+
+    /**
+     * Sets messages output.
+     * @param output True for cli, false for gui.
+     */
     public void setOutput(boolean output)
     {
         this.output = output;
     }
-    
+
+    /**
+     * In case we use gui we need this to append our messages.
+     * @param gui Our gui.
+     */
     public void setGUI(GUI gui)
     {
         this.gui = gui;

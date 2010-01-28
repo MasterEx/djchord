@@ -32,7 +32,8 @@ package basic;
 import java.io.Serializable;
 
 /**
- *
+ * This class creates hash keys items. It also provides methods for
+ * hash keys manipulation. Some of the methods provided are static.
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class SHAhash implements Serializable, Comparable<SHAhash>{
@@ -40,8 +41,9 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
     private byte[] bytehash = null;
     private String stringhash;
 
-    /*
-     * constructor
+    /**
+     *
+     * @param hash Byte array returned by java SHA1 digest.
      */
     public SHAhash(byte[] hash)
     {
@@ -49,16 +51,18 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         this.stringhash = convertToHex(hash);
     }
     
-    /*
-     * constructor
+    /**
+     *
+     * @param hash The string is already a hash.
      */
     public SHAhash(String hash)
     {
         this.stringhash = hash;
     }
 
-    /*
-     * compareTo implementation
+    /**
+     * compareTo implementation.
+     * @param arg0 SHAhash compared with this hash key.
      */
     public int compareTo(SHAhash arg0)
     {
@@ -81,8 +85,9 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         return this_temp.compareToIgnoreCase(arg0_temp);
     }
 
-    /*
+    /**
      * returns bytehash
+     * @return The java SHA1 digest.
      */
     public byte[] getByteHash()
     {
@@ -93,22 +98,31 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         return this.stringhash.getBytes();
     }
 
-    /*
-     * returns specific byte ofbytehash
+    /**
+     * returns specific byte ofbytehash.
+     * @param position A specified position from the byte array digest.
+     * @return A specified byte.
      */
     public byte getByte(int position)
     {
         return bytehash[position];
     }
 
-    /*
-     * returns stringhash
+    /**
+     * returns stringhash.
+     * @return The hash in string form.
      */
     public String getStringHash()
     {
         return stringhash;
     }
 
+    /**
+     * Method found from the internet.
+     * @param data The byte array that returns the java SHA1 digest.
+     * @return The digest in string form.
+     * @see SHA1.java
+     */
     private String convertToHex(byte[] data)
     {
         StringBuffer buf = new StringBuffer();
@@ -133,8 +147,9 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         return buf.toString();
     }
 
-    /*
+    /**
      * overides toString()
+     * @return The hash in string format
      */
     @Override
     public String toString()
@@ -142,8 +157,11 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         return stringhash;
     }
 
-    /*
-     * This method rises one hexadecimal number to the given power
+    /**
+     * This method rises one hexadecimal number to the given power.
+     * @param base The base of power in hexadecimal format (string).
+     * @param exponent The exponent in decimal format (int).
+     * @return The power in hecadecimal format (string).
      */
     public static String power(String base, int exponent)
     {
@@ -166,8 +184,10 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
     }
 
     /**
-     *
-     * A multiplication method
+     * A multiplication method.
+     * @param a A hex number.
+     * @param b Another hex number.
+     * @return A hex in string form.
      */
     public static String multiply(String a, String b)
     {
@@ -179,16 +199,21 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         return result;
     }
 
-    /*
-     * This method adds 2 hexadecimal numbers
+    /**
+     * This method adds 2 hexadecimal numbers.
+     * @param hex A hex nuber in string form.
+     * @return A hex in string form.
      */
     public String add(String hex)
     {
         return SHAhash.add(this.getStringHash(), hex);
     }
 
-    /*
-     * This method adds 2 hexadecimal numbers
+    /**
+     * This method adds 2 hexadecimal numbers.
+     * @param hex A hex number in string form,
+     * @param hexx Another numer in string form.
+     * @return A hex in string form.
      */
     public static String add(String hex,String hexx)
     {
@@ -258,6 +283,12 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         return outcome;
     }
 
+    /**
+     * A static implementation of compareTo.
+     * @param this_temp A hash in string form.
+     * @param arg0_temp Another hash in string form.
+     * @return 0 for equals, 1 for greater and -1 for less.
+     */
     public static int compareTo(String this_temp,String arg0_temp)
     {
         if(this_temp.length()>arg0_temp.length())
@@ -284,10 +315,13 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
         }
     }
 
-    /*
-     * a method that subtracts a hexadesimal String from another (first-second)
-     * special thanks to mathforum.org
-     * http://mathforum.org/library/drmath/view/55943.html
+    /**
+     * A method that subtracts a hexadesimal String from another (first-second)
+     * special thanks to mathforum.org.
+     * @see <link>http://mathforum.org/library/drmath/view/55943.html</link>
+     * @param first A hex in string form.
+     * @param second Another hex in string form.
+     * @return The result 0f the substraction of the 2 hexes in hex/string.
      */
     public static String subtract(String first, String second)
     {

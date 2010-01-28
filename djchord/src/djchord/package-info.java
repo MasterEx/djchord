@@ -27,22 +27,8 @@
  * THE SOFTWARE.
  */
 
-package exceptions;
-
 /**
- * This exception is thrown when there unitialized variables.
- *@author Ntanasis Periklis and Chatzipetros Mike
+ * This packet contains the Classes that invoke cli or gui instance of our application.
  */
-public class NotInitializedVariablesException extends Exception {
+package djchord;
 
-    public NotInitializedVariablesException()
-    {
-
-    }
-
-    public NotInitializedVariablesException(String msg)
-    {
-        super(msg);
-    }
-
-}

@@ -34,13 +34,15 @@ import java.util.Scanner;
 import networking.RMIRegistry;
 
 /**
- *
- *@author Ntanasis Periklis and Chatzipetros Mike
+ * This is the command line interface of our application.
+ * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class Arguments {
 
     /**
-     * This method is the cli of djchord application
+     * This method is the cli of djchord application. It handles all the given
+     * commands.
+     * @param args[] The arguments table taken from main.
      */
     public static void handler(String args[])
     {

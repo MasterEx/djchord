@@ -39,6 +39,7 @@ import java.security.NoSuchAlgorithmException;
 public class Main {
 
     /**
+     * The main start gui if no arguments supplied, otherwise the cli is invoked.
      * @param args the command line arguments
      */
     public static void main(String[] args) throws RemoteException, NoSuchAlgorithmException, UnsupportedEncodingException, Exception

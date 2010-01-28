@@ -32,7 +32,7 @@ package basic;
 import java.io.File;
 
 /**
- *
+ * This class contains the getfiles method that returns all the visible files of a folder.
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class FileNames {
@@ -48,7 +48,8 @@ public class FileNames {
     String separator = "";
 
     /**
-     * constructor
+     *
+     * @param folderPath The folder path of witch we will return the files.
      */
     public FileNames(String folderPath)
     {
@@ -68,11 +69,20 @@ public class FileNames {
     /**
      * methods
      */
+
+    /**
+     * Returns the result of files()
+     * @return As files() T
+     */
     public String[] getFileNames()
     {
         return this.files();
     }
 
+    /**
+     * Creates a String array with the files of the specified folder.
+     * @return A string array with file names.
+     */
     private String[] files()
     {
         temp1=folderPath.split(separator);

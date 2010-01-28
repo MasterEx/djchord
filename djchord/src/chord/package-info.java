@@ -27,22 +27,8 @@
  * THE SOFTWARE.
  */
 
-package exceptions;
-
 /**
- * This exception is thrown when there unitialized variables.
- *@author Ntanasis Periklis and Chatzipetros Mike
+ * This package contains all the classes that compine the core od chord.
  */
-public class NotInitializedVariablesException extends Exception {
+package chord;
 
-    public NotInitializedVariablesException()
-    {
-
-    }
-
-    public NotInitializedVariablesException(String msg)
-    {
-        super(msg);
-    }
-
-}

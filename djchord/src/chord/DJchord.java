@@ -37,7 +37,7 @@ import networking.MulticastReceiver;
 import networking.MulticastSender;
 
 /**
- *
+ * This class is a layer between our node and the application.
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class DJchord implements Runnable {
@@ -48,8 +48,8 @@ public class DJchord implements Runnable {
     private boolean output; // true for system false for gui
     private GUI gui;
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start()
      */
     public void run()
     {
@@ -132,8 +132,8 @@ public class DJchord implements Runnable {
         receivemulticast.start();
     }
 
-    /*
-     * starts the execution of the thread
+    /**
+     * Starts the execution of the thread
      */
     public void start()
     {
@@ -145,8 +145,8 @@ public class DJchord implements Runnable {
         }
     }
 
-    /*
-     * stops the execution of the thread
+    /**
+     * Stops the execution of the thread.
      */
     public void stop()
     {
@@ -157,7 +157,8 @@ public class DJchord implements Runnable {
     }
 
     /**
-     * starts receiving files!
+     * Starts receiving files!
+     * @param name A file name.
      */
     public void getFile(String name)
     {
@@ -166,7 +167,7 @@ public class DJchord implements Runnable {
 
     /**
      *
-     * this method terminetes the node
+     * This method terminates the node.
      */
     public void killNode()
     {
@@ -186,7 +187,7 @@ public class DJchord implements Runnable {
     }
 
     /**
-     * This method return the node successor
+     * This method return the node successor.
      */
     public String getRMIInfo()
     {
@@ -211,6 +212,10 @@ public class DJchord implements Runnable {
         }
         return returnval;
     }
+
+    /**
+     * This method prints all the next successors and their hashes.
+     */
     public void showAllSuccessors()
     {
         try
@@ -254,16 +259,27 @@ public class DJchord implements Runnable {
         }
     }
 
+    /**
+     * Constructor that sets the standar ouput.
+     * @param output True for System.out , false for gui.
+     */
     public DJchord(boolean output)
     {
         this.output = output;
     }
 
+    /**
+     * In case we have gui we need to append our messages to it.
+     * @param gui Our gui.
+     */
     public void setGui(GUI gui)
     {
         this.gui = gui;
     }
 
+    /**
+     * Prints all the chord files.
+     */
     public void getFiles()
     {
         try

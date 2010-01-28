@@ -38,7 +38,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 /**
- *
+ *This class contains the methods for receiving multicasts.
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
 public class MulticastReceiver extends Multicast implements Runnable{
@@ -49,16 +49,19 @@ public class MulticastReceiver extends Multicast implements Runnable{
     private GUI gui;
     private boolean output; // true for system false for gui
 
-    /*
-     * constructor
+    /**
+     *
+     * @param node The node that will receive the multicasts.
      */
     public MulticastReceiver(Node node)
     {
         this.node = node;
     }
 
-    /*
-     * constructor
+    /**
+     *
+     * @param port The port that we will receive multicasts.
+     * @param node
      */
     public MulticastReceiver(int port,Node node)
     {
@@ -66,8 +69,10 @@ public class MulticastReceiver extends Multicast implements Runnable{
         this.node = node;
     }
 
-    /*
-     *constructor
+    /**
+     *
+     * @param group The D class address used for multicast.
+     * @param node
      */
     public MulticastReceiver(String group,Node node)
     {
@@ -75,8 +80,11 @@ public class MulticastReceiver extends Multicast implements Runnable{
         this.node = node;
     }
 
-    /*
-     *constructor
+    /**
+     *
+     * @param port
+     * @param group
+     * @param node
      */
     public MulticastReceiver(int port,String group,Node node)
     {
@@ -84,8 +92,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         this.node = node;
     }
 
-    /*
-     *binds port to socket and joins the mullticast group
+    /**
+     * Binds port to socket and joins the mullticast group.
      */
     @Override
     public void openconnection()
@@ -118,8 +126,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         }
     }
 
-    /*
-     *closes the open connnections
+    /**
+     * Closes the open connnections.
      */
     @Override
     public void closeconnection()
@@ -144,8 +152,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         }
     }
 
-    /*
-     * receiver that returns the received datagram packet
+    /**
+     * Receiver that returns the received datagram packet.
      */
     public DatagramPacket receive(byte buffer[]) throws IOException
     {
@@ -154,8 +162,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         return packet;
     }
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start().
      */
     public void run()
     {        
@@ -203,8 +211,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         }
     }
 
-    /*
-     * stops the execution of the thread
+    /**
+     * Stops the execution of the thread.
      */
     public void stop()
     {
@@ -213,19 +221,27 @@ public class MulticastReceiver extends Multicast implements Runnable{
         runner = null;
     }
 
-    /*
-     * Terminates the loop - thread
+    /**
+     * Terminates the loop - thread.
      */
     public void terminate()
     {
         run = false;
     }
 
+    /**
+     * Sets the messages output.
+     * @param output
+     */
     public void setOutput(boolean output)
     {
         this.output = output;
     }
 
+    /**
+     * Is used if we use gui.
+     * @param gui
+     */
     public void setGUI(GUI gui)
     {
         this.gui = gui;

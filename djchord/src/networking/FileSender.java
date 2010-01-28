@@ -40,7 +40,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class contains the methods for sending Files. The methods use
+ * TCP for sending files and create new thread for this purpose.
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
 public class FileSender implements Runnable{
@@ -57,8 +58,8 @@ public class FileSender implements Runnable{
     private final int BYTE_BUFFER_SIZE = 65536;
     private byte[] buffer = new byte[BYTE_BUFFER_SIZE];
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start().
      */
     public void run()
     {
@@ -107,8 +108,11 @@ public class FileSender implements Runnable{
         }
     }
 
-    /*
-     * constructor
+    /**
+     *
+     * @param address The ip destination address.
+     * @param port the port that we will use.
+     * @param source Our local files.
      */
     public FileSender(String address,int port, String source)
     {
@@ -117,6 +121,13 @@ public class FileSender implements Runnable{
         this.source = source;
     }
 
+    /**
+     *
+     * @param address
+     * @param port
+     * @param source
+     * @param node The node that sends a file.
+     */
     public FileSender(String address,int port, String source,RemoteNode node)
     {
         this.node = node;
@@ -125,8 +136,8 @@ public class FileSender implements Runnable{
         this.source = source;               
     }
 
-    /*
-     * starts the execution of the thread
+    /**
+     * Starts the execution of the thread.
      */
     public void start()
     {
@@ -138,8 +149,8 @@ public class FileSender implements Runnable{
         }
     }
 
-    /*
-     * stops the execution of the thread
+    /**
+     * Stops the execution of the thread.
      */
     public void stop()
     {
@@ -155,14 +166,18 @@ public class FileSender implements Runnable{
         runner = null;
     }
 
-    /*
-     * returns true if file is sended
+    /**
+     * Returns true if file is sended
      */
     public boolean getstatus()
     {
         return status;
     }
 
+    /**
+     * Return this thread in case of join.
+     * @return This thread.
+     */
     public Thread getThread()
     {
         return this.runner;

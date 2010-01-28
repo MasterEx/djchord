@@ -43,7 +43,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import networking.RMIRegistry;
 
 /**
- *
+ * This is the GUI thread created with Netbeans IDE 6.7.1 .
  * @author Ntanasis Periklis and Chatzipetros Mike
  */
 public class GUI extends javax.swing.JFrame {
@@ -276,8 +276,8 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
-    * @param args the command line arguments
-    */
+     * This method invokes the GUI.
+     */
     public static void start() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -315,6 +315,10 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * This method appends a string to our gui's jtextfield.
+     * @param txt A string text.
+     */
     public void append(String txt)
     {
         jTextArea1.append(txt+"\n");
@@ -322,6 +326,9 @@ public class GUI extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This class adds a shutdown hook so we can exit properly by the window x button.
+     */
     private class ThreadImpl extends Thread {
 
         private final GUI g;
