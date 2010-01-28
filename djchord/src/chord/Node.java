@@ -226,6 +226,10 @@ public class Node implements RemoteNode {
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
         Node search = this;
+        if(this.getSuccessor().getKey().compareTo(this.getKey())==0)
+        {
+            return this.thisnode;
+        }
         if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) || (k.compareTo(search.getSuccessor().getKey())<0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
         {
             return search.getSuccessor();
@@ -271,6 +275,68 @@ public class Node implements RemoteNode {
     
     public RemoteNode closest_preceding_node(SHAhash k) throws RemoteException
     {
+        SHAhash LAST_FINGER_HASH = this.compressedFingers.get(this.compressedFingers.size()-1).getKey();
+        RemoteNode LAST_FINGER = this.compressedFingers.get(this.compressedFingers.size()-1);
+        if(k.compareTo(this.getKey())>0)
+        {
+            if(k.compareTo(LAST_FINGER_HASH)>0)
+            {
+                if(LAST_FINGER_HASH.compareTo(this.getKey())<0)
+                {
+                    for(int i=this.compressedFingers.size()-1;i>=0;i--)
+                    {
+                        if(this.compressedFingers.get(i).getKey().compareTo(k)<0 && this.compressedFingers.get(i).getKey().compareTo(this.getKey())>0)
+                        {
+                            return this.compressedFingers.get(i);
+                        }
+                    }
+                }
+                return LAST_FINGER;
+            }
+            if(k.compareTo(LAST_FINGER_HASH)<0)
+            {
+                for(int i=this.compressedFingers.size()-1;i>=0;i--)
+                {
+                    if( this.compressedFingers.get(i).getKey().compareTo(k)>0 || this.compressedFingers.get(i).getKey().compareTo(k)<0 )
+                    {
+                        return this.compressedFingers.get(i);
+                    }
+                }
+                return this.compressedFingers.get(this.compressedFingers.size()-2);
+            }
+        }
+        if(k.compareTo(this.getKey())<0)
+        {
+            if(k.compareTo(LAST_FINGER_HASH)>0)
+            {
+                return LAST_FINGER;
+            }
+            if(k.compareTo(LAST_FINGER_HASH)<0)
+            {
+                if(LAST_FINGER_HASH.compareTo(this.getKey())<0)
+                {
+                    for(int i=this.compressedFingers.size()-1;i>=0;i--)
+                    {
+                        if( this.compressedFingers.get(i).getKey().compareTo(k)>0 || this.compressedFingers.get(i).getKey().compareTo(k)<0 )
+                        {
+                            return this.compressedFingers.get(i);
+                        }
+                    }
+                }
+                else
+                {
+                    for(int i=this.compressedFingers.size()-1;i>=0;i--)
+                    {
+                        if( (this.compressedFingers.get(i).getKey().compareTo(k)<0 && this.compressedFingers.get(i).getKey().compareTo(LAST_FINGER_HASH)<0 ) || ( this.compressedFingers.get(i).getKey().compareTo(k)<0 && this.compressedFingers.get(i).getKey().compareTo(this.getKey())>0) )
+                        {
+                            return this.compressedFingers.get(i);
+                        }
+                    }
+                }
+                return LAST_FINGER.getPredecessor();
+            }
+        }
+        /*
         int i;
         if(this.compressedFingers.size()==1)
         {
@@ -304,7 +370,7 @@ public class Node implements RemoteNode {
             {
                 return this.compressedFingers.get(i);
             }
-        }
+        }*/
         System.out.println("FTANEI EDW ENW DE PREPEI!!!!");
         return this.simple_find_successor(k);// unreachable statement(??)
     }

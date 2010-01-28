@@ -332,7 +332,6 @@ public class GUI extends javax.swing.JFrame {
 
         @Override
         public void run() {
-            System.out.println("this comes here");
             g.append("The process is terminating...");
             chord.stop();
             //race condition may occur
