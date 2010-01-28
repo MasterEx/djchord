@@ -225,22 +225,51 @@ public class Node implements RemoteNode {
 
     public RemoteNode find_successor(SHAhash k) throws RemoteException
     {
+        int hop = 0;
         Node search = this;
         if(this.getSuccessor().getKey().compareTo(this.getKey())==0)
         {
+            basic.Logger.inf("find_successor's total hops: "+hop);
             return this.thisnode;
         }
         if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) || (k.compareTo(search.getSuccessor().getKey())<0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
         {
+            basic.Logger.inf("find_successor's total hops: "+hop);
             return search.getSuccessor();
         }
         else if((k.compareTo(search.getKey())<0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) || (k.compareTo(search.getPredecessor().getKey())>0 && search.getKey().compareTo(search.getPredecessor().getKey())<=0))
         {
+            basic.Logger.inf("find_successor's total hops: "+hop);
             return search;
         }
         else
         {
-            return search.closest_preceding_node(k).find_successor(k);
+            return search.closest_preceding_node(k).find_successor_hops(k,hop);
+        }
+    }
+
+    public RemoteNode find_successor_hops(SHAhash k,int hop) throws RemoteException
+    {
+        hop++;
+        Node search = this;
+        if(this.getSuccessor().getKey().compareTo(this.getKey())==0)
+        {
+            basic.Logger.inf("find_successor's total hops: "+hop);
+            return this.thisnode;
+        }
+        if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) || (k.compareTo(search.getSuccessor().getKey())<0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
+        {
+            basic.Logger.inf("find_successor's total hops: "+hop);
+            return search.getSuccessor();
+        }
+        else if((k.compareTo(search.getKey())<0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) || (k.compareTo(search.getPredecessor().getKey())>0 && search.getKey().compareTo(search.getPredecessor().getKey())<=0))
+        {
+            basic.Logger.inf("find_successor's total hops: "+hop);
+            return search;
+        }
+        else
+        {
+            return search.closest_preceding_node(k).find_successor_hops(k,hop);
         }
     }
     

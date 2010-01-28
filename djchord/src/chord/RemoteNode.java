@@ -71,4 +71,5 @@ public interface RemoteNode extends Remote{
     public RemoteNode simple_find_successor(SHAhash k) throws RemoteException;
     public void unsetPortBusy(int i) throws RemoteException;
     public String[] getFile_keys() throws RemoteException;
+    public RemoteNode find_successor_hops(SHAhash k,int hop) throws RemoteException;
 }
