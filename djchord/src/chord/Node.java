@@ -674,7 +674,7 @@ public class Node implements RemoteNode {
      * It downloads the specified file.
      * @param filename Filename in string.
      */
-    public void getFile(String filename)
+    public boolean getFile(String filename)
     {
         boolean contin = true;
         RemoteNode responsible = null;
@@ -689,10 +689,12 @@ public class Node implements RemoteNode {
         catch (NoSuchAlgorithmException ex)
         {
             basic.Logger.err(ex.getMessage());
+            return false;
         }
         catch (UnsupportedEncodingException ex)
         {
             basic.Logger.err(ex.getMessage());
+            return false;
         }
         catch (RemoteException ex)
         {
@@ -705,6 +707,7 @@ public class Node implements RemoteNode {
                 this.gui.append("File was unable to be sent, please try again later.");
             }
             basic.Logger.err(ex.getMessage());
+            return false;
         }
         catch (NullPointerException ex)
         {
@@ -718,6 +721,7 @@ public class Node implements RemoteNode {
                 this.gui.append("FILE DOESN'T EXIST!!!");
             }
             basic.Logger.war("FILE DOESN'T EXIST!!!");
+            return false;
         }
 
         if(contin)
@@ -746,20 +750,25 @@ public class Node implements RemoteNode {
                 }
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
+                return receiver.getstatus();
             }
             catch (UnsupportedEncodingException ex)
             {
                 basic.Logger.err(ex.getMessage());
+                return false;
             }
             catch (RemoteException ex)
             {
                 basic.Logger.err(ex.getMessage());
+                return false;
             }
             catch (IOException ex)
             {
                 basic.Logger.err(ex.getMessage());
+                return false;
             }
         }
+        return false;
     }
 
     /**

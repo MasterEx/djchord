@@ -203,7 +203,6 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         final GUI g = this;
         java.awt.EventQueue.invokeLater(new Runnable(){
             public void run()
@@ -216,7 +215,6 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         basic.Logger.inf("======== PROCESS INITIATED (GUI MODE) ========");
         this.chord = new DJchord(false);
         chord.setGui(this);
@@ -249,7 +247,6 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
-        // TODO add your handling code here:
         jTextField1.setText("");
     }//GEN-LAST:event_jTextField1FocusGained
 
@@ -258,12 +255,10 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1FocusLost
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
         this.chord.showAllSuccessors();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
         String filename = jTextField1.getText();
         jTextField1.setText("here give a file name");
         this.append("Trying to retrieve file: "+filename);
@@ -271,7 +266,6 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
         chord.getFiles();
     }//GEN-LAST:event_jButton3ActionPerformed
 

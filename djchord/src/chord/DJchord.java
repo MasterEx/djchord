@@ -162,7 +162,10 @@ public class DJchord implements Runnable {
      */
     public void getFile(String name)
     {
-        this.node.getFile(name);
+        if(!this.node.getFile(name))
+        {
+            this.node.getFile(name);
+        }
     }
 
     /**
