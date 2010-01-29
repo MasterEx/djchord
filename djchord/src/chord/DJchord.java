@@ -33,6 +33,8 @@ import djchord.GUI;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import networking.MulticastReceiver;
 import networking.MulticastSender;
 
@@ -78,30 +80,13 @@ public class DJchord implements Runnable {
             basic.Logger.err(ex.getMessage());
         }
         sendmulticast.start();
-        for(;;)
+        try
         {
-            synchronized (sendmulticast)
-            {
-                try
-                {
-                    sendmulticast.wait();
-                }
-                catch (InterruptedException ex)
-                {
-                    basic.Logger.err(ex.getMessage());
-                }
-                try
-                {
-                    if (node.isNotified())
-                    {
-                        break;
-                    }
-                }
-                catch (RemoteException ex1)
-                {
-                    basic.Logger.err(ex1.getMessage());
-                }
-            }
+            sendmulticast.getThread().join();
+        }
+        catch (InterruptedException ex)
+        {
+            
         }
         try
         {
@@ -204,7 +189,7 @@ public class DJchord implements Runnable {
             basic.Logger.war("The successors seems down... :(");
             try
             {
-                node.stabilize();
+                node.joinedStabilize();
                 node.fixFingers();
             }
             catch (RemoteException remoteException)
@@ -251,7 +236,7 @@ public class DJchord implements Runnable {
             basic.Logger.err("The successors seems down... :(");
             try
             {
-                node.stabilize();
+                node.joinedStabilize();
                 node.fixFingers();
             }
             catch (RemoteException remoteException)
@@ -332,7 +317,7 @@ public class DJchord implements Runnable {
             basic.Logger.err("The successors seems down... :(");
             try
             {
-                node.stabilize();
+                node.joinedStabilize();
                 node.fixFingers();
             }
             catch (RemoteException remoteException)

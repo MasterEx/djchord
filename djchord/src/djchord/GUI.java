@@ -309,7 +309,7 @@ public class GUI extends javax.swing.JFrame {
      * This method appends a string to our gui's jtextfield.
      * @param txt A string text.
      */
-    public void append(String txt)
+    synchronized public void append(String txt)
     {
         jTextArea1.append(txt+"\n");
         jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());

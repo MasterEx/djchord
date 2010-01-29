@@ -326,8 +326,16 @@ public class Node implements RemoteNode {
      */
     public RemoteNode find_successor_hops(SHAhash k,int hop) throws RemoteException
     {
-        hop++;
         long startTime = System.currentTimeMillis();
+        if(hop==5)
+        {
+            basic.HopsAndTime.addCounter();
+            basic.HopsAndTime.addHop(hop);
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
+            basic.Logger.inf("find_successor's total hops: "+2);
+            return this.simple_find_successor(k);
+        }
+        hop++;
         Node search = this;
         if(this.getSuccessor().getKey().compareTo(this.getKey())==0)
         {
@@ -401,6 +409,10 @@ public class Node implements RemoteNode {
     {
         SHAhash LAST_FINGER_HASH = this.compressedFingers.get(this.compressedFingers.size()-1).getKey();
         RemoteNode LAST_FINGER = this.compressedFingers.get(this.compressedFingers.size()-1);
+        if(k.compareTo(LAST_FINGER_HASH)==0)
+        {
+            return LAST_FINGER.getSuccessor();
+        }
         if(k.compareTo(this.getKey())>0)
         {
             if(k.compareTo(LAST_FINGER_HASH)>0)
@@ -485,7 +497,7 @@ public class Node implements RemoteNode {
     {
         if(checkstabilize.isFree())
         {
-            checkstabilize = new Check(this);
+            checkstabilize = new Check(this.thisnode);
             checkstabilize.startStabilize();
         }
         try
@@ -496,6 +508,9 @@ public class Node implements RemoteNode {
         {
             basic.Logger.err(ex.getMessage());
         }
+        checkstabilize.stop();
+        checkstabilize = null;
+        checkstabilize = new Check(this.thisnode);
     }
 
     /**
@@ -820,6 +835,8 @@ public class Node implements RemoteNode {
      */
     public void sendFiles2ResponsibleNode() throws RemoteException
     {
+        this.joinedStabilize();
+        this.fixFingers();
         this.setFile_keys();
         if(!this.empty_folder)
         {
@@ -828,7 +845,7 @@ public class Node implements RemoteNode {
             {
                 try
                 {
-                    remotenode = this.find_successor(SHA1.getHash(file_keys[i]));
+                    remotenode = this.simple_find_successor(SHA1.getHash(file_keys[i]));
                 }
                 catch (NoSuchAlgorithmException ex)
                 {

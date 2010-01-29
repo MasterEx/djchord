@@ -50,6 +50,7 @@ public class Logger {
     /**
      * Appends a string to Log.txt in our current directory with a date/time prefix.
      * @param msg The string that we want to append.
+     * @param filename The file that we will write.
      */
     synchronized public static void println(String msg,String filename)
     {
@@ -67,7 +68,7 @@ public class Logger {
         }
         catch (IOException ex)
         {
-            java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
+            basic.Logger.err(ex.getMessage());
         }
     }
 

@@ -104,6 +104,8 @@ public class Check implements Runnable{
                     catch(RemoteException ex)
                     {
                         basic.Logger.war("Can't fix fingers right now");
+                        Thread.sleep(10000); // 10 sec
+                        continue;
                     }
                     basic.Logger.inf("sending files to responsible node");
                     try
@@ -114,6 +116,7 @@ public class Check implements Runnable{
                     {
                         basic.Logger.war("Can't send files right now");
                     }
+                    Runtime.getRuntime().gc();
                     Thread.sleep(40000); // 40 sec
                 }
             }

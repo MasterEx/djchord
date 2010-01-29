@@ -89,34 +89,6 @@ public class FileNames {
         try
         {
             files = folder.listFiles();
-            filepaths = new String[files.length];
-            retval = new String[files.length];
-            for(int i=0;i<files.length;i++)
-            {
-                if(!files[i].isHidden())
-                {
-                    filepaths[i] = files[i].toString();
-                    tempstringarray=filepaths[i].split(separator);
-
-                    for(int j=0;j<tempstringarray.length;j++)
-                    {
-                        count=0;
-                        for(int y=0;y<temp1.length;y++)
-                        {
-                            if(tempstringarray[j].equals(temp1[y]))
-                            {
-                                count++;
-                                break;
-                            }
-                        }
-                        if(count==0)
-                        {
-                            retval[pos] = tempstringarray[j];
-                            pos++;
-                        }
-                    }
-                }
-            }
         }
         catch (NullPointerException e)
         {
@@ -124,6 +96,35 @@ public class FileNames {
             if (success)
             {
                 basic.Logger.inf("\"local_files\" folder was created!");
+            }
+            return new String[0];
+        }
+        filepaths = new String[files.length];
+        retval = new String[files.length];
+        for(int i=0;i<files.length;i++)
+        {
+            if(!files[i].isHidden())
+            {
+                filepaths[i] = files[i].toString();
+                tempstringarray=filepaths[i].split(separator);
+
+                for(int j=0;j<tempstringarray.length;j++)
+                {
+                    count=0;
+                    for(int y=0;y<temp1.length;y++)
+                    {
+                        if(tempstringarray[j].equals(temp1[y]))
+                        {
+                            count++;
+                            break;
+                        }
+                    }
+                    if(count==0)
+                    {
+                        retval[pos] = tempstringarray[j];
+                        pos++;
+                    }
+                }
             }
         }
         return retval;

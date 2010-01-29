@@ -193,4 +193,13 @@ public class MulticastSender extends Multicast implements Runnable{
         this.buffer = buffer;
     }
 
+    /**
+     *
+     * @return Returns this thread in case of join
+     */
+    public Thread getThread()
+    {
+        return this.runner;
+    }
+
 }
