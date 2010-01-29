@@ -29,11 +29,14 @@
 
 package basic;
 
+import chord.RemoteNode;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Vector;
 import java.util.logging.Level;
 
 /**
@@ -48,14 +51,14 @@ public class Logger {
      * Appends a string to Log.txt in our current directory with a date/time prefix.
      * @param msg The string that we want to append.
      */
-    synchronized public static void println(String msg)
+    synchronized public static void println(String msg,String filename)
     {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 
         try
         {
-            FileWriter fwriter = new FileWriter("Log.txt",true);
+            FileWriter fwriter = new FileWriter(filename,true);
             BufferedWriter bwriter = new BufferedWriter(fwriter);
             bwriter.write("["+sdf.format(cal.getTime())+"]: "+msg);
             bwriter.newLine();
@@ -74,7 +77,7 @@ public class Logger {
      */
     public static void war(String msg)
     {
-        Logger.println("Warning:     "+msg);
+        Logger.println("Warning:     "+msg,"Log.txt");
     }
 
     /**
@@ -83,7 +86,7 @@ public class Logger {
      */
     public static void inf(String msg)
     {
-        Logger.println("Information: "+msg);
+        Logger.println("Information: "+msg,"Log.txt");
     }
 
     /**
@@ -92,7 +95,29 @@ public class Logger {
      */
     public static void err(String msg)
     {
-        Logger.println("Error:       "+msg);
+        Logger.println("Error:       "+msg,"Log.txt");
+    }
+
+    /**
+     * Prints the compressed finger to the FingerLog.txt ,
+     * located to our local directory.
+     * @param fingers The compressed finger vector.
+     */
+    public static void fingerLog(Vector<RemoteNode> fingers)
+    {
+        Logger.println("The fingers are:","FingerLog.txt");
+        for(int i=0;i<fingers.size();i++)
+        {
+            try
+            {
+                Logger.println("The finger " + i + " is:" + fingers.get(i).getKey().getStringHash(), "FingerLog.txt");
+            }
+            catch (RemoteException ex)
+            {
+                java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        Logger.println("******** End Of Finger Print ********","FingerLog.txt");
     }
 
 }

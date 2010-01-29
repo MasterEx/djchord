@@ -50,6 +50,7 @@ public class Arguments {
         System.out.println("authors : Ntanasis Periklis and Chatzipetros Mike");
         System.out.println("This application is licensed under the MIT license,\n" +
                 "see license.txt for further information\n");
+        System.out.println("Use -help to display the help.");
 
         if(args.length == 1 && args[0].equalsIgnoreCase("-h") || args.length == 1 && args[0].equalsIgnoreCase("-help"))
         {

@@ -600,6 +600,7 @@ public class Node implements RemoteNode {
             }
         }
         compressedFingers.trimToSize();
+        basic.Logger.fingerLog(compressedFingers);
     }
 
     /**
