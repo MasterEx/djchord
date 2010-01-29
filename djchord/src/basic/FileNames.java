@@ -120,10 +120,10 @@ public class FileNames {
         }
         catch (NullPointerException e)
         {
-            boolean success = (new File("downloads")).mkdir();
+            boolean success = (new File("local_files")).mkdir();
             if (success)
             {
-                basic.Logger.inf("\"downloads\" folder was created!");
+                basic.Logger.inf("\"local_files\" folder was created!");
             }
         }
         return retval;

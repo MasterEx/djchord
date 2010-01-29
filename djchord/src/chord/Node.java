@@ -91,7 +91,7 @@ public class Node implements RemoteNode {
         {
             basic.Logger.err(ex.getMessage());
         }
-        this.setFolder("downloads");
+        this.setFolder("local_files");
         this.setFile_keys();
         this.setPredecessor(thisnode);
         for(int u=0;u<3;u++)
@@ -931,7 +931,7 @@ public class Node implements RemoteNode {
      */
     public void sendFile(int port,String address,String file) throws RemoteException
     {
-        FileSender sender = new FileSender(address,port,"downloads"+File.separator+file);
+        FileSender sender = new FileSender(address,port,"local_files"+File.separator+file);
         sender.start();
     }
 
