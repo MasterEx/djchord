@@ -35,15 +35,15 @@ package basic;
  */
 public class HopsAndTime {
 
-    public static long TIME;
-    public static long HOPS;
-    public static long search_counter;
+    public static long TIME = 0;
+    public static long HOPS = 0;
+    public static long search_counter = 0;
 
     /**
      * This method adds the find time to total time.
      * @param time Time in millis.
      */
-    synchronized static void addTime(long time)
+    synchronized public static void addTime(long time)
     {
         TIME += time;
     }
@@ -52,7 +52,7 @@ public class HopsAndTime {
      * Adds this find number of hops to the total.
      * @param hop Number of hops.
      */
-    synchronized static void addHop(long hop)
+    synchronized public static void addHop(long hop)
     {
         HOPS += hop;
     }
@@ -60,7 +60,7 @@ public class HopsAndTime {
     /**
      * It counts the times a find_successor was called.
      */
-    synchronized static void addCounter()
+    synchronized public static void addCounter()
     {
         search_counter++;
     }
@@ -69,7 +69,7 @@ public class HopsAndTime {
      * Returns the average execution time of find_successor.
      * @return Time in seconds with 3 decimal digits precision.
      */
-    synchronized static double getAvgTime()
+    synchronized public static double getAvgTime()
     {
         return (TIME/search_counter)/1000D;
     }
@@ -78,7 +78,7 @@ public class HopsAndTime {
      * Returns the average hops per find_successor.
      * @return Average hops (long).
      */
-    synchronized static long getAvgHops()
+    synchronized public static long getAvgHops()
     {
         return (HOPS/search_counter);
     }

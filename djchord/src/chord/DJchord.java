@@ -151,6 +151,8 @@ public class DJchord implements Runnable {
     public void stop()
     {
         this.killNode();
+        basic.Logger.inf("Average hops/find_successor: "+basic.HopsAndTime.getAvgHops());
+        basic.Logger.inf("Average execution time/find_successor: "+basic.HopsAndTime.getAvgTime());
         sendmulticast.stop();
         runner.interrupt();
         runner = null;
