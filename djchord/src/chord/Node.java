@@ -290,7 +290,7 @@ public class Node implements RemoteNode {
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             basic.Logger.inf("find_successor's total hops: "+hop);
             return this.thisnode;
         }
@@ -299,7 +299,7 @@ public class Node implements RemoteNode {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
             basic.Logger.inf("find_successor's total hops: "+hop);
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             return search.getSuccessor();
         }
         else if((k.compareTo(search.getKey())<0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) || (k.compareTo(search.getPredecessor().getKey())>0 && search.getKey().compareTo(search.getPredecessor().getKey())<=0))
@@ -307,12 +307,12 @@ public class Node implements RemoteNode {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
             basic.Logger.inf("find_successor's total hops: "+hop);
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             return search;
         }
         else
         {
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             return search.closest_preceding_node(k).find_successor_hops(k,hop);
         }
     }
@@ -333,7 +333,7 @@ public class Node implements RemoteNode {
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             basic.Logger.inf("find_successor's total hops: "+hop);
             return this.thisnode;
         }
@@ -341,7 +341,7 @@ public class Node implements RemoteNode {
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             basic.Logger.inf("find_successor's total hops: "+hop);
             return search.getSuccessor();
         }
@@ -349,13 +349,13 @@ public class Node implements RemoteNode {
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             basic.Logger.inf("find_successor's total hops: "+hop);
             return search;
         }
         else
         {
-            basic.HopsAndTime.addTime(startTime-System.currentTimeMillis());
+            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             return search.closest_preceding_node(k).find_successor_hops(k,hop);
         }
     }
@@ -460,43 +460,8 @@ public class Node implements RemoteNode {
                 return LAST_FINGER.getPredecessor();
             }
         }
-        /*
-        int i;
-        if(this.compressedFingers.size()==1)
-        {
-            return compressedFingers.get(0);
-        }
-        if(this.compressedFingers.get(this.compressedFingers.size()-1).getKey().compareTo(k)<0)
-        {
-            if(this.getKey().compareTo(k)<0)
-            {
-                if (this.getKey().compareTo(this.compressedFingers.get(this.compressedFingers.size()-1).getKey())<0)
-                {
-                    return this.compressedFingers.get(this.compressedFingers.size()-1);
-                }
-                else if(this.getKey().compareTo(this.compressedFingers.get(this.compressedFingers.size()-2).getKey())<0)
-                {
-                    return this.compressedFingers.get(this.compressedFingers.size()-2);
-                }
-                else
-                {
-                    return this.getSuccessor();
-                }
-            }
-            else
-            {
-                return this.getPredecessor();
-            }
-        }
-        for(i=this.compressedFingers.size()-1;i>=0;i--)
-        {
-            if(this.compressedFingers.get(i).getKey().compareTo(k)<0 && this.compressedFingers.get(i).getKey().compareTo(this.getKey())>0)
-            {
-                return this.compressedFingers.get(i);
-            }
-        }*/
-        System.out.println("FTANEI EDW ENW DE PREPEI!!!!");
-        return this.simple_find_successor(k);// unreachable statement(??)
+        System.out.println("NEVER COMES HERE ");
+        return this.simple_find_successor(k);// unreachable statement
     }
 
     /**

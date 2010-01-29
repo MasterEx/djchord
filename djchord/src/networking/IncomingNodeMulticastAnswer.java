@@ -64,7 +64,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         try
         {
             serversocket = new ServerSocket(port);
-            serversocket.setSoTimeout(5000);// 3 sec
+            serversocket.setSoTimeout(5000);// 5 sec
             socket = serversocket.accept();// race condition may occur
             Scanner in = new Scanner(socket.getInputStream());
             pid = in.next();

@@ -38,6 +38,8 @@ package djchord;
 import chord.DJchord;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import networking.RMIRegistry;
@@ -231,15 +233,8 @@ public class GUI extends javax.swing.JFrame {
         jButton4.setVisible(true);
         jButton5.setVisible(true);
         jTextField1.setVisible(true);
-        try
-                {
-                    final GUI g = this;
-                    Runtime.getRuntime().addShutdownHook(new ThreadImpl(g));
-                }
-                catch (Throwable t)
-                {
-                    System.err.println("ShutdownHook not supported at this version of java");
-                }
+        final GUI g = this;
+        this.addWindowListener(new ThreadImpl(g));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -323,7 +318,7 @@ public class GUI extends javax.swing.JFrame {
     /**
      * This class adds a shutdown hook so we can exit properly by the window x button.
      */
-    private class ThreadImpl extends Thread {
+    private class ThreadImpl implements WindowListener {
 
         private final GUI g;
 
@@ -331,12 +326,29 @@ public class GUI extends javax.swing.JFrame {
             this.g = g;
         }
 
-        @Override
-        public void run() {
+        public void windowOpened(WindowEvent e) {
+        }
+
+        public void windowClosing(WindowEvent e) {
             g.append("The process is terminating...");
             chord.stop();
-            //race condition may occur
             basic.Logger.inf("The process is now being terminated...");
+            System.exit(0);
+        }
+
+        public void windowClosed(WindowEvent e) {
+        }
+
+        public void windowIconified(WindowEvent e) {
+        }
+
+        public void windowDeiconified(WindowEvent e) {
+        }
+
+        public void windowActivated(WindowEvent e) {
+        }
+
+        public void windowDeactivated(WindowEvent e) {
         }
     }
 
