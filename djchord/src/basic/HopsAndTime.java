@@ -71,7 +71,14 @@ public class HopsAndTime {
      */
     synchronized public static double getAvgTime()
     {
-        return (TIME/search_counter)/1000D;
+        if(TIME!=0 && search_counter!=0)
+        {
+            return (TIME/search_counter)/1000D;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     /**
@@ -80,7 +87,14 @@ public class HopsAndTime {
      */
     synchronized public static long getAvgHops()
     {
-        return (HOPS/search_counter);
+        if(HOPS!=0 && search_counter!=0)
+        {
+            return (HOPS/search_counter);
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 }
