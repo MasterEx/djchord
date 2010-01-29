@@ -42,7 +42,7 @@ public class Arguments {
     /**
      * This method is the cli of djchord application. It handles all the given
      * commands.
-     * @param args[] The arguments table taken from main.
+     * @param args The arguments table taken from main.
      */
     public static void handler(String args[])
     {

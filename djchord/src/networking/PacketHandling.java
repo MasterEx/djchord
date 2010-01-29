@@ -45,7 +45,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class contains the methods that handle the incoming multicast. When a new node
+ * is added to chord it transmits multicast and this method handles the incoming
+ * multicast.
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
 public class PacketHandling implements Runnable{
@@ -57,8 +59,8 @@ public class PacketHandling implements Runnable{
     private RemoteNode successor;
     private SHAhash sha1;
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start().
      */
     public void run()
     {
@@ -126,8 +128,10 @@ public class PacketHandling implements Runnable{
         }
     }
 
-    /*
-     * constructor
+    /**
+     * 
+     * @param packet The received DatagramPacket.
+     * @param node The node that received it.
      */
     PacketHandling(DatagramPacket packet,Node node)
     {

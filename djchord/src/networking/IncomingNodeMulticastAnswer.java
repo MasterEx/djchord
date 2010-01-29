@@ -42,7 +42,9 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 /**
- *
+ * This class contains the methods that
+ * start a TCP connection and wait after the multicast call. This class works
+ * by creating a new thread.
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
 public class IncomingNodeMulticastAnswer implements Runnable{
@@ -55,8 +57,8 @@ public class IncomingNodeMulticastAnswer implements Runnable{
     private RemoteNode successor;
     private boolean flag = false;
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start().
      */
     synchronized public void run()
     {
@@ -149,8 +151,8 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         }
     }
 
-    /*
-     * starts the execution of the thread
+    /**
+     * Starts the execution of the thread.
      */
     synchronized public void start()
     {
@@ -162,8 +164,8 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         }
     }
 
-    /*
-     * stops the execution of the thread
+    /**
+     * Stops the execution of the thread.
      */
     public void stop()
     {
@@ -179,16 +181,28 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         runner = null;
     }
 
+    /**
+     * Sets the node if it wasn't set in the constructor.
+     * @param node The node who just did multicast.
+     */
     public void setNode(Node node)
     {
         this.node = node;
     }
 
+    /**
+     * Returns true if nobody have answered.
+     * @return True or False.
+     */
     public synchronized boolean isAlone()
     {
         return flag;
     }
 
+    /**
+     * Returns this thread in case of join.
+     * @return This thread.
+     */
     public Thread returnThread()
     {
         return this.runner;

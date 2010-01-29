@@ -33,8 +33,10 @@ import java.net.*;
 import exceptions.NotInitializedVariablesException;
 
 /**
- *
+ * It is inheritted by MulticastReceiver and MulticastSender.
  *@author Ntanasis Periklis and Chatzipetros Mike
+ * @see MulticastReceiver
+ * @see MulticastSender
  */
 public class Multicast {
 

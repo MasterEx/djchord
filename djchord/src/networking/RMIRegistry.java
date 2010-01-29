@@ -44,7 +44,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
-*
+* This class contains all the RMI related methods. It is used for creating the
+ * RMI registry or for creating new RemoteNode Objects by registring the nodes
+ * to the local RMI registry.
 *@author Ntanasis Periklis and Chatzipetros Mike
 */
 public class RMIRegistry {
@@ -55,14 +57,15 @@ public class RMIRegistry {
     private static String address;
 
     /**
-    * This method works like java RMI tutorial example
-    * http://java.sun.com/docs/books/tutorial/rmi/overview.html
+    * This method works like 
+    * <a href="http://java.sun.com/docs/books/tutorial/rmi/overview.html:>java RMI tutorial example</a>
     * and as the example we have to start RMI registry before the
     * execution of our applications.
     * It is start rmiregistry fow windows (or javaw if start not available)
     * and rmiregistry & for linux.
     * We also use a security manager, so we need to specify a security policy
     * file so that the code is granted the security permissions it needs to run.
+    * @param security True for install a security manager.
     */
     static public boolean init(boolean security)
     {
@@ -95,11 +98,20 @@ public class RMIRegistry {
         return init=true;
     }
 
+    /**
+     * It lookups the rmi registry with no security manager installed.
+     * @return Returns true init was successfull.
+     */
     static public boolean init()
     {
         return init(false);
     }
 
+    /**
+     * Add a node to the local rmi registry.
+     * @param node The node that we add.
+     * @param name It's name - (PID).
+     */
     static public void addNode(Node node,String name)
     {
         RemoteNode rnode = (RemoteNode) node;
@@ -115,21 +127,30 @@ public class RMIRegistry {
 
     }
 
+    /**
+     * Returns the port that the rmi registry is created.
+     * @return Port.
+     */
     static public int getPort()
     {
         return RMIRegistry.port;
     }
 
+    /**
+     * Sets the rmi registry port.
+     * @param port The port that we use.
+     */
     static public void setPort(int port)
     {
         RMIRegistry.port = port;
     }
 
-    /*
-    * This method creates an RMIRegistry. It's like
-    * start rmiregistry in windows or
-    * rmiregistry & in linux
-    */
+    /**
+     * This method creates an RMIRegistry. It's like
+     * <i>start rmiregistry</i> in windows or
+     * <i>rmiregistry &</i> in linux.
+     * @param port The port that our rmi registry is created.
+     */
     static public void createRegistry(int port)
     {
         try
@@ -170,17 +191,30 @@ public class RMIRegistry {
         return null;
     }
 
-
+    /**
+     * Returns a RemoteNode object from a foreign rmi registry.
+     * @param address The ip address of the remote rmi registry.
+     * @param name The object name in the remote registry.
+     * @return A Remote Node.
+     * @throws NotBoundException
+     */
     static public RemoteNode getRemoteNode(String address,String name) throws NotBoundException
     {
         return RMIRegistry.getRemoteNode(address,1099, name);
     }
 
+    /**
+     * Creates an RMI that listens to the default port - which is 1099.
+     */
     static public void createRegistry()
     {
         createRegistry(1099);
     }
 
+    /**
+     * As createRegistry() but it's used when gui is available.
+     * @param gui Our gui.
+     */
     static public void createRegistryGUI(GUI gui)
     {
         try
@@ -194,6 +228,10 @@ public class RMIRegistry {
         }
     }
 
+    /**
+     * Returns the address of our local rmi registry.
+     * @return IP address in string form.
+     */
     static public String getAddress()
     {
         return address;

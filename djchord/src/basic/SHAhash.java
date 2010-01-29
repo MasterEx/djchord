@@ -118,7 +118,7 @@ public class SHAhash implements Serializable, Comparable<SHAhash>{
     }
 
     /**
-     * Method found from the internet.
+     * Method found on the internet.
      * @param data The byte array that returns the java SHA1 digest.
      * @return The digest in string form.
      * @see SHA1.java

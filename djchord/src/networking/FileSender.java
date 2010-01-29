@@ -167,7 +167,7 @@ public class FileSender implements Runnable{
     }
 
     /**
-     * Returns true if file is sended
+     * Returns true if a file was sent
      */
     public boolean getstatus()
     {

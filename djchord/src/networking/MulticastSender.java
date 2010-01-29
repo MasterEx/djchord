@@ -37,7 +37,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- *
+ * This class contains all the methods for sending multicasts. It is used as a separate thread.
  *@author Ntanasis Periklis and Chatzipetros Mike
  */
 public class MulticastSender extends Multicast implements Runnable{
@@ -47,16 +47,20 @@ public class MulticastSender extends Multicast implements Runnable{
     private Thread runner; //the thread that we will use
     private Node node; //the current node
 
-    /*
-     *constructor
+    /**
+     * Default constructor.
      */
     public MulticastSender()
     {
         super();
     }
 
-    /*
-     *constructor
+    /**
+     *
+     * @param port Port used for multicast.
+     * @param group D class address.
+     * @param buffer The byte array that we will transmit.
+     * @param node The node that transmits the multicast.
      */
     public MulticastSender(int port,String group,byte buffer[],Node node)
     {
@@ -65,16 +69,20 @@ public class MulticastSender extends Multicast implements Runnable{
         this.node = node;
     }
 
-    /*
-     * set time to live
+    /**
+     * Set time to live.
+     * @param ttl Time To Live.
      */
     public void setttl(int ttl)
     {
         this.ttl = ttl;
     }
 
-    /*
-     * sender
+    /**
+     * The method that starts the transmission.
+     * @param buffer The message.
+     * @throws UnknownHostException
+     * @throws IOException
      */
     public void send(byte buffer[]) throws UnknownHostException, IOException
     {
@@ -84,8 +92,10 @@ public class MulticastSender extends Multicast implements Runnable{
         this.socket.send(packet);
     }
 
-    /*
-     * sender
+    /**
+     * Sends an empty DatagramPacket.
+     * @throws UnknownHostException
+     * @throws IOException
      */
     public void send() throws UnknownHostException, IOException
     {
@@ -95,8 +105,8 @@ public class MulticastSender extends Multicast implements Runnable{
         this.socket.send(packet);
     }
 
-    /*
-     * is invoked by start()
+    /**
+     * Is invoked by start().
      */
     public void run()
     {
@@ -136,8 +146,8 @@ public class MulticastSender extends Multicast implements Runnable{
         }
     }
 
-    /*
-     * starts the execution of the thread
+    /**
+     * Starts the execution of the thread.
      */
     public void start()
     {
@@ -149,8 +159,8 @@ public class MulticastSender extends Multicast implements Runnable{
         }
     }
 
-    /*
-     * stops the execution of the thread
+    /**
+     * Stops the execution of the thread.
      */
     public void stop()
     {
@@ -174,8 +184,9 @@ public class MulticastSender extends Multicast implements Runnable{
         runner = null;
     }
 
-    /*
-     * set value to buffer
+    /**
+     * Set value to buffer.
+     * @param buffer The message if it's not set in the costructor.
      */
     public void setbuffer(byte buffer[])
     {

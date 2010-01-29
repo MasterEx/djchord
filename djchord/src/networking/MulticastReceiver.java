@@ -198,8 +198,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         }
     }
 
-    /*
-     * starts the execution of the thread
+    /**
+     * Starts the execution of the thread.
      */
     public void start()
     {

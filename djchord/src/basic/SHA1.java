@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * This class was originally found here : <a href='http://www.anyexample.com/programming/java/java_simple_class_to_compute_sha_1_hash.xml'>here</a> .
- * It was modified by us and hex2string method is used in SHAhash class.
+ * It was modified by us and convertToHex method is used in SHAhash class.
  *
  */
 public class SHA1 {   
