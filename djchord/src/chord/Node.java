@@ -79,9 +79,9 @@ public class Node implements RemoteNode {
     {
         this.output = output;
         this.gui = gui;
-        RMIRegistry.init();
         pid = this.setPid();
         this.key = SHA1.getHash(pid);
+        RMIRegistry.init();
         RMIRegistry.addNode(this,pid);
         try
         {
@@ -294,7 +294,7 @@ public class Node implements RemoteNode {
             basic.Logger.inf("find_successor's total hops: "+hop);
             return this.thisnode;
         }
-        if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) || (k.compareTo(search.getSuccessor().getKey())<0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
+        if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) && (k.compareTo(search.getKey())>0 || k.compareTo(search.getSuccessor().getKey())<0) || (k.compareTo(search.getSuccessor().getKey())<=0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
@@ -302,7 +302,7 @@ public class Node implements RemoteNode {
             basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             return search.getSuccessor();
         }
-        else if((k.compareTo(search.getKey())<0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) || (k.compareTo(search.getPredecessor().getKey())>0 && search.getKey().compareTo(search.getPredecessor().getKey())<=0))
+        else if((k.compareTo(search.getKey())<=0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) && (k.compareTo(search.getKey())<0 || k.compareTo(search.getPredecessor().getKey())>0) || (search.getKey().compareTo(k)>=0 && search.getKey().compareTo(search.getPredecessor().getKey())<0))
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
@@ -329,6 +329,7 @@ public class Node implements RemoteNode {
         long startTime = System.currentTimeMillis();
         if(hop==5)
         {
+            System.out.println("Eginan 5 ta hops!!! DANGER");
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
             basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
@@ -337,23 +338,15 @@ public class Node implements RemoteNode {
         }
         hop++;
         Node search = this;
-        if(this.getSuccessor().getKey().compareTo(this.getKey())==0)
+        if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) && (k.compareTo(search.getKey())>0 || k.compareTo(search.getSuccessor().getKey())<0) || (k.compareTo(search.getSuccessor().getKey())<=0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
-            basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
             basic.Logger.inf("find_successor's total hops: "+hop);
-            return this.thisnode;
-        }
-        if (((k.compareTo(search.getKey())>0 && (k.compareTo(search.getSuccessor().getKey())<=0 || search.getKey().compareTo(search.getSuccessor().getKey())>=0))) || (k.compareTo(search.getSuccessor().getKey())<0 && search.getSuccessor().getKey().compareTo(search.getKey())<0))
-        {
-            basic.HopsAndTime.addCounter();
-            basic.HopsAndTime.addHop(hop);
             basic.HopsAndTime.addTime(System.currentTimeMillis()-startTime);
-            basic.Logger.inf("find_successor's total hops: "+hop);
             return search.getSuccessor();
         }
-        else if((k.compareTo(search.getKey())<0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) || (k.compareTo(search.getPredecessor().getKey())>0 && search.getKey().compareTo(search.getPredecessor().getKey())<=0))
+        else if((k.compareTo(search.getKey())<=0 && (k.compareTo(search.getPredecessor().getKey())>0 || search.getKey().compareTo(search.getPredecessor().getKey())<=0)) && (k.compareTo(search.getKey())<0 || k.compareTo(search.getPredecessor().getKey())>0) || (search.getKey().compareTo(k)>=0 && search.getKey().compareTo(search.getPredecessor().getKey())<0))
         {
             basic.HopsAndTime.addCounter();
             basic.HopsAndTime.addHop(hop);
@@ -375,10 +368,10 @@ public class Node implements RemoteNode {
      */
     public RemoteNode simple_find_successor(SHAhash k) throws RemoteException
     {
-        RemoteNode next = this;
+        RemoteNode next = this.thisnode;
         if(this.getPid().equalsIgnoreCase(this.getSuccessor().getPid()))
         {
-            return this;
+            return this.thisnode;
         }
         else
         {
@@ -411,7 +404,7 @@ public class Node implements RemoteNode {
         RemoteNode LAST_FINGER = this.compressedFingers.get(this.compressedFingers.size()-1);
         if(k.compareTo(LAST_FINGER_HASH)==0)
         {
-            return LAST_FINGER.getSuccessor();
+            return LAST_FINGER;
         }
         if(k.compareTo(this.getKey())>0)
         {
@@ -438,6 +431,7 @@ public class Node implements RemoteNode {
                         return this.compressedFingers.get(i);
                     }
                 }
+                System.out.println("Ftanei sto -2");
                 return this.compressedFingers.get(this.compressedFingers.size()-2);
             }
         }
@@ -458,6 +452,7 @@ public class Node implements RemoteNode {
                             return this.compressedFingers.get(i);
                         }
                     }
+                    System.out.println("Bgainei eksw apola");
                 }
                 else
                 {
@@ -798,11 +793,12 @@ public class Node implements RemoteNode {
      */
     public void setFile_keys()
     {
-        FileNames files = new FileNames(this.folder);
-        file_keys = files.getFileNames();
-        files = null;
+        this.empty_folder = true;
+        file_keys = (new FileNames(this.folder)).getFileNames();
+        System.out.println("O FAKELOS DIABASTIKE");
         if(file_keys!=null)
         {
+            System.out.println("O FAKELOS DEN EINAI ADEIOS ALLA DEN MPAINEI EDW");
             this.empty_folder = false;
         }
     }
@@ -854,6 +850,10 @@ public class Node implements RemoteNode {
                 catch (UnsupportedEncodingException ex)
                 {
                     basic.Logger.err(ex.getMessage());
+                }
+                catch (NullPointerException ex)
+                {
+                    continue;
                 }
                 remotenode.addFile(file_keys[i], this.thisnode);
             }

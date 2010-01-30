@@ -48,7 +48,7 @@ public class DJchord implements Runnable {
     private MulticastSender sendmulticast;
     private Thread runner;
     private boolean output; // true for system false for gui
-    private GUI gui;
+    private GUI gui = null;
 
     /**
      * Is invoked by start()
