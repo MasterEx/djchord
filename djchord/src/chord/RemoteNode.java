@@ -40,7 +40,7 @@ import java.rmi.RemoteException;
 public interface RemoteNode extends Remote{
 
     public void stabilize() throws RemoteException;
-    public void joinedStabilize() throws RemoteException;
+    public boolean joinedStabilize() throws RemoteException;
     public RemoteNode find_successor(SHAhash k) throws RemoteException;
     public RemoteNode getPredecessor()throws RemoteException;
     public RemoteNode getSuccessor()throws RemoteException;

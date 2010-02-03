@@ -64,6 +64,7 @@ public class PacketHandling implements Runnable{
      */
     public void run()
     {
+        System.out.println("Packethandling!!!");
         //here we will learn next nodes' ip and name
         pid = new String(this.packet.getData());
         try 
@@ -85,7 +86,7 @@ public class PacketHandling implements Runnable{
             successor = this.node.find_successor(sha1);
             try
             {
-                Thread.sleep(2000); //sleep for 2 secs
+                Thread.sleep(500); //sleep for 0.5 secs
             }
             catch (InterruptedException ex)
             {
@@ -93,6 +94,7 @@ public class PacketHandling implements Runnable{
             }
             socket = new Socket(packet.getAddress(),1100);
             outstream = socket.getOutputStream();
+            System.out.println("The successor of "+pid.trim()+" is "+successor.getPid());
             basic.Logger.inf("The successor of "+pid.trim()+" is "+successor.getPid());
             outstream.write(new String(successor.getRMIInfo()+" "+node.getRMIInfo()).getBytes());
 

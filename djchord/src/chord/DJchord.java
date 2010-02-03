@@ -33,8 +33,6 @@ import djchord.GUI;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import networking.MulticastReceiver;
 import networking.MulticastSender;
 
@@ -108,6 +106,7 @@ public class DJchord implements Runnable {
         {
             basic.Logger.err(ex.getMessage());
         }
+        node.startCheck();
         MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
         receivemulticast.setOutput(output);
         if(!output)

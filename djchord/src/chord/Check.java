@@ -40,14 +40,14 @@ import java.util.logging.Logger;
 public class Check implements Runnable{
 
     private Thread runner;
-    private RemoteNode node;
-    private boolean stabilize = false;
+    private Node node;
+    private boolean stabilize = false,stop = false;
 
     /**
      *
      * @param node A RemoteNode object.
      */
-    public Check(RemoteNode node)
+    public Check(Node node)
     {
         this.node = node;
     }
@@ -67,6 +67,10 @@ public class Check implements Runnable{
             {
                 while(true)
                 {
+                    if(stop)
+                    {
+                        break;
+                    }
                     if(node.getPort(2995))
                     {
                         for(int i=0;i<2900;i++)
@@ -97,27 +101,7 @@ public class Check implements Runnable{
                         }).start();
                     }
                     this.stabilize();
-                    try
-                    {
-                        node.fixFingers();
-                    }
-                    catch(RemoteException ex)
-                    {
-                        basic.Logger.war("Can't fix fingers right now");
-                        Thread.sleep(10000); // 10 sec
-                        continue;
-                    }
-                    basic.Logger.inf("sending files to responsible node");
-                    try
-                    {
-                        node.sendFiles2ResponsibleNode();
-                    }
-                    catch(RemoteException ex)
-                    {
-                        basic.Logger.war("Can't send files right now");
-                    }
-                    Runtime.getRuntime().gc();
-                    Thread.sleep(40000); // 40 sec
+                    Thread.sleep(20000); // 20 sec
                 }
             }
         }
@@ -166,8 +150,7 @@ public class Check implements Runnable{
      */
     public void stop()
     {
-        runner.interrupt();
-        runner = null;
+        stop = true;
     }
 
     /**
@@ -188,6 +171,8 @@ public class Check implements Runnable{
             node.setSuccessor(1,node.getSuccessor(0).getSuccessor());
             node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
             node.getSuccessor().setPredecessor(node.getNode());
+            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
+            sendmulticast.start();
         }
         try
         {
@@ -199,6 +184,8 @@ public class Check implements Runnable{
             node.setSuccessor(1,node.getSuccessor(2));
             node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
             node.getSuccessor(1).setPredecessor(node.getSuccessor());
+            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), node);
+            sendmulticast.start();
         }
         try
         {
@@ -216,6 +203,8 @@ public class Check implements Runnable{
                 node.setSuccessor(2,node.getSuccessor(1).getSuccessor(1));
             }
             node.getSuccessor(2).setPredecessor(node.getSuccessor(1));
+            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), node);
+            sendmulticast.start();
         }
         basic.Logger.inf("ended stabilizing.");
     }

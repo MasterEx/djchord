@@ -114,22 +114,29 @@ public class MulticastSender extends Multicast implements Runnable{
         {
             openconnection();
             send();
-            IncomingNodeMulticastAnswer answer = new IncomingNodeMulticastAnswer();
-            answer.setNode(node);
-            answer.start();
-            try
+            if(!((new String(buffer)).trim().substring(0, 3)).equalsIgnoreCase("fix"))
             {
-                answer.returnThread().join();
+                IncomingNodeMulticastAnswer answer = new IncomingNodeMulticastAnswer();
+                answer.setNode(node);
+                answer.start();
+                try
+                {
+                    answer.returnThread().join();
+                }
+                catch (InterruptedException ex)
+                {
+                    basic.Logger.war("IncomingNodeMulticastAnswer was unable to be terminated");
+                }
+                closeconnection();
+                node.notified();
+                synchronized(this)
+                {
+                    this.notifyAll();
+                }
             }
-            catch (InterruptedException ex)
+            else
             {
-                basic.Logger.war("IncomingNodeMulticastAnswer was unable to be terminated");
-            }
-            closeconnection();
-            node.notified();
-            synchronized(this)
-            {
-                this.notifyAll();
+                System.out.println("Stelnei ena fix");
             }
         }
         catch (NotInitializedVariablesException ex)

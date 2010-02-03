@@ -171,7 +171,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
         {
             openconnection();
             DatagramPacket temp;
-            String previous = "";
+            String previous = "null";
+            String temp2 = "null";
             if(output)
             {
                 System.out.println("Started waiting for multicast calls");
@@ -184,7 +185,12 @@ public class MulticastReceiver extends Multicast implements Runnable{
             while(run)
             {
                 temp = receive(new byte[1024]);
-                if (!(new String(temp.getData())).equalsIgnoreCase(previous))
+                if((new String(temp.getData()).trim().substring(0, 3)).equalsIgnoreCase("fix") && !(new String(temp.getData())).trim().substring(4).equalsIgnoreCase(temp2))
+                {
+                    new chord.Fix(this.node);
+                    temp2 = (new String(temp.getData())).trim().substring(4);
+                }
+                else if (!(new String(temp.getData()).trim().substring(0, 3)).equalsIgnoreCase("fix") && !(new String(temp.getData())).equalsIgnoreCase(previous))
                 {
                     new PacketHandling(temp, this.node);
                     previous = new String(temp.getData());
