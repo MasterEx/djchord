@@ -1,0 +1,5 @@
+check and fix exit
+check if nodes can enter chord at the same time
+check gui for bugs
+make gui static - global and use it for appending messages
+check if find_successor may crash
