@@ -642,13 +642,42 @@ public class Node implements RemoteNode {
     }
 
     /**
+     * It fixes faster the fingers.
+     * @throws RemoteException
+     */
+    public void fastFix() throws RemoteException
+    {
+        compressedFingers = new Vector<RemoteNode>();
+        SHAhash temp,max = new SHAhash("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+        RemoteNode temp1 , temp2=null;
+        for(int i=0;i<160;i++)
+        {
+            temp = new SHAhash(this.key.add(SHAhash.power(Integer.toHexString(2), i)));
+            /*
+             * if hash is greater than max sha1 hash value it takes a value
+             * equal to value-maxValue. Then we return a RemoteNode with
+             * find_successor to the finger table
+             */
+            temp1 = this.simple_find_successor((temp.compareTo(max)>0)?new SHAhash((SHAhash.subtract(temp.getStringHash(), max.getStringHash())).length()==40?SHAhash.subtract(temp.getStringHash(), max.getStringHash()):(SHAhash.subtract(temp.getStringHash(), max.getStringHash())).substring(1,40)):temp);
+            if(temp2==null || !temp1.getPid().equalsIgnoreCase(temp2.getPid()))
+            {
+                this.compressedFingers.add(temp1);
+                temp2 = temp1;
+            }
+        }
+        compressedFingers.trimToSize();
+        basic.Logger.fingerLog(compressedFingers);
+    }
+
+    /**
      * It calls setFingers and compressFingers.
      * @throws RemoteException
      */
     public void fixFingers() throws RemoteException
     {
-        this.setFingers();
-        this.compressFingers();
+        //this.setFingers();
+        //this.compressFingers();
+        this.fastFix();
     }
 
     /**
