@@ -33,6 +33,8 @@ import djchord.GUI;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import networking.MulticastReceiver;
 import networking.MulticastSender;
 
@@ -44,6 +46,7 @@ public class DJchord implements Runnable {
 
     private Node node;
     private MulticastSender sendmulticast;
+    MulticastReceiver receivemulticast;
     private Thread runner;
     private boolean output; // true for system false for gui
     private GUI gui = null;
@@ -107,7 +110,7 @@ public class DJchord implements Runnable {
             basic.Logger.err(ex.getMessage());
         }
         node.startCheck();
-        MulticastReceiver receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
+        receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
         receivemulticast.setOutput(output);
         if(!output)
         {
@@ -134,13 +137,38 @@ public class DJchord implements Runnable {
      */
     public void stop()
     {
+        System.out.print("Killing this node...");
         this.killNode();
+        System.out.print("..");
         basic.Logger.inf("find_successor has been called "+basic.HopsAndTime.search_counter+" times");
         basic.Logger.inf("Average hops/find_successor: "+basic.HopsAndTime.getAvgHops());
         basic.Logger.inf("Average execution time/find_successor: "+basic.HopsAndTime.getAvgTime());
-        sendmulticast.stop();
+        System.out.print("..");
+        receivemulticast.stop();
+        System.out.print(".");
+        MulticastSender fixmulticast;
+        try
+        {
+            fixmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix " + node.getPid()).getBytes(), node);
+            fixmulticast.start();
+            System.out.print(".");
+            try
+            {
+                fixmulticast.getThread().join();
+            }
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.print(".");
         runner.interrupt();
         runner = null;
+        System.out.println("done!");
     }
 
     /**
@@ -162,10 +190,6 @@ public class DJchord implements Runnable {
         {
             RemoteNode successor = this.node.getSuccessor(), predecessor = this.node.getPredecessor();
             this.node.exit();
-            successor.joinedStabilize();
-            successor.fixFingers();
-            predecessor.joinedStabilize();
-            predecessor.fixFingers();
         }
         catch (RemoteException remoteException)
         {

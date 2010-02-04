@@ -185,6 +185,8 @@ public class MulticastReceiver extends Multicast implements Runnable{
             while(run)
             {
                 temp = receive(new byte[1024]);
+                String x = new String(temp.getData());
+                System.out.println("ELABA MULTICAST: "+x.trim()+" kai temp2= "+temp2);
                 if((new String(temp.getData()).trim().substring(0, 3)).equalsIgnoreCase("fix") && !(new String(temp.getData())).trim().substring(4).equalsIgnoreCase(temp2))
                 {
                     new chord.Fix(this.node);

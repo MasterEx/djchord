@@ -69,7 +69,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             serversocket = new ServerSocket(port);
             serversocket.setSoTimeout(5000);// 5 sec
             socket = serversocket.accept();// race condition may occur
-            System.out.print("Trying to enter to existring chord...");
+            System.out.print("Trying to enter to existing chord...");
             Scanner in = new Scanner(socket.getInputStream());
             pid = in.next();
             String address = in.next();
