@@ -99,7 +99,7 @@ public class Arguments {
             if (args[counter].equalsIgnoreCase("-createnode"))
             {
                 basic.Logger.inf("********** PROCESS INITIATED **********");
-                DJchord chord = new DJchord(true);
+                DJchord chord = new DJchord();
                 chord.start();
                 System.out.println("A node is being created..." +
                         "\nUse -help to see the available options");

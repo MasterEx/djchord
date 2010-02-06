@@ -54,7 +54,9 @@ public class GUI extends javax.swing.JFrame {
 
     /** Creates new form GUI */
     public GUI() {
-    initComponents();
+        basic.Global.GUI = this;
+        basic.Global.OUTPUT = false;
+        initComponents();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int X = (screen.width / 2) - (this.getWidth() / 2); // Center horizontally.
         int Y = (screen.height / 2) - (this.getHeight() / 2); // Center vertically.
@@ -111,7 +113,7 @@ public class GUI extends javax.swing.JFrame {
 
         jTextArea1.setColumns(20);
         jTextArea1.setEditable(false);
-        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 12));
+        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -166,7 +168,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel1))
@@ -219,8 +221,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         basic.Logger.inf("======== PROCESS INITIATED (GUI MODE) ========");
-        this.chord = new DJchord(false);
-        chord.setGui(this);
+        this.chord = new DJchord();
         chord.start();
         jButton1.setVisible(false);
         jButton2.setVisible(false);
@@ -311,7 +312,7 @@ public class GUI extends javax.swing.JFrame {
      */
     synchronized public void append(String txt)
     {
-        jTextArea1.append(txt+"\n");
+        jTextArea1.append(txt);
         jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
 
     }

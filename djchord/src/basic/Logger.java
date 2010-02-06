@@ -68,7 +68,7 @@ public class Logger {
         }
         catch (IOException ex)
         {
-            basic.Logger.err(ex.getMessage());
+            basic.Logger.appendln(ex.getMessage());
         }
     }
 
@@ -119,6 +119,31 @@ public class Logger {
             }
         }
         Logger.println("******** End Of Finger Print ********","FingerLog.txt");
+    }
+
+    /**
+     * This method is used to print a message.
+     * @param msg The message's text.
+     */
+    public static void append(String msg)
+    {
+        if(Global.OUTPUT)
+        {
+            System.out.print(msg);
+        }
+        else
+        {
+            Global.GUI.append(msg);
+        }
+    }
+
+    /**
+     * Like append but it breaks line after the message.
+     * @param msg The message.
+     */
+    public static void appendln(String msg)
+    {
+        append(msg+"\n");
     }
 
 }

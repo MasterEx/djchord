@@ -65,45 +65,45 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         String responders_pid = null, responders_address = null, pid = null;
         try
         {
-            System.out.println("Please wait...");
+            basic.Logger.appendln("Please wait...");
             serversocket = new ServerSocket(port);
             serversocket.setSoTimeout(5000);// 5 sec
             socket = serversocket.accept();// race condition may occur
-            System.out.print("Trying to enter to existing chord...");
+            basic.Logger.append("Trying to enter to existing chord...");
             Scanner in = new Scanner(socket.getInputStream());
             pid = in.next();
             String address = in.next();
             responders_pid = in.next();
             responders_address = in.next();
-            System.out.print(".");
+            basic.Logger.append(".");
             successor = RMIRegistry.getRemoteNode(address, pid);
             node.setSuccessor(successor);
-            System.out.print(".");
+            basic.Logger.append(".");
             node.setPredecessor(successor.getPredecessor());
             node.getPredecessor().setSuccessor(node.getNode());
-            System.out.print(".");
+            basic.Logger.append(".");
             successor.setPredecessor(node.getNode());
             if(successor.getSuccessor().getPid().equalsIgnoreCase(successor.getPid()))
             {
                 successor.setSuccessor(node.getNode());
                 successor.initSuccessors();
             }
-            System.out.print(".");
+            basic.Logger.append(".");
             node.initSuccessors();
             node.getPredecessor().initSuccessors();
             if(!node.getPredecessor().getPredecessor().getPid().equalsIgnoreCase(node.getPid()))
             {
                 node.getPredecessor().getPredecessor().initSuccessors();
             }
-            System.out.print(".");
+            basic.Logger.append(".");
             node.fixFingers();
             networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
             sendmulticast.start();
-            System.out.print(".");
+            basic.Logger.append(".");
             in.close();
             socket.close();
             serversocket.close();
-            System.out.println("done!");
+            basic.Logger.appendln("done!");
         }
         catch (NotBoundException ex)
         {
@@ -148,7 +148,7 @@ public class IncomingNodeMulticastAnswer implements Runnable{
         {
             try
             {
-                System.out.println("Creating new chord!");
+                basic.Logger.appendln("Creating new chord!");
                 flag = true;
                 serversocket.close();
             }

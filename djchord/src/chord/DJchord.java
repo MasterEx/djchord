@@ -29,7 +29,6 @@
         
 package chord;
 
-import djchord.GUI;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
@@ -48,8 +47,6 @@ public class DJchord implements Runnable {
     private MulticastSender sendmulticast;
     MulticastReceiver receivemulticast;
     private Thread runner;
-    private boolean output; // true for system false for gui
-    private GUI gui = null;
 
     /**
      * Is invoked by start()
@@ -58,7 +55,7 @@ public class DJchord implements Runnable {
     {
         try
         {
-            node = new Node(this.output,this.gui);
+            node = new Node();
         }
         catch (RemoteException ex)
         {
@@ -111,11 +108,6 @@ public class DJchord implements Runnable {
         }
         node.startCheck();
         receivemulticast = new MulticastReceiver(1101, "224.1.1.1", node);
-        receivemulticast.setOutput(output);
-        if(!output)
-        {
-            receivemulticast.setGUI(gui);
-        }
         receivemulticast.start();
     }
 
@@ -137,21 +129,21 @@ public class DJchord implements Runnable {
      */
     public void stop()
     {
-        System.out.print("Killing this node...");
+        basic.Logger.append("Killing this node...");
         this.killNode();
-        System.out.print("..");
+        basic.Logger.append("..");
         basic.Logger.inf("find_successor has been called "+basic.HopsAndTime.search_counter+" times");
         basic.Logger.inf("Average hops/find_successor: "+basic.HopsAndTime.getAvgHops());
         basic.Logger.inf("Average execution time/find_successor: "+basic.HopsAndTime.getAvgTime());
-        System.out.print("..");
+        basic.Logger.append("..");
         receivemulticast.stop();
-        System.out.print(".");
+        basic.Logger.append(".");
         MulticastSender fixmulticast;
         try
         {
             fixmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix " + node.getPid()).getBytes(), node);
             fixmulticast.start();
-            System.out.print(".");
+            basic.Logger.append(".");
             try
             {
                 fixmulticast.getThread().join();
@@ -165,10 +157,10 @@ public class DJchord implements Runnable {
         {
             Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.print(".");
+        basic.Logger.append(".");
         runner.interrupt();
         runner = null;
-        System.out.println("done!");
+        basic.Logger.appendln("done!");
     }
 
     /**
@@ -231,25 +223,11 @@ public class DJchord implements Runnable {
     {
         try
         {
-            if(output)
-            {
-                System.out.println("I'm "+node.getRMIInfo()+" with hash:\n"+node.getKey().getStringHash());
-            }
-            else
-            {
-                this.gui.append("I'm "+node.getRMIInfo()+" with hash:\n"+node.getKey().getStringHash());
-            }
+            basic.Logger.appendln("I'm "+node.getRMIInfo()+" with hash:\n"+node.getKey().getStringHash());
             basic.Logger.inf("I'm "+node.getRMIInfo());
             for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
             {
-                if(output)
-                {
-                    System.out.println("My next successor is "+i.getRMIInfo()+" with hash:\n"+i.getKey().getStringHash());
-                }
-                else
-                {
-                    this.gui.append("My next successor is "+i.getRMIInfo()+" with hash:\n"+i.getKey().getStringHash());
-                }
+                basic.Logger.appendln("My next successor is "+i.getRMIInfo()+" with hash:\n"+i.getKey().getStringHash());
                 basic.Logger.inf("My next successor is "+i.getRMIInfo());
             }
             
@@ -271,66 +249,25 @@ public class DJchord implements Runnable {
     }
 
     /**
-     * Constructor that sets the standar ouput.
-     * @param output True for System.out , false for gui.
-     */
-    public DJchord(boolean output)
-    {
-        this.output = output;
-    }
-
-    /**
-     * In case we have gui we need to append our messages to it.
-     * @param gui Our gui.
-     */
-    public void setGui(GUI gui)
-    {
-        this.gui = gui;
-    }
-
-    /**
      * Prints all the chord files.
      */
     public void getFiles()
     {
         try
         {
-            if(output)
+            basic.Logger.appendln("My files are");
+            String[] files = node.getFile_keys();
+            for(int i=0;i<files.length;i++)
             {
-                System.out.println("My files are");
-                String[] files = node.getFile_keys();
-                for(int i=0;i<files.length;i++)
-                {
-                    System.out.println(files[i]);
-                }
-            }
-            else
-            {
-                this.gui.append("My files are");
-                String[] files = node.getFile_keys();
-                for(int i=0;i<files.length;i++)
-                {
-                    this.gui.append(files[i]);
-                }
+                basic.Logger.appendln(files[i]);
             }
             for(RemoteNode i=node.getSuccessor();!i.getPid().equalsIgnoreCase(node.getPid());i=i.getSuccessor())
             {
-                String[] files = i.getFile_keys();
-                if(output)
+                files = i.getFile_keys();
+                basic.Logger.appendln("My next successor files are: ");
+                for(int j=0;j<files.length;j++)
                 {
-                    System.out.println("My next successor files are: ");
-                    for(int j=0;j<files.length;j++)
-                    {
-                        System.out.println(files[j]);
-                    }
-                }
-                else
-                {
-                    this.gui.append("My next successor files are: ");
-                    for(int j=0;j<files.length;j++)
-                    {
-                        this.gui.append(files[j]);
-                    }
+                    basic.Logger.appendln(files[j]);
                 }
             }
 

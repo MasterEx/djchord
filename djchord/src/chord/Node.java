@@ -32,7 +32,6 @@ package chord;
 import basic.FileNames;
 import basic.SHA1;
 import basic.SHAhash;
-import djchord.GUI;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -67,18 +66,14 @@ public class Node implements RemoteNode {
     private Check check, checkstabilize = null;
     private boolean[] ports;
     private boolean empty_folder=true;
-    private GUI gui; // true for system false for gui
-    private boolean output;
 
     /**
      * Constructor.
-     * @param output Sets the messages outpput.
-     * @param gui Sets the gui, if any.
+     * @param basic.Global.OUTPUT Sets the messages outpput.
+     * @param basic.Global.GUI Sets the basic.Global.GUI, if any.
      */    
-    public Node(boolean output,GUI gui) throws NoSuchAlgorithmException, UnsupportedEncodingException, RemoteException
+    public Node() throws NoSuchAlgorithmException, UnsupportedEncodingException, RemoteException
     {
-        this.output = output;
-        this.gui = gui;
         pid = this.setPid();
         this.key = SHA1.getHash(pid);
         RMIRegistry.init();
@@ -104,14 +99,7 @@ public class Node implements RemoteNode {
         {
             ports[i] = false;
         }
-        if(output)
-        {
-            System.out.println("The node: "+this.getRMIInfo()+" has been created!");            
-        }
-        else
-        {
-            this.gui.append("The node: "+this.getRMIInfo()+" has been created!");
-        }
+        basic.Logger.appendln("The node: "+this.getRMIInfo()+" has been created!");
         basic.Logger.inf("The node: "+this.getRMIInfo()+" has been created!");
     }
 
@@ -475,8 +463,7 @@ public class Node implements RemoteNode {
                 return LAST_FINGER;
             }
         }
-
-        System.out.println("NEVER COMES HERE ");
+        basic.Logger.appendln("NEVER COMES HERE ");
         return this.simple_find_successor(K);// unreachable statement
     }
 
@@ -752,28 +739,14 @@ public class Node implements RemoteNode {
         }
         catch (RemoteException ex)
         {
-            if(output)
-            {
-                System.out.println("File was unable to be sent, please try again later.");
-            }
-            else
-            {
-                this.gui.append("File was unable to be sent, please try again later.");
-            }
+            basic.Logger.appendln("File was unable to be sent, please try again later.");
             basic.Logger.err(ex.getMessage());
             return false;
         }
         catch (NullPointerException ex)
         {
             contin = false;
-            if(output)
-            {
-                System.out.print("FILE DOESN'T EXIST!!!");
-            }
-            else
-            {
-                this.gui.append("FILE DOESN'T EXIST!!!");
-            }
+            basic.Logger.appendln("FILE DOESN'T EXIST!!!");
             basic.Logger.war("FILE DOESN'T EXIST!!!");
             return false;
         }
@@ -797,11 +770,6 @@ public class Node implements RemoteNode {
                 }
                 this.setPortBusy(port);
                 FileReceiver receiver = new FileReceiver(port,"remote_files"+File.separator+filename,this.thisnode);
-                receiver.setOutput(output);
-                if(!output)
-                {
-                    receiver.setGUI(gui);
-                }
                 receiver.start();
                 responsible.sendFile(port, this.getAddress(), filename);
                 return receiver.getstatus();

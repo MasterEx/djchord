@@ -46,8 +46,6 @@ public class MulticastReceiver extends Multicast implements Runnable{
     private Thread runner;
     private boolean run = true; //terminates the loop
     private Node node;
-    private GUI gui;
-    private boolean output; // true for system false for gui
 
     /**
      *
@@ -173,14 +171,7 @@ public class MulticastReceiver extends Multicast implements Runnable{
             DatagramPacket temp;
             String previous = "null";
             String temp2 = "null";
-            if(output)
-            {
-                System.out.println("Started waiting for multicast calls");
-            }
-            else
-            {
-                this.gui.append("Started waiting for multicast calls");
-            }
+            basic.Logger.appendln("Started waiting for multicast calls");
             basic.Logger.inf("Started waiting for multicast calls");
             while(run)
             {
@@ -235,24 +226,6 @@ public class MulticastReceiver extends Multicast implements Runnable{
     public void terminate()
     {
         run = false;
-    }
-
-    /**
-     * Sets the messages output.
-     * @param output
-     */
-    public void setOutput(boolean output)
-    {
-        this.output = output;
-    }
-
-    /**
-     * Is used if we use gui.
-     * @param gui
-     */
-    public void setGUI(GUI gui)
-    {
-        this.gui = gui;
     }
 
 }

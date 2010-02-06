@@ -30,7 +30,6 @@
 package networking;
 
 import chord.RemoteNode;
-import djchord.GUI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -58,8 +57,6 @@ public class FileReceiver implements Runnable{
     private RemoteNode node = null;
     private final int BYTE_BUFFER_SIZE = 65536;
     private byte[] buffer;
-    private GUI gui;
-    private boolean output;
 
     /**
      * Is invoked by start().
@@ -104,18 +101,9 @@ public class FileReceiver implements Runnable{
             long endTime = System.currentTimeMillis();
             if (echo)
             {
-                if(output)
-                {
-                    System.out.println("File was successfully received in "+((endTime-startTime)/1000D)+" sec:\n" +
+                basic.Logger.appendln("File was successfully received in "+((endTime-startTime)/1000D)+" sec:\n" +
                         "\tSize:\t"+bytecounter  +" bytes"+
                         "\n\tSender address:\t"+socket.getLocalSocketAddress());
-                }
-                else
-                {
-                    this.gui.append("File was successfully received in "+((endTime-startTime)/1000D)+" sec:\n" +
-                        "\tSize:\t"+bytecounter  +" bytes"+
-                        "\n\tSender address:\t"+socket.getLocalSocketAddress());
-                }
                 basic.Logger.inf("File was successfully received in: "+destination);                
             }/*if(node!=null)
             {
@@ -213,24 +201,6 @@ public class FileReceiver implements Runnable{
     public Thread getThread()
     {
         return this.runner;
-    }
-
-    /**
-     * Sets messages output.
-     * @param output True for cli, false for gui.
-     */
-    public void setOutput(boolean output)
-    {
-        this.output = output;
-    }
-
-    /**
-     * In case we use gui we need this to append our messages.
-     * @param gui Our gui.
-     */
-    public void setGUI(GUI gui)
-    {
-        this.gui = gui;
     }
 
 }
