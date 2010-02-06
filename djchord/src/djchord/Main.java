@@ -46,6 +46,18 @@ public class Main {
     {
         if(args.length>0)
         {
+            if(args[0].equalsIgnoreCase("-simple"))
+            {
+                basic.Global.SIMPLE = true;
+            }
+            else
+            {
+                Arguments.handler(args);
+                System.exit(0);
+            }
+        }
+        if(args.length>1)
+        {
             Arguments.handler(args);
             System.exit(0);
         }

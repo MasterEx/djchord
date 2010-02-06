@@ -721,7 +721,14 @@ public class Node implements RemoteNode {
         RemoteNode responsible = null;
         try
         {
-            responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
+            if(basic.Global.SIMPLE)
+            {
+                responsible = this.simple_find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
+            }
+            else
+            {
+                responsible = this.find_successor(SHA1.getHash(filename)).getFileResponsible(filename);
+            }
             if (responsible == null)
             {
                 throw new NullPointerException();
@@ -861,7 +868,14 @@ public class Node implements RemoteNode {
             {
                 try
                 {
-                    remotenode = this.simple_find_successor(SHA1.getHash(file_keys[i]));
+                    if(basic.Global.SIMPLE)
+                    {
+                        remotenode = this.simple_find_successor(SHA1.getHash(file_keys[i]));
+                    }
+                    else
+                    {
+                        remotenode = this.find_successor(SHA1.getHash(file_keys[i]));
+                    }
                     remotenode.addFile(file_keys[i], this.thisnode);
                 }
                 catch (NoSuchAlgorithmException ex)
@@ -901,7 +915,14 @@ public class Node implements RemoteNode {
             RemoteNode remotenode;
             for(int i=0;i<file_keys.length;i++)
             {
-                remotenode = this.find_successor((new SHAhash(file_keys[i])));
+                if(basic.Global.SIMPLE)
+                {
+                    remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                }
+                else
+                {
+                    remotenode = this.find_successor((new SHAhash(file_keys[i])));
+                }
                 remotenode.rmFile(file_keys[i]);
             }
         }

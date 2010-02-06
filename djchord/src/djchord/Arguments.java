@@ -59,6 +59,10 @@ public class Arguments {
         }
 
         int counter = 0;
+        if(basic.Global.SIMPLE)
+        {
+            counter++;
+        }
         
         while(true)
         {

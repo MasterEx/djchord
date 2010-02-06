@@ -101,6 +101,17 @@ public class Check implements Runnable{
                         }).start();
                     }
                     this.stabilize();
+                    if(basic.Global.SIMPLE)
+                    {
+                        try
+                        {
+                            this.node.sendFiles2ResponsibleNode();
+                        }
+                        catch(RemoteException e)
+                        {
+                            //continue
+                        }
+                    }
                     Thread.sleep(20000); // 20 sec
                 }
             }
@@ -171,8 +182,11 @@ public class Check implements Runnable{
             node.setSuccessor(1,node.getSuccessor(0).getSuccessor());
             node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
             node.getSuccessor().setPredecessor(node.getNode());
-            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
-            sendmulticast.start();
+            if(!basic.Global.SIMPLE)
+            {
+                networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
+                sendmulticast.start();
+            }
         }
         try
         {
@@ -184,8 +198,11 @@ public class Check implements Runnable{
             node.setSuccessor(1,node.getSuccessor(2));
             node.setSuccessor(2,node.getSuccessor(1).getSuccessor());
             node.getSuccessor(1).setPredecessor(node.getSuccessor());
-            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), node);
-            sendmulticast.start();
+            if(!basic.Global.SIMPLE)
+            {
+                networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
+                sendmulticast.start();
+            }
         }
         try
         {
@@ -203,8 +220,11 @@ public class Check implements Runnable{
                 node.setSuccessor(2,node.getSuccessor(1).getSuccessor(1));
             }
             node.getSuccessor(2).setPredecessor(node.getSuccessor(1));
-            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), node);
-            sendmulticast.start();
+            if(!basic.Global.SIMPLE)
+            {
+                networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
+                sendmulticast.start();
+            }
         }
         basic.Logger.inf("ended stabilizing.");
     }

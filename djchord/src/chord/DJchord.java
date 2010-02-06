@@ -139,23 +139,26 @@ public class DJchord implements Runnable {
         receivemulticast.stop();
         basic.Logger.append(".");
         MulticastSender fixmulticast;
-        try
+        if(!basic.Global.SIMPLE)
         {
-            fixmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix " + node.getPid()).getBytes(), node);
-            fixmulticast.start();
-            basic.Logger.append(".");
             try
             {
-                fixmulticast.getThread().join();
+                fixmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix " + node.getPid()).getBytes(), node);
+                fixmulticast.start();
+                basic.Logger.append(".");
+                try
+                {
+                    fixmulticast.getThread().join();
+                }
+                catch (InterruptedException ex)
+                {
+                    Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            catch (InterruptedException ex)
+            catch (RemoteException ex)
             {
                 Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } 
-        catch (RemoteException ex)
-        {
-            Logger.getLogger(DJchord.class.getName()).log(Level.SEVERE, null, ex);
         }
         basic.Logger.append(".");
         runner.interrupt();
@@ -238,7 +241,6 @@ public class DJchord implements Runnable {
             try
             {
                 node.joinedStabilize();
-                node.fixFingers();
             }
             catch (RemoteException remoteException)
             {
@@ -278,7 +280,6 @@ public class DJchord implements Runnable {
             try
             {
                 node.joinedStabilize();
-                node.fixFingers();
             }
             catch (RemoteException remoteException)
             {

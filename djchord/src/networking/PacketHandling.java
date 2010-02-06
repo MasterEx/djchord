@@ -83,7 +83,14 @@ public class PacketHandling implements Runnable{
         OutputStream outstream = null;
         try
         {
-            successor = this.node.find_successor(sha1);
+            if(basic.Global.SIMPLE)
+            {
+                successor = this.node.simple_find_successor(sha1);
+            }
+            else
+            {
+                successor = this.node.find_successor(sha1);
+            }
             try
             {
                 Thread.sleep(500); //sleep for 0.5 secs

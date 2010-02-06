@@ -97,8 +97,11 @@ public class IncomingNodeMulticastAnswer implements Runnable{
             }
             basic.Logger.append(".");
             node.fixFingers();
-            networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
-            sendmulticast.start();
+            if(!basic.Global.SIMPLE)
+            {
+                networking.MulticastSender sendmulticast = new networking.MulticastSender(1101, "224.1.1.1", ("fix "+node.getPid()).getBytes(), this.node);
+                sendmulticast.start();
+            }
             basic.Logger.append(".");
             in.close();
             socket.close();

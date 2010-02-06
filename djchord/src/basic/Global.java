@@ -39,5 +39,6 @@ public class Global {
 
     static public GUI GUI;
     static public boolean OUTPUT = true; //true for print in command line
+    static public boolean SIMPLE = false; //true to use only simple_find_successor
 
 }
