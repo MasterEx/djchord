@@ -3,5 +3,5 @@ check if nodes can enter chord at the same time
 check gui for bugs
 make gui static - global and use it for appending messages		DONE
 check if find_successor may crash
-create a simple_find_successor mode
+create a simple_find_successor mode					DONE
 optimize fix fingers
