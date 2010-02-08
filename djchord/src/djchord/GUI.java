@@ -332,8 +332,8 @@ public class GUI extends javax.swing.JFrame {
         }
 
         public void windowClosing(WindowEvent e) {
-            chord.stop();
             g.setVisible(false);
+            chord.stop();
             basic.Logger.inf("The process is now being terminated...");
             System.exit(0);
         }
