@@ -915,15 +915,26 @@ public class Node implements RemoteNode {
             RemoteNode remotenode;
             for(int i=0;i<file_keys.length;i++)
             {
-                if(basic.Global.SIMPLE)
+                try
                 {
-                    remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                    if(basic.Global.SIMPLE)
+                    {
+                        remotenode = this.simple_find_successor((new SHAhash(file_keys[i])));
+                    }
+                    else
+                    {
+                        remotenode = this.find_successor((new SHAhash(file_keys[i])));
+                    }
+                    remotenode.rmFile(file_keys[i]);
                 }
-                else
+                catch (NullPointerException ex)
                 {
-                    remotenode = this.find_successor((new SHAhash(file_keys[i])));
+                    continue;
                 }
-                remotenode.rmFile(file_keys[i]);
+                catch(Exception ex)
+                {
+                    continue;
+                }
             }
         }
         else
