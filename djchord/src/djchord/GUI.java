@@ -61,9 +61,9 @@ public class GUI extends javax.swing.JFrame {
         int X = (screen.width / 2) - (this.getWidth() / 2); // Center horizontally.
         int Y = (screen.height / 2) - (this.getHeight() / 2); // Center vertically.
         this.setBounds(X,Y , this.getWidth(),this.getHeight());
-        this.append("\n\tdjchord -- a distributed filesystem based on chord written in java\n");
-        this.append("authors : Ntanasis Periklis and Chatzipetros Mike");
-        this.append("This application is licensed under the MIT license,\n" +
+        basic.Logger.appendln("\n\tdjchord -- a distributed filesystem based on chord written in java\n");
+        basic.Logger.appendln("authors : Ntanasis Periklis and Chatzipetros Mike");
+        basic.Logger.append("This application is licensed under the MIT license,\n" +
                 "see license.txt for further information\n");
         jButton3.setVisible(false);
         jButton4.setVisible(false);
