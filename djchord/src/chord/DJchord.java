@@ -132,9 +132,12 @@ public class DJchord implements Runnable {
         basic.Logger.append("Killing this node...");
         this.killNode();
         basic.Logger.append("..");
-        basic.Logger.inf("find_successor has been called "+basic.HopsAndTime.search_counter+" times");
-        basic.Logger.inf("Average hops/find_successor: "+basic.HopsAndTime.getAvgHops());
-        basic.Logger.inf("Average execution time/find_successor: "+basic.HopsAndTime.getAvgTime());
+        if(!basic.Global.SIMPLE)
+        {
+            basic.Logger.inf("find_successor has been called "+basic.HopsAndTime.search_counter+" times");
+            basic.Logger.inf("Average hops/find_successor: "+basic.HopsAndTime.getAvgHops());
+            basic.Logger.inf("Average execution time/find_successor: "+basic.HopsAndTime.getAvgTime());
+        }
         basic.Logger.append("..");
         receivemulticast.stop();
         basic.Logger.append(".");
